@@ -1,0 +1,32 @@
+<nav class="navbar navbar-default navbar-static-top" id="nav-root">
+  <div class="container-fluid">
+    <div class="navbar-heeader">
+      <button class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+        <span class="sr-only">Открыть навигацию</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="/" data-spa="main">Main</a>
+    </div>
+    <div class="collapse navbar-collapse" id="navbar">
+      <ul class="nav navbar-nav">
+        <li><a href="/music" data-spa="main">Music</a></li>
+        <li><a href="/posts" data-spa="main">Posts</a></li>
+        <li><a href="/users" data-spa="main">Users</a></li>
+        <!--<li><a href="/about" data-spa="main">About</a></li>-->
+        <li><a href="/admin" data-spa="main">Admin</a></li>
+        <li><a href="/music/search" data-spa="main">Search</a></li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        {% if user %}
+        <li><a href=""
+               onclick="$('<form method=POST action=/logout>').appendTo('body').submit();return false">Выйти</a></form>
+        </li>
+        {% else %}
+        <li><a href="/login" data-spa="main">Войти</a></li>
+        {% endif %}
+      </ul>
+    </div>
+  </div>
+</nav>

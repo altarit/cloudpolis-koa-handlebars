@@ -1,4 +1,6 @@
 exports.index = function *(next) {
-  yield this.render('index.html', {title: 'EquestriaJS'});
+  yield this.render('index.html', {title: 'EquestriaJS', part: this.request.isAjax});
   yield next;
 };
+
+//res.render('index', {part: req.isAjax});

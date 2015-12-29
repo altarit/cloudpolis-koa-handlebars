@@ -6,6 +6,7 @@ var koa = require('koa'),
   compression = require('koa-gzip'),
   session = require('koa-generic-session'),
   mongooseStore = require('koa-session-mongoose'),
+  swig = require('swig'),
 
   //Project modules
   config = require('config'),
@@ -40,10 +41,14 @@ app.use(require('middlewares/logRequest'));
 
 
 //routes
-app.use(views(config.template.path, config.template.options));
+swig.setDefaults({ loader: swig.loaders.fs(__dirname + '/views' ), varControls: ['[[', ']]']});
+//app.use(views(config.template.path, config.template.options));
+app.use(views('views', {map: {html: 'swig'}}));
+
+require('routes')(app);
 app.use(static('public'));
 app.use(static('bower_components'));
-require('routes')(app);
+app.use(static('D:/Documents/Music/MAv16/Artists/'));
 
 
 log.debug('EquestriaJS started');

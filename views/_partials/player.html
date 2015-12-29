@@ -1,0 +1,63 @@
+<div class="navbar navbar-default navbar-fixed-top bar-player">
+  <div class="container-fluid">
+    <div class="player-buttons" id="playermenu">
+      <ul class="nav navbar-nav">
+        <li><a href="#" data-action="prev" class="fa fa-fast-backward hidden-xs"></a></li>
+        <li><a href="#" data-action="play" class="fa fa-play button-pause"></a></li>
+        <li><a href="#" data-action="next" class="fa fa-fast-forward hidden-xs"></a></li>
+        <!--<li><a href="#" data-action="hush" class="fa fa-volume-down"></a></li>
+        <li><a href="#" data-action="louder" class="fa fa-volume-up"></a></li>-->
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="#" data-action="playlist" class="fa fa-gear"></a></li>
+      </ul>
+    </div>
+
+    <div class="progress progress-player">
+      <div class="musicinfo" id="musicinfo">
+        Song
+      </div>
+      <div class="progress-bar progress-bar-info" id="musicbar" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width: 0%; height: 100%; margin-top: -35px;">
+        <span ></span>
+      </div>
+      <div class="musictime" style="height: 100%; margin-top: -35px;">
+        13:37
+      </div>
+      <div class="musiclength" style="height: 100%; margin-top: -35px;">
+        20:00
+      </div>
+
+    </div>
+  </div>
+  <audio id="player" src="Not a Clever Pony\Princess Luna as Imagined/Not a Clever Pony - Princess Luna as Imagined - 04 For The New Lunar Republic.mp3"></audio>
+</div>
+
+<div class="playmenu" id="playmenu">
+  <div class="playermenu_top">
+    <ul class="pagination">
+      <li><a href="#" data-action="prev" class="fa fa-fast-backward"></a></li>
+      <li><a href="#" data-action="next" class="fa fa-fast-forward"></a></li>
+      <li><a href="#" data-action="repeat" class="fa fa-retweet"></a></li>
+      <li><a href="#" data-action="random" class="fa fa-random"></a></li>
+      <li><a href="#" data-action="volumeoff" class="fa fa-volume-up"></a></li>
+    </ul>
+    <input type="range" min="1" max="20" value="20" id="volume">
+  </div>
+  <div class="playlist" id="playlist">
+
+  </div>
+  <div class="playmenu_bottom">
+    <div class="playmenu_current">Играет <a href="/music/library/4everfreebrony" data-spa="main">4everfreebrony</a></div>
+    <div class="btn-group dropup">
+      <button type="button" data-toggle="dropdown" class="btn btn-info dropdown-toggle dropup">Управление списками воспроизведения <span class="caret"></span></button>
+      <ul class="dropdown-menu">
+        <li><a href="#" data-action="pl_current" class="fa fa-arrow-right"> Загрузить в текущий список</a></li>
+        <li><a href="#" data-action="pl_random" class="fa fa-random"> Случайный плейлист</a></li>
+        <li><a href="#" data-action="pl_open" class="fa fa-folder-open-o"> Открыть плейлист</a></li>
+        <li><a href="#" data-action="pl_save" class="fa fa-save"> Сохранить</a></li>
+        <li><a href="#" data-action="pl_clean" class="fa fa-cut"> Очистить</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
