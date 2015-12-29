@@ -11,14 +11,14 @@ var koa = require('koa'),
   //Project modules
   config = require('config'),
   log = require('lib/log')(module),
-  mongoose = require('lib/mongoose'),
-  HttpError = require('error').HttpError;
+  mongoose = require('lib/mongoose');
 
-//
+//koa
 var app = koa();
 app.use(koalogger());
 app.use(compression());
 
+//cookies
 app.keys = ['very secret'];
 app.use(session({
   store: mongooseStore.create({
@@ -28,7 +28,11 @@ app.use(session({
   })
 }));
 
-//app.use(require('middlewares/sendHttpError'));
+//templates
+swig.setDefaults({ loader: swig.loaders.fs(__dirname + '/views' ), varControls: ['[[', ']]']});
+app.use(views('views', {map: {html: 'swig'}}));
+
+app.use(require('middlewares/sendHttpError'));
 app.use(require('middlewares/loadUser'));
 app.use(require('middlewares/setParams'));
 app.use(require('middlewares/logRequest'));
@@ -41,15 +45,11 @@ app.use(require('middlewares/logRequest'));
 
 
 //routes
-swig.setDefaults({ loader: swig.loaders.fs(__dirname + '/views' ), varControls: ['[[', ']]']});
-//app.use(views(config.template.path, config.template.options));
-app.use(views('views', {map: {html: 'swig'}}));
-
 require('routes')(app);
 app.use(static('public'));
 app.use(static('bower_components'));
 app.use(static('D:/Documents/Music/MAv16/Artists/'));
-
+app.use(function*() {throw 404;});
 
 log.debug('EquestriaJS started');
 app.listen(config.port);
