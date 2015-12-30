@@ -34,7 +34,7 @@ module.exports = function *(next) {
       return this.body = err;
     } else {
       log.debug('!get');
-      return yield this.render("error/index.html", {error: err});
+      return yield this.render("error.html", {locals: this.locals, error: err});
       //res.send('123');
     }
   }

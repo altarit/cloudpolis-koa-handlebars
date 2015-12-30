@@ -1,0 +1,24 @@
+{% extends '_layouts/page.html' %}
+{% block title %}[[artist.name]]{% endblock %}
+
+
+{% block content %}
+<h1>{% block title %}{% endblock %}</h1>
+
+<div><a href="/music/artists/" data-spa="main">Все сборники</a></div>
+<div>
+  <ul class="songlist">
+    {% for song in artist.songs %}
+    <li data-spa="player" data-href="[[song.path]]" data-title="[[song.title]]" data-artist="[[song.artist]]" data-album="[[song.album]]">
+      <div class="track_end"><span class="fa fa-plus" data-add="plus"></span></div>
+      <div class="track_cover"><span class="fa fa-play" data-add="play"></span></div>
+      <div class="track_info">
+        <div>[[song.title]]</div>
+        <div>[[song.artist]] - [[song.album]]</div>
+      </div>
+      <div class="clear_left"></div>
+    </li>
+    {% endfor %}
+  </ul>
+</div>
+{% endblock %}

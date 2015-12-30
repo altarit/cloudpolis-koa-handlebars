@@ -1,0 +1,14 @@
+{% extends '_layouts/page.html' %}
+{% block title %}Artists{% endblock %}
+
+
+{% block content %}
+
+<div>
+  <ul class="artists">
+    {% for artist in artists %}
+    <li><a href="/music/artists/[[artist.name]]" data-spa="main">[[artist.name]]</a></li>
+    {% endfor %}
+  </ul>
+</div>
+{% endblock %}

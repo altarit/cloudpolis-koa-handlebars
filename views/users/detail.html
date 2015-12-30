@@ -1,0 +1,23 @@
+{% extends '_layouts/page.html' %}
+{% block title %}[[profile.username]]{% endblock %}
+
+
+{% block content %}
+<h1>{% block title %}{% endblock %}</h1>
+<div class="container-fluid">
+  <div>
+    Roles: {% if profile.roles %} {% for role in profile.roles %} [[role+' ']] {% endfor %} {% endif %}
+  </div>
+  <br>
+  <form class="form-horizontal" name="user-data" method="post">
+    <div class="form-group">
+      <input name="newrole" class="form-control" placeholder="New role"/>
+    </div>
+    <div class="form-group">
+      <button type="submit" class="btn btn-primary">Отправить</button>
+      <div class=".error"></div>
+    </div>
+  </form>
+</div>
+
+{% endblock %}

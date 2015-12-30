@@ -7,6 +7,7 @@ var koa = require('koa'),
   session = require('koa-generic-session'),
   mongooseStore = require('koa-session-mongoose'),
   swig = require('swig'),
+  bodyParser = require('koa-bodyparser'),
 
   //Project modules
   config = require('config'),
@@ -17,6 +18,7 @@ var koa = require('koa'),
 var app = koa();
 app.use(koalogger());
 app.use(compression());
+app.use(bodyParser());
 
 //cookies
 app.keys = ['very secret'];
@@ -32,16 +34,18 @@ app.use(session({
 swig.setDefaults({ loader: swig.loaders.fs(__dirname + '/views' ), varControls: ['[[', ']]']});
 app.use(views('views', {map: {html: 'swig'}}));
 
+app.use(function *(next) {
+  var n = this.session.views || 0;
+  this.session.views = ++n;
+  this.locals = {};
+  yield next;
+});
+
 app.use(require('middlewares/sendHttpError'));
 app.use(require('middlewares/loadUser'));
 app.use(require('middlewares/setParams'));
 app.use(require('middlewares/logRequest'));
 
-/*app.use(function *() {
-  var n = this.session.views || 0;
-  this.session.views = ++n;
-  this.body = n + ' views';
-});*/
 
 
 //routes

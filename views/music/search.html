@@ -1,0 +1,64 @@
+{% extends '_layouts/page.html' %}
+{% block title %}Search{% endblock %}
+
+
+{% block content %}
+<h1>{% block title %}{% endblock %}</h1>
+
+<div class="container-fluid">
+  <form class="form-horizontal form-search" name="form-search">
+    <div class="form-group">
+      <input type="text" name="filter-query" class="form-control">
+    </div>
+  </form>
+</div>
+<div>
+  <div class="searchsongresult" id="compilationinfo" data-template="hb_songlist">
+    <!--{#<table class="table" >
+      <%songs.forEach(function(song, num) {%>
+      <tr data-spa="player" href="<%=song.path%>" data-title="<%=song.title%>" data-artist="<%=song.artist%>" data-album="<%=song.album%>">
+        <td><span class="fa fa-play" data-add="play"></span></td>
+        <td><%=song.title%></td>
+        <td><%=song.artist%></td>
+        <td><%=song.album%></td>
+        <td><span class="fa fa-plus" data-add="plus"></span></td>
+      </tr>
+      <%});%>
+    </table>#}
+    -->
+    <ul class="songlist">
+      {% for song in songs %}
+      <li data-spa="player" data-href="[[song.path]]" data-title="[[song.title]]" data-artist="[[song.artist]]" data-album="[[song.album]]">
+        <div class="track_end"><span class="fa fa-plus" data-add="plus"></span></div>
+        <div class="track_cover"><span class="fa fa-play" data-add="play"></span></div>
+        <div class="track_info">
+          <div>[[song.title]]</div>
+          <div>[[song.artist]] - [[song.album]]</div>
+        </div>
+        <div class="clear_left"></div>
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+</div>
+
+<script>
+  $('.form-search input').keyup(function(e) {
+    var filter = document.forms['form-search'];
+    var filterOptions = {};
+    try {
+      var fQuery = filter['filter-query'].value;
+      if (fQuery) {
+        new RegExp(fQuery);
+        filterOptions.query = fQuery;
+      }
+
+      //console.log(filterOptions);
+      //updateContainer('/music/search', 'searchsongresult', true, filterOptions);
+      applyTemplate('/music/search', 'compilationinfo', 'hb_songlist', filterOptions);
+    } catch(e) {
+      console.log('Wrong regexp');
+    }
+  });
+</script>
+{% endblock %}
