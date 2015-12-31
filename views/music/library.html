@@ -19,7 +19,7 @@
       {% if songs[0] %}
         <table class="table">
           {% for song in songs['0'].songs %}
-            <tr data-spa="player" data-href="[[song.path]]" data-title="[[song.title]]" data-artist="[[song.artist]]" data-album="[[song.album]]">
+            <tr data-spa="player" data-href="/artists/[[song.path]]" data-title="[[song.title]]" data-artist="[[song.artist]]" data-album="[[song.album]]">
               <td><span class="fa fa-play" data-add="play"></span></td>
               <td>[[song.title]]</td>
               <td>[[song.artist]]</td>

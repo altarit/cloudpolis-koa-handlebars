@@ -52,7 +52,6 @@ app.use(require('middlewares/logRequest'));
 require('routes')(app);
 app.use(static('public'));
 app.use(static('bower_components'));
-app.use(static('D:/Documents/Music/MAv16/Artists/'));
 app.use(function*() {throw 404;});
 
 log.debug('EquestriaJS started');

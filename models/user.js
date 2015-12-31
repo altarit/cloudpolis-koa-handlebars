@@ -1,5 +1,4 @@
 var crypto = require('crypto');
-//var async = require('async');
 var util = require('util');
 var log = require('lib/log')(module);
 
@@ -72,25 +71,6 @@ schema.statics.authorize = function (username, password) {
         throw new AuthError('Такого логина не существует');
       }
     });
-    /*.catch(function(err) {
-      throw err;
-    });*/
-  /*async.waterfall([
-      function(callback) {
-          c;
-      },
-      function(user, callback) {
-          if (user) {
-              if (user.checkPassword(password)) {
-                  return callback(null, user);
-              } else {
-                  return callback(new AuthError('Пароль неверен'));
-              }
-          } else {
-              return callback(new AuthError('Такого логина не существует'));
-          }
-      }
-  ], callback);*/
 };
 
 schema.statics.register = function(username, password, email, additional) {
@@ -100,17 +80,12 @@ schema.statics.register = function(username, password, email, additional) {
   if (!/^.{0,40}$/.test(password))
     throw new AuthError('Пароль 6-40 символов.');
 
-
-  console.log('b');
-
   return User.findOneByName(username)
     .then(function(user) {
       if (user) {
         throw new AuthError('Логин занят');
       } else {
-        console.log('d');
         var user = new User({username: username, password: password, email: email});
-        console.log('e');
         return user.save();
       }
     });
