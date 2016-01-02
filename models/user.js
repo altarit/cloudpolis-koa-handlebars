@@ -50,8 +50,6 @@ schema.methods.checkPassword = function(password) {
 
 schema.statics.findOneByName = function(username) {
   var User = this;
-
-  console.log('c');
   return User.findOne({username: { $regex: new RegExp('^' + username + '$', 'i') } });
 };
 

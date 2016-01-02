@@ -14,8 +14,10 @@ var koa = require('koa'),
   log = require('lib/log')(module),
   mongoose = require('lib/mongoose');
 
+var Compilation = require('models/user').User;
+
 //koa
-var app = koa();
+var app = module.exports = koa();
 app.use(koalogger());
 app.use(compression());
 app.use(bodyParser());
@@ -55,4 +57,4 @@ app.use(static('bower_components'));
 app.use(function*() {throw 404;});
 
 log.debug('EquestriaJS started');
-app.listen(config.port);
+if (!module.parent) app.listen(config.port);
