@@ -27,15 +27,11 @@ module.exports = function *(next) {
        res.sendHttpError(err);
        }*/
     }
-    this.status = err.status;
+    this.status = err.status | 500;
     if (this.req.headers['x-requested-with'] == 'XMLHttpRequest') {
-      log.debug('!ajax');
-      //res.json(err);
       return this.body = err;
     } else {
-      log.debug('!get');
       return yield this.render("error.html", {locals: this.locals, error: err});
-      //res.send('123');
     }
   }
 };

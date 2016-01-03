@@ -7,7 +7,7 @@
 <div>
   <ul class="artists">
     {% for artist in artists %}
-    <li><a href="/music/artists/[[artist.name]]" data-spa="main">[[artist.name]]</a></li>
+    <li><a href="/music/artists/{{artist.name}}" data-spa="main">{{artist.name}}</a></li>
     {% endfor %}
   </ul>
 </div>

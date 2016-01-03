@@ -6,6 +6,6 @@
 <h1>{% block title %}{% endblock %}</h1>
 
 {% for user in users %}
-<a href="/users/[[user.username]]" data-spa="main">[[user.username]]</a><br>
+<a href="/users/{{user.username}}" data-spa="main">{{user.username}}</a><br>
 {% endfor %}
 {% endblock %}

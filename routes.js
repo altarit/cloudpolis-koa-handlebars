@@ -17,11 +17,11 @@ module.exports = function(app) {
   router.post('/users/:id', require('./views/users').update);
 
   //Posts
-  /*router.get('/posts', require('./views/posts').init);
-  router.get('/posts/create', require('./views/posts/create').init);
-  router.post('/posts/create', checkAuth, require('./views/posts/create').create);
-  router.get('/posts/:id', require('./views/posts/-id').init);
-  router.post('/posts/:id', checkAuth, require('./views/posts/-id').comment);*/
+  router.get('/posts', require('./views/posts').init);
+  router.get('/posts/create', require('./views/posts').addpost);
+  router.post('/posts/create', checkAuth, require('./views/posts').create);
+  router.get('/posts/:id', require('./views/posts').detail);
+  router.post('/posts/:id', checkAuth, require('./views/posts/').comment);
 
   //Music
   router.get('/music', require('./views/music').init);

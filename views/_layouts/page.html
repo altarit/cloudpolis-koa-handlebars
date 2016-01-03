@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-  <title>{% block title %}[[title|'Missed Title']]{%endblock %}</title>
+  <title>{% block title %}{{title|'Missed Title'}}{%endblock %}</title>
 
   <!--
   <link href="/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -16,7 +16,6 @@
   <link rel="stylesheet" href="/css/style.css"/>
   <!--<link rel="stylesheet" href="/css/jquery-ui.css"/>-->
   <!--<link rel="stylesheet" href="/css/bootstrap/bootstrap-theme.css"/>-->
-
 </head>
 <body>
 <!--<script src="/jquery/dist/jquery.js"></script>-->
@@ -49,14 +48,8 @@
 -->
 <script src="/js/bootstrap/bootstrap.js"></script>
 <script src="/js/jquery/jquery-ui.js"></script>
-<script src="/js/handlebars/handlebars-v4.0.5.js"></script>
 
-<script src="/js/blog.js"></script>
-<script src="/js/ajax_methods.js"></script>
-<script src="/js/js_templates.js"></script>
-<script src="/js/player.js"></script>
-
-{% include '_templates/handlebars.html' %}
+<script src="/js/bundle.js"></script>
 </body>
 </html>
 {% else %}

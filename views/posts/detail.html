@@ -1,0 +1,38 @@
+{% extends '_layouts/page.html' %}
+{% block title %}{{post.name}}{% endblock %}
+
+{% block content %}
+<p>Опубликовано: <time datetime="<%=moment(post.created).format('YYYY-MM-DDThh:mm:ss')%>">{{moment(post.created).fromNow()}}</time>
+  автором <a href="/users/{{post.author}}" data-spa="main">{{post.author}}</a></p>
+
+<article>
+    <p>{{post.text}}</p>
+</article>
+
+<br>
+<div class="container-fluid" id="comments">
+  <div class="container-fluid">
+    {% if post.comments %}
+
+      <h4>Комментарии ({{post.comments.length}}): </h4>
+      {% for comment in post.comments %}
+      <div>
+        <a href="/users/{{comment.author}}" data-spa="main">{{comment.author}}</a> <time datetime="{{moment(comment.created).format('YYYY-MM-DDThh:mm:ss')}}">{{moment(comment.created).fromNow()}}</time>
+        <p>{{comment.text}}</p>
+      </div>
+      {% endfor %}
+    {% else %}
+        <h4>Комментариев пока нет...</h4>
+    {% endif %}
+  </div>
+  <form class="form-horizontal" name="comment-form" method="post">
+    <div class="form-group">
+      <textarea name="text" class="form-control" placeholder="Комментарий"></textarea>
+    </div>
+    <div class="form-group">
+      <button type="submit" class="btn btn-primary">Отправить</button>
+      <div class=".error"></div>
+    </div>
+  </form>
+</div>
+{% endblock %}

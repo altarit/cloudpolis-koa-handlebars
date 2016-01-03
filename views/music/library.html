@@ -1,5 +1,5 @@
 {% extends '_layouts/page.html' %}
-{% block title %}[[songs[0] ? songs[0].name : 'Music']] {% endblock %}
+{% block title %}{{songs[0] ? songs[0].name : 'Music'}} {% endblock %}
 
 
 {% block content %}
@@ -12,18 +12,18 @@
   <div class="row-fluid library">
     <div class="compilations">
       {% for compilation in compilations %}
-      <a href="/music/library/[[compilation.name]]" data-spa="compilationinfo">[[compilation.name]]</a><br>
+      <a href="/music/library/{{compilation.name}}" data-spa="compilationinfo">{{compilation.name}}</a><br>
       {% endfor %}
     </div>
-    <div class="compilationinfo" id="compilationinfo" data-template="hb_songlist">
+    <div class="compilationinfo" id="compilationinfo" data-template="songlist">
       {% if songs[0] %}
         <table class="table">
           {% for song in songs['0'].songs %}
-            <tr data-spa="player" data-href="/artists/[[song.path]]" data-title="[[song.title]]" data-artist="[[song.artist]]" data-album="[[song.album]]">
+            <tr data-spa="player" data-href="/artists/{{song.path}}" data-title="{{song.title}}" data-artist="{{song.artist}}" data-album="{{song.album}}">
               <td><span class="fa fa-play" data-add="play"></span></td>
-              <td>[[song.title]]</td>
-              <td>[[song.artist]]</td>
-              <td>[[song.album]]</td>
+              <td>{{song.title}}</td>
+              <td>{{song.artist}}</td>
+              <td>{{song.album}}</td>
               <td><span class="fa fa-plus" data-add="plus"></span></td>
             </tr>
           {% endfor %}

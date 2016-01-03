@@ -1,0 +1,14 @@
+{% extends '_layouts/page.html' %}
+{% block title %}Posts{% endblock %}
+
+{% block content %}
+<h1>{% block title %}{% endblock %}</h1>
+
+<a href="/posts/create" spa="main">Create</a><br><br>
+
+{% for post in posts %}
+  <a href="/posts/{{post._id}}" data-spa="main">{{post.name}}</a> posted by <a href="/users/{{post.author}}" data-spa="main">{{post.author}}</a>
+  <time datetime="{{moment(post.created).format('YYYY-MM-DDThh:mm:ss')}}">{{moment(post.created).fromNow()}}</time><br>
+  <p>{{post.text}}</p><br>
+{% endfor %}
+{% endblock %}

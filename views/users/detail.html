@@ -1,12 +1,12 @@
 {% extends '_layouts/page.html' %}
-{% block title %}[[profile.username]]{% endblock %}
+{% block title %}{{profile.username}}{% endblock %}
 
 
 {% block content %}
 <h1>{% block title %}{% endblock %}</h1>
 <div class="container-fluid">
   <div>
-    Roles: {% if profile.roles %} {% for role in profile.roles %} [[role+' ']] {% endfor %} {% endif %}
+    Roles: {% if profile.roles %} {% for role in profile.roles %} {{role+' '}} {% endfor %} {% endif %}
   </div>
   <br>
   <form class="form-horizontal" name="user-data" method="post">

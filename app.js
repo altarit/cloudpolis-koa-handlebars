@@ -33,7 +33,7 @@ app.use(session({
 }));
 
 //templates
-swig.setDefaults({ loader: swig.loaders.fs(__dirname + '/views' ), varControls: ['[[', ']]']});
+swig.setDefaults({ loader: swig.loaders.fs(__dirname + '/views' )/*, varControls: ['[[', ']]']*/});
 app.use(views('views', {map: {html: 'swig'}}));
 
 app.use(function *(next) {

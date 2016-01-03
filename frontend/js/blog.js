@@ -1,3 +1,10 @@
+var mp3 = require('./player');
+var methods = require('./ajax_methods');
+var templates = require('./hb-templates.js')
+
+
+module.exports.InfoMessage = InfoMessage;
+
 $(document).ready(function (e) {
   window.app = {};
   window.app.barPlayer = document.getElementsByClassName('bar-player')[0];
@@ -19,7 +26,6 @@ function makeAjaxLink(e) {
   //console.log(container);
   if (!container)
     return;
-  //container = 'main';
   e.preventDefault();
 
   var href = target.href || target.dataset.href;
@@ -43,8 +49,7 @@ function applyTemplate(url, container, template, body) {
     data: body,
     headers: {"X-Expected-Format": "JSON"},
     success: function (json, status) {
-      //$(document.getElementById(container)).html(templates[container](json.data));
-      var templateFunction = Handlebars.compile(document.getElementById(template).innerHTML);
+      var templateFunction = templates[template];
       $(document.getElementById(container)).html(templateFunction(json.data));
       if (json.title) {
         document.title = json.title;
@@ -103,3 +108,13 @@ function InfoMessage(el) {
     el.fadeOut(500);
   }
 }
+
+$(document).on('submit',function(e) {
+  var m = methods[e.target.name];
+  if (m) {
+    m(e.target);
+    return false;
+  }
+  else
+    console.log('methods['+e.target.name+'] is not a function');
+});

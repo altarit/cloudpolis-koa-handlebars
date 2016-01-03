@@ -4,37 +4,3 @@
     {{body}}
   </div>
 </div>
-
-  <script id="hb_songlist" type="text/x-handlebars-template">
-    <ul class="songlist">
-      {{#each songs}}
-      <li data-spa="player" data-href="/artists/{{path}}" data-title="{{title}}" data-artist="{{artist}}" data-album="{{album}}">
-        <div class="track_end"><span class="fa fa-plus" data-add="plus"></span></div>
-        <div class="track_cover"><span class="fa fa-play" data-add="play"></span></div>
-        <div class="track_info">
-          <div>{{title}}</div>
-          <div>{{artist}} - {{album}}</div>
-        </div>
-        <div class="clear_left"></div>
-      </li>
-      {{/each}}
-    </ul>
-  </script>
-
-  <script id="hb_copy_songlist" type="text/x-handlebars-template">
-    <ul class="songlist">
-      {{#each children}}
-      <li data-spa="player" data-href="/artists/{{dataset.href}}" data-title="{{dataset.title}}" data-artist="{{dataset.artist}}" data-album="{{dataset.album}}">
-        <div class="track_end"><span class="fa fa-plus" data-add="plus"></span></div>
-        <div class="track_cover"><span class="fa fa-play" data-add="play"></span></div>
-        <div class="track_info">
-          <div>{{dataset.title}}</div>
-          <div>{{dataset.artist}} - {{dataset.album}}</div>
-        </div>
-        <div class="clear_left"></div>
-      </li>
-      {{/each}}
-    </ul>
-  </script>
-</div>
-{% endautoescape %}

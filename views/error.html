@@ -3,7 +3,7 @@
 {% block content %}
 <h1>{% block title %}{% endblock %}</h1>
 
-<h1>[[error.message]]</h1>
-<h2>[[error.status]]</h2>
-<pre>[[error.stack]]</pre>
+<h1>{{error.message}}</h1>
+<h2>{{error.status}}</h2>
+<pre>{{error.stack}}</pre>
 {% endblock %}
