@@ -1,3 +1,5 @@
+var blog = require('./blog');
+
 module.exports = {
   //posts/-id/library.ejs
   "comment-form": function (target) {
@@ -48,7 +50,8 @@ module.exports = {
       success: function () {
         form.html("Вы вошли в сайт").addClass('alert-success');
         //window.location.href = "/";
-        updateContainer('/', 'main');
+        blog.updateContainer('/', 'main');
+        console.log('123');
       },
       error: function (jqXHR) {
         var error = JSON.parse(jqXHR.responseText);
@@ -56,5 +59,24 @@ module.exports = {
       }
     });
     return false;
+  },
+
+  "form-search" : function(target) {
+    var filter = document.forms['form-search'];
+    var filterOptions = {};
+    try {
+      var fQuery = filter['filter-query'].value;
+      if (fQuery) {
+      new RegExp(fQuery);
+      filterOptions.query = fQuery;
+      }
+
+      //console.log(filterOptions);
+      //updateContainer('/music/search', 'searchsongresult', true, filterOptions);
+      blog.applyTemplate('/music/search', 'compilationinfo', 'songlist', filterOptions);
+    } catch(e) {
+      console.log('Wrong regexp');
+      console.log(e);
+    }
   }
 };

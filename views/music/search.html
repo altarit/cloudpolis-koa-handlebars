@@ -28,7 +28,7 @@
     -->
     <ul class="songlist">
       {% for song in songs %}
-      <li data-spa="player" data-href="/artists/{{song.path}}" data-title="{{song.title}}" data-artist="{{song.artist}}" data-album="{{song.album}}">
+      <li data-spa="player" data-href="/artists/{{song.href}}" data-title="{{song.title}}" data-artist="{{song.artist}}" data-album="{{song.album}}">
         <div class="track_end"><span class="fa fa-plus" data-add="plus"></span></div>
         <div class="track_cover"><span class="fa fa-play" data-add="play"></span></div>
         <div class="track_info">
@@ -43,22 +43,6 @@
 </div>
 
 <script>
-  $('.form-search input').keyup(function(e) {
-    var filter = document.forms['form-search'];
-    var filterOptions = {};
-    try {
-      var fQuery = filter['filter-query'].value;
-      if (fQuery) {
-        new RegExp(fQuery);
-        filterOptions.query = fQuery;
-      }
-
-      //console.log(filterOptions);
-      //updateContainer('/music/search', 'searchsongresult', true, filterOptions);
-      applyTemplate('/music/search', 'compilationinfo', 'songlist', filterOptions);
-    } catch(e) {
-      console.log('Wrong regexp');
-    }
-  });
+  $('.form-search input').keyup(function(e) { $('.form-search').submit() });
 </script>
 {% endblock %}

@@ -1,22 +1,11 @@
 var mp3 = require('./player');
-var methods = require('./ajax_methods');
-var templates = require('./hb-templates.js')
+var templates = require('./hb-templates.js');
 
+module.exports.makeAjaxLink = makeAjaxLink;
+module.exports.applyTemplate = applyTemplate;
+module.exports.updateContainer = updateContainer;
+module.exports.error = new InfoMessage($('.info-error'));
 
-module.exports.InfoMessage = InfoMessage;
-
-$(document).ready(function (e) {
-  window.app = {};
-  window.app.barPlayer = document.getElementsByClassName('bar-player')[0];
-  window.app.currentSong = null;
-  window.app.error = new InfoMessage($('.info-error'));
-
-  $(document.body).click(makeAjaxLink);
-
-  window.addEventListener('popstate', function (e) {
-    updateContainer(location.pathname, 'main', true);
-  });
-});
 
 function makeAjaxLink(e) {
   var target = $(e.target).closest('tr,li,a')[0];
@@ -108,13 +97,3 @@ function InfoMessage(el) {
     el.fadeOut(500);
   }
 }
-
-$(document).on('submit',function(e) {
-  var m = methods[e.target.name];
-  if (m) {
-    m(e.target);
-    return false;
-  }
-  else
-    console.log('methods['+e.target.name+'] is not a function');
-});

@@ -1,8 +1,8 @@
 module.exports = {
-  entry: "./frontend/js/blog",
+  entry: "./frontend/js/entry",
   output: {
     filename: "./public/js/bundle.js",
-    library: "home"
+    library: "entry"
   },
 
   watch: true,
@@ -13,12 +13,12 @@ module.exports = {
 
   devtool: "source-map",
 
+  resolve: {
+    alias: {
+      handlebars: __dirname + "/bower_components/handlebars/handlebars.runtime.js"
+    }
+  },
 
-  /*module: {
-    loaders: [
-      { test: /.\.hbs$/, loader: "handlebars-loader" }
-    ]
-  }*/
   module: {
     loaders: [{ test: /\.hbs$/, loader: "handlebars-loader" }]
   }

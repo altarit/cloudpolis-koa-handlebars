@@ -55,7 +55,7 @@ function extractSongs(callback) {
           artist: currentSong.artist,
           album: currentSong.album,
           compilation: currentCompilation.name,
-          path: currentSong.path
+          href: currentSong.href
         });
         newSong.save();
       });

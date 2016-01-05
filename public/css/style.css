@@ -1,7 +1,8 @@
 /* General */
 
 a {
-    color: #00B7FF;
+  color: #00B7FF;
+
 }
 
 textarea {
@@ -185,6 +186,15 @@ body {
 .playmenu li > a {
   background: none;
   border: none;
+
+}
+
+.pagination>li>a:hover, .pagination>li>a:focus {
+  background-color: transparent;
+}
+
+html {
+  overflow-y: scroll;
 }
 
 .playmenu #volume {

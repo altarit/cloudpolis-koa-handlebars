@@ -1,0 +1,14 @@
+<% if (!part) layout('_layout/page') %>
+<% block('title', 'Admin'); %>
+
+<%requests.forEach(function(req, num) {%>
+<tr>
+  <td>GET</td>
+  <td><a href="<%=req.url%>" data-spa="main"><%=req.url%></a></td>
+  <td><%=req.user%></td>
+  <td><%=req.session%></td>
+  <td><%=req.ip%></td>
+  <td><%=moment(req.created).format('YYYY-MM-DD HH:mm:ss')%></td>
+  <td><%req.body%></td>
+</tr>
+<%});%>

@@ -20,7 +20,7 @@ var schema = new Schema({
     type: String,
     requred: true
   },
-  path: {
+  href: {
     type: String,
     requred: true
   }

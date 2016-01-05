@@ -1,7 +1,8 @@
 var templates_names = [
   'entry_template',
   'copy_songlist',
-  'songlist'
+  'songlist',
+  'song'
 ];
 
 var templates = {};

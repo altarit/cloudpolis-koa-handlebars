@@ -84,7 +84,7 @@ function lookInside(root, dir, fromroot, depth) {
           printLine(el, depth);
 
         var metadata = getTags(fullpath);
-        metadata.path = fromroot + el;
+        metadata.href = fromroot + el;
         if (!metadata.artist) {
           emptyArtist.push(fromroot + el);
           metadata.artist = fromroot.substring(1, fromroot.indexOf('/', 2));

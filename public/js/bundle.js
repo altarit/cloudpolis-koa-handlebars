@@ -1,4 +1,4 @@
-var home =
+var entry =
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -45,25 +45,44 @@ var home =
 /* 0 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var mp3 = __webpack_require__(1);
-	var methods = __webpack_require__(26);
-	var templates = __webpack_require__(2)
-	
-	
-	module.exports.InfoMessage = InfoMessage;
+	var blog = __webpack_require__(1);
+	var methods = __webpack_require__(28);
 	
 	$(document).ready(function (e) {
-	  window.app = {};
-	  window.app.barPlayer = document.getElementsByClassName('bar-player')[0];
-	  window.app.currentSong = null;
-	  window.app.error = new InfoMessage($('.info-error'));
+	  //window.app = {};
+	  //window.app.barPlayer = document.getElementsByClassName('bar-player')[0];
+	  //window.app.currentSong = null;
+	  //window.app.error = new blog.InfoMessage($('.info-error'));
 	
-	  $(document.body).click(makeAjaxLink);
+	  $(document.body).click(blog.makeAjaxLink);
 	
 	  window.addEventListener('popstate', function (e) {
-	    updateContainer(location.pathname, 'main', true);
+	    blog.updateContainer(location.pathname, 'main', true);
 	  });
 	});
+	
+	$(document).on('submit',function(e) {
+	  var m = methods[e.target.name];
+	  if (m) {
+	    m(e.target);
+	    return false;
+	  }
+	  else
+	    console.log('methods['+e.target.name+'] is not a function');
+	});
+
+/***/ },
+/* 1 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var mp3 = __webpack_require__(2);
+	var templates = __webpack_require__(3);
+	
+	module.exports.makeAjaxLink = makeAjaxLink;
+	module.exports.applyTemplate = applyTemplate;
+	module.exports.updateContainer = updateContainer;
+	module.exports.error = new InfoMessage($('.info-error'));
+	
 	
 	function makeAjaxLink(e) {
 	  var target = $(e.target).closest('tr,li,a')[0];
@@ -155,28 +174,19 @@ var home =
 	    el.fadeOut(500);
 	  }
 	}
-	
-	$(document).on('submit',function(e) {
-	  var m = methods[e.target.name];
-	  if (m) {
-	    m(e.target);
-	    return false;
-	  }
-	  else
-	    console.log('methods['+e.target.name+'] is not a function');
-	});
 
 /***/ },
-/* 1 */
+/* 2 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var templates = __webpack_require__(2);
+	var blog = __webpack_require__(1);
+	var templates = __webpack_require__(3);
 	
 	var mp3player = document.getElementById('player');
 	var mp3bar = document.getElementById('musicbar');
 	var mp3time = document.getElementsByClassName('musictime')[0];
 	var mp3length = document.getElementsByClassName('musiclength')[0];
-	
+	var currentSong;
 	
 	
 	var mp3options = {
@@ -225,15 +235,15 @@ var home =
 	    $('#playmenu').stop(true,true).toggle("slide", { direction: "right" }, 200);
 	  },
 	  pl_current: function (e) {
-	    if (!window.app.currentSong)
-	      return app.error.show('Ничего не вопроизводится');
-	    if (!window.app.currentSong.parentNode)
-	      return app.error.show('Нет ссылки на список');
-	    if (!window.app.currentSong.parentNode.children)
-	      return app.error.show('Список пуст');
+	    if (!currentSong)
+	      return blog.error.show('Ничего не вопроизводится');
+	    if (!currentSong.parentNode)
+	      return blog.error.show('Нет ссылки на список');
+	    if (!currentSong.parentNode.children)
+	      return blog.error.show('Список пуст');
 	    var pl = document.getElementById('playlist');
 	    var templateFunction = templates['copy_songlist'];
-	    $(document.getElementById('playlist')).html(templateFunction(window.app.currentSong.parentNode));
+	    $(document.getElementById('playlist')).html(templateFunction(currentSong.parentNode));
 	  },
 	  pl_clean: function (e) {
 	    document.getElementById('playlist').innerHTML = '';
@@ -290,7 +300,7 @@ var home =
 	
 	function playMusic(target, add, order) {
 	  if (!target)
-	    target = window.app.currentSong;
+	    target = currentSong;
 	  if (target == null)
 	    return;
 	
@@ -301,25 +311,25 @@ var home =
 	          var children = target.parentNode.children;
 	          target = children[Math.floor(Math.random() * children.length) % children.length];
 	        } else
-	          return app.error.show('Не удается загрузить исходный список');
+	          return blog.error.show('Не удается загрузить исходный список');
 	      } else {
 	        if (target.nextElementSibling)
 	          target = target.nextElementSibling;
 	        else
-	          return app.error.show('Последний файл в списке');
+	          return blog.error.show('Последний файл в списке');
 	      }
 	    } else if (order == 'prev') {
 	      if (target.previousElementSibling)
 	        target = target.previousElementSibling;
 	      else
-	        return app.error.show('Первый файл в списке');
+	        return blog.error.show('Первый файл в списке');
 	    }
 	  }
 	
 	  if (add == 'plus') {
 	    console.log('plus');
 	  } else /*if (add == 'play' || target.tagName == 'TR')*/ {
-	    window.app.currentSong = target;
+	    currentSong = target;
 	    document.getElementById('player').setAttribute('src', target.dataset.href);
 	    document.getElementById('musicinfo').innerHTML = '<b>' + target.dataset.title + '</b><br>' + target.dataset.artist + ' - ' + target.dataset.album;
 	    mp3bar.style.width = '0%';
@@ -330,31 +340,33 @@ var home =
 	module.exports.playMusic = playMusic;
 
 /***/ },
-/* 2 */
+/* 3 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var templates_names = [
 	  'entry_template',
 	  'copy_songlist',
-	  'songlist'
+	  'songlist',
+	  'song'
 	];
 	
 	var templates = {};
 	templates_names.forEach(function(name) {
-	  templates[name] = __webpack_require__(3)("./" + name + '.hbs');
+	  templates[name] = __webpack_require__(4)("./" + name + '.hbs');
 	});
 	
 	
 	module.exports = templates;
 
 /***/ },
-/* 3 */
+/* 4 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var map = {
-		"./copy_songlist.hbs": 4,
-		"./entry_template.hbs": 24,
-		"./songlist.hbs": 25
+		"./copy_songlist.hbs": 5,
+		"./entry_template.hbs": 25,
+		"./song.hbs": 26,
+		"./songlist.hbs": 27
 	};
 	function webpackContext(req) {
 		return __webpack_require__(webpackContextResolve(req));
@@ -367,32 +379,18 @@ var home =
 	};
 	webpackContext.resolve = webpackContextResolve;
 	module.exports = webpackContext;
-	webpackContext.id = 3;
+	webpackContext.id = 4;
 
 
 /***/ },
-/* 4 */
+/* 5 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Handlebars = __webpack_require__(5);
+	var Handlebars = __webpack_require__(6);
 	module.exports = (Handlebars["default"] || Handlebars).template({"1":function(container,depth0,helpers,partials,data) {
-	    var stack1, alias1=container.lambda, alias2=container.escapeExpression;
-	
-	  return "  <li data-spa=\"player\" data-href=\""
-	    + alias2(alias1(((stack1 = (depth0 != null ? depth0.dataset : depth0)) != null ? stack1.href : stack1), depth0))
-	    + "\" data-title=\""
-	    + alias2(alias1(((stack1 = (depth0 != null ? depth0.dataset : depth0)) != null ? stack1.title : stack1), depth0))
-	    + "\" data-artist=\""
-	    + alias2(alias1(((stack1 = (depth0 != null ? depth0.dataset : depth0)) != null ? stack1.artist : stack1), depth0))
-	    + "\" data-album=\""
-	    + alias2(alias1(((stack1 = (depth0 != null ? depth0.dataset : depth0)) != null ? stack1.album : stack1), depth0))
-	    + "\">\r\n    <div class=\"track_end\"><span class=\"fa fa-plus\" data-add=\"plus\"></span></div>\r\n    <div class=\"track_cover\"><span class=\"fa fa-play\" data-add=\"play\"></span></div>\r\n    <div class=\"track_info\">\r\n      <div>"
-	    + alias2(alias1(((stack1 = (depth0 != null ? depth0.dataset : depth0)) != null ? stack1.title : stack1), depth0))
-	    + "</div>\r\n      <div>"
-	    + alias2(alias1(((stack1 = (depth0 != null ? depth0.dataset : depth0)) != null ? stack1.artist : stack1), depth0))
-	    + " - "
-	    + alias2(alias1(((stack1 = (depth0 != null ? depth0.dataset : depth0)) != null ? stack1.album : stack1), depth0))
-	    + "</div>\r\n    </div>\r\n    <div class=\"clear_left\"></div>\r\n  </li>\r\n";
+	    return "  "
+	    + container.escapeExpression((helpers.song || (depth0 && depth0.song) || helpers.helperMissing).call(depth0 != null ? depth0 : {},(depth0 != null ? depth0.dataset : depth0),{"name":"song","hash":{},"data":data}))
+	    + "\r\n";
 	},"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
 	    var stack1;
 	
@@ -402,16 +400,16 @@ var home =
 	},"useData":true});
 
 /***/ },
-/* 5 */
+/* 6 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// Create a simple path alias to allow browserify to resolve
 	// the runtime on a supported path.
-	module.exports = __webpack_require__(6)['default'];
+	module.exports = __webpack_require__(7)['default'];
 
 
 /***/ },
-/* 6 */
+/* 7 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -425,30 +423,30 @@ var home =
 	
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj['default'] = obj; return newObj; } }
 	
-	var _handlebarsBase = __webpack_require__(7);
+	var _handlebarsBase = __webpack_require__(8);
 	
 	var base = _interopRequireWildcard(_handlebarsBase);
 	
 	// Each of these augment the Handlebars object. No need to setup here.
 	// (This is done to easily share code between commonjs and browse envs)
 	
-	var _handlebarsSafeString = __webpack_require__(21);
+	var _handlebarsSafeString = __webpack_require__(22);
 	
 	var _handlebarsSafeString2 = _interopRequireDefault(_handlebarsSafeString);
 	
-	var _handlebarsException = __webpack_require__(9);
+	var _handlebarsException = __webpack_require__(10);
 	
 	var _handlebarsException2 = _interopRequireDefault(_handlebarsException);
 	
-	var _handlebarsUtils = __webpack_require__(8);
+	var _handlebarsUtils = __webpack_require__(9);
 	
 	var Utils = _interopRequireWildcard(_handlebarsUtils);
 	
-	var _handlebarsRuntime = __webpack_require__(22);
+	var _handlebarsRuntime = __webpack_require__(23);
 	
 	var runtime = _interopRequireWildcard(_handlebarsRuntime);
 	
-	var _handlebarsNoConflict = __webpack_require__(23);
+	var _handlebarsNoConflict = __webpack_require__(24);
 	
 	var _handlebarsNoConflict2 = _interopRequireDefault(_handlebarsNoConflict);
 	
@@ -483,7 +481,7 @@ var home =
 
 
 /***/ },
-/* 7 */
+/* 8 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -494,17 +492,17 @@ var home =
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 	
-	var _utils = __webpack_require__(8);
+	var _utils = __webpack_require__(9);
 	
-	var _exception = __webpack_require__(9);
+	var _exception = __webpack_require__(10);
 	
 	var _exception2 = _interopRequireDefault(_exception);
 	
-	var _helpers = __webpack_require__(10);
+	var _helpers = __webpack_require__(11);
 	
-	var _decorators = __webpack_require__(18);
+	var _decorators = __webpack_require__(19);
 	
-	var _logger = __webpack_require__(20);
+	var _logger = __webpack_require__(21);
 	
 	var _logger2 = _interopRequireDefault(_logger);
 	
@@ -593,7 +591,7 @@ var home =
 
 
 /***/ },
-/* 8 */
+/* 9 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -723,7 +721,7 @@ var home =
 
 
 /***/ },
-/* 9 */
+/* 10 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -769,7 +767,7 @@ var home =
 
 
 /***/ },
-/* 10 */
+/* 11 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -780,31 +778,31 @@ var home =
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 	
-	var _helpersBlockHelperMissing = __webpack_require__(11);
+	var _helpersBlockHelperMissing = __webpack_require__(12);
 	
 	var _helpersBlockHelperMissing2 = _interopRequireDefault(_helpersBlockHelperMissing);
 	
-	var _helpersEach = __webpack_require__(12);
+	var _helpersEach = __webpack_require__(13);
 	
 	var _helpersEach2 = _interopRequireDefault(_helpersEach);
 	
-	var _helpersHelperMissing = __webpack_require__(13);
+	var _helpersHelperMissing = __webpack_require__(14);
 	
 	var _helpersHelperMissing2 = _interopRequireDefault(_helpersHelperMissing);
 	
-	var _helpersIf = __webpack_require__(14);
+	var _helpersIf = __webpack_require__(15);
 	
 	var _helpersIf2 = _interopRequireDefault(_helpersIf);
 	
-	var _helpersLog = __webpack_require__(15);
+	var _helpersLog = __webpack_require__(16);
 	
 	var _helpersLog2 = _interopRequireDefault(_helpersLog);
 	
-	var _helpersLookup = __webpack_require__(16);
+	var _helpersLookup = __webpack_require__(17);
 	
 	var _helpersLookup2 = _interopRequireDefault(_helpersLookup);
 	
-	var _helpersWith = __webpack_require__(17);
+	var _helpersWith = __webpack_require__(18);
 	
 	var _helpersWith2 = _interopRequireDefault(_helpersWith);
 	
@@ -821,14 +819,14 @@ var home =
 
 
 /***/ },
-/* 11 */
+/* 12 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	exports.__esModule = true;
 	
-	var _utils = __webpack_require__(8);
+	var _utils = __webpack_require__(9);
 	
 	exports['default'] = function (instance) {
 	  instance.registerHelper('blockHelperMissing', function (context, options) {
@@ -866,7 +864,7 @@ var home =
 
 
 /***/ },
-/* 12 */
+/* 13 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -876,9 +874,9 @@ var home =
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 	
-	var _utils = __webpack_require__(8);
+	var _utils = __webpack_require__(9);
 	
-	var _exception = __webpack_require__(9);
+	var _exception = __webpack_require__(10);
 	
 	var _exception2 = _interopRequireDefault(_exception);
 	
@@ -966,7 +964,7 @@ var home =
 
 
 /***/ },
-/* 13 */
+/* 14 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -976,7 +974,7 @@ var home =
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 	
-	var _exception = __webpack_require__(9);
+	var _exception = __webpack_require__(10);
 	
 	var _exception2 = _interopRequireDefault(_exception);
 	
@@ -997,14 +995,14 @@ var home =
 
 
 /***/ },
-/* 14 */
+/* 15 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	exports.__esModule = true;
 	
-	var _utils = __webpack_require__(8);
+	var _utils = __webpack_require__(9);
 	
 	exports['default'] = function (instance) {
 	  instance.registerHelper('if', function (conditional, options) {
@@ -1032,7 +1030,7 @@ var home =
 
 
 /***/ },
-/* 15 */
+/* 16 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -1064,7 +1062,7 @@ var home =
 
 
 /***/ },
-/* 16 */
+/* 17 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -1082,14 +1080,14 @@ var home =
 
 
 /***/ },
-/* 17 */
+/* 18 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	exports.__esModule = true;
 	
-	var _utils = __webpack_require__(8);
+	var _utils = __webpack_require__(9);
 	
 	exports['default'] = function (instance) {
 	  instance.registerHelper('with', function (context, options) {
@@ -1121,7 +1119,7 @@ var home =
 
 
 /***/ },
-/* 18 */
+/* 19 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1132,7 +1130,7 @@ var home =
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 	
-	var _decoratorsInline = __webpack_require__(19);
+	var _decoratorsInline = __webpack_require__(20);
 	
 	var _decoratorsInline2 = _interopRequireDefault(_decoratorsInline);
 	
@@ -1143,14 +1141,14 @@ var home =
 
 
 /***/ },
-/* 19 */
+/* 20 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	exports.__esModule = true;
 	
-	var _utils = __webpack_require__(8);
+	var _utils = __webpack_require__(9);
 	
 	exports['default'] = function (instance) {
 	  instance.registerDecorator('inline', function (fn, props, container, options) {
@@ -1178,14 +1176,14 @@ var home =
 
 
 /***/ },
-/* 20 */
+/* 21 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	exports.__esModule = true;
 	
-	var _utils = __webpack_require__(8);
+	var _utils = __webpack_require__(9);
 	
 	var logger = {
 	  methodMap: ['debug', 'info', 'warn', 'error'],
@@ -1231,7 +1229,7 @@ var home =
 
 
 /***/ },
-/* 21 */
+/* 22 */
 /***/ function(module, exports) {
 
 	// Build out our basic SafeString type
@@ -1252,7 +1250,7 @@ var home =
 
 
 /***/ },
-/* 22 */
+/* 23 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1272,15 +1270,15 @@ var home =
 	
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj['default'] = obj; return newObj; } }
 	
-	var _utils = __webpack_require__(8);
+	var _utils = __webpack_require__(9);
 	
 	var Utils = _interopRequireWildcard(_utils);
 	
-	var _exception = __webpack_require__(9);
+	var _exception = __webpack_require__(10);
 	
 	var _exception2 = _interopRequireDefault(_exception);
 	
-	var _base = __webpack_require__(7);
+	var _base = __webpack_require__(8);
 	
 	function checkRevision(compilerInfo) {
 	  var compilerRevision = compilerInfo && compilerInfo[0] || 1,
@@ -1550,7 +1548,7 @@ var home =
 
 
 /***/ },
-/* 23 */
+/* 24 */
 /***/ function(module, exports) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/* global window */
@@ -1577,10 +1575,10 @@ var home =
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 24 */
+/* 25 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Handlebars = __webpack_require__(5);
+	var Handlebars = __webpack_require__(6);
 	module.exports = (Handlebars["default"] || Handlebars).template({"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
 	    var helper, alias1=depth0 != null ? depth0 : {}, alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
 	
@@ -1592,40 +1590,53 @@ var home =
 	},"useData":true});
 
 /***/ },
-/* 25 */
+/* 26 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Handlebars = __webpack_require__(5);
-	module.exports = (Handlebars["default"] || Handlebars).template({"1":function(container,depth0,helpers,partials,data) {
+	var Handlebars = __webpack_require__(6);
+	module.exports = (Handlebars["default"] || Handlebars).template({"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
 	    var helper, alias1=depth0 != null ? depth0 : {}, alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
 	
-	  return "  <li data-spa=\"player\" data-href=\"/artists/"
-	    + alias4(((helper = (helper = helpers.path || (depth0 != null ? depth0.path : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"path","hash":{},"data":data}) : helper)))
+	  return "<li data-spa=\"player\" data-href=\"/artists/"
+	    + alias4(((helper = (helper = helpers.href || (depth0 != null ? depth0.href : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"href","hash":{},"data":data}) : helper)))
 	    + "\" data-title=\""
 	    + alias4(((helper = (helper = helpers.title || (depth0 != null ? depth0.title : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"title","hash":{},"data":data}) : helper)))
 	    + "\" data-artist=\""
 	    + alias4(((helper = (helper = helpers.artist || (depth0 != null ? depth0.artist : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"artist","hash":{},"data":data}) : helper)))
 	    + "\" data-album=\""
 	    + alias4(((helper = (helper = helpers.album || (depth0 != null ? depth0.album : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"album","hash":{},"data":data}) : helper)))
-	    + "\">\r\n    <div class=\"track_end\"><span class=\"fa fa-plus\" data-add=\"plus\"></span></div>\r\n    <div class=\"track_cover\"><span class=\"fa fa-play\" data-add=\"play\"></span></div>\r\n    <div class=\"track_info\">\r\n      <div>"
+	    + "\">\r\n  <div class=\"track_end\"><span class=\"fa fa-plus\" data-add=\"plus\"></span></div>\r\n  <div class=\"track_cover\"><span class=\"fa fa-play\" data-add=\"play\"></span></div>\r\n  <div class=\"track_info\">\r\n    <div>"
 	    + alias4(((helper = (helper = helpers.title || (depth0 != null ? depth0.title : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"title","hash":{},"data":data}) : helper)))
-	    + "</div>\r\n      <div>"
+	    + "</div>\r\n    <div>"
 	    + alias4(((helper = (helper = helpers.artist || (depth0 != null ? depth0.artist : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"artist","hash":{},"data":data}) : helper)))
 	    + " - "
 	    + alias4(((helper = (helper = helpers.album || (depth0 != null ? depth0.album : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"album","hash":{},"data":data}) : helper)))
-	    + "</div>\r\n    </div>\r\n    <div class=\"clear_left\"></div>\r\n  </li>\r\n";
+	    + "</div>\r\n  </div>\r\n  <div class=\"clear_left\"></div>\r\n</li>";
+	},"useData":true});
+
+/***/ },
+/* 27 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Handlebars = __webpack_require__(6);
+	module.exports = (Handlebars["default"] || Handlebars).template({"1":function(container,depth0,helpers,partials,data) {
+	    var stack1;
+	
+	  return ((stack1 = container.invokePartial(__webpack_require__(26),depth0,{"name":"song","data":data,"indent":"    ","helpers":helpers,"partials":partials,"decorators":container.decorators})) != null ? stack1 : "");
 	},"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
 	    var stack1;
 	
 	  return "<ul class=\"songlist\">\r\n"
 	    + ((stack1 = helpers.each.call(depth0 != null ? depth0 : {},(depth0 != null ? depth0.songs : depth0),{"name":"each","hash":{},"fn":container.program(1, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
 	    + "</ul>";
-	},"useData":true});
+	},"usePartial":true,"useData":true});
 
 /***/ },
-/* 26 */
-/***/ function(module, exports) {
+/* 28 */
+/***/ function(module, exports, __webpack_require__) {
 
+	var blog = __webpack_require__(1);
+	
 	module.exports = {
 	  //posts/-id/library.ejs
 	  "comment-form": function (target) {
@@ -1676,7 +1687,8 @@ var home =
 	      success: function () {
 	        form.html("Вы вошли в сайт").addClass('alert-success');
 	        //window.location.href = "/";
-	        updateContainer('/', 'main');
+	        blog.updateContainer('/', 'main');
+	        console.log('123');
 	      },
 	      error: function (jqXHR) {
 	        var error = JSON.parse(jqXHR.responseText);
@@ -1684,6 +1696,25 @@ var home =
 	      }
 	    });
 	    return false;
+	  },
+	
+	  "form-search" : function(target) {
+	    var filter = document.forms['form-search'];
+	    var filterOptions = {};
+	    try {
+	      var fQuery = filter['filter-query'].value;
+	      if (fQuery) {
+	      new RegExp(fQuery);
+	      filterOptions.query = fQuery;
+	      }
+	
+	      //console.log(filterOptions);
+	      //updateContainer('/music/search', 'searchsongresult', true, filterOptions);
+	      blog.applyTemplate('/music/search', 'compilationinfo', 'songlist', filterOptions);
+	    } catch(e) {
+	      console.log('Wrong regexp');
+	      console.log(e);
+	    }
 	  }
 	};
 
