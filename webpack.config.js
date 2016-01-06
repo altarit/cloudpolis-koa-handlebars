@@ -14,10 +14,16 @@ module.exports = {
   devtool: "source-map",
 
   resolve: {
+    root: [__dirname],
+    //modulesDirectories: __dirname+'node_modules',
     alias: {
-      handlebars: __dirname + "/bower_components/handlebars/handlebars.runtime.js"
+      "handlebars-runtime": __dirname + "/bower_components/handlebars/handlebars.runtime.js",
+      "js": "frontend/js",
+      "templates": "frontend/templates"
     }
   },
+
+
 
   module: {
     loaders: [{ test: /\.hbs$/, loader: "handlebars-loader" }]

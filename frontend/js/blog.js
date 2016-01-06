@@ -1,10 +1,12 @@
-var mp3 = require('./player');
-var templates = require('./hb-templates.js');
+var mp3 = require('js/player');
+var templates = require('js/hb-templates');
+
+var errorMessage = new InfoMessage($('.info-error'));
 
 module.exports.makeAjaxLink = makeAjaxLink;
 module.exports.applyTemplate = applyTemplate;
 module.exports.updateContainer = updateContainer;
-module.exports.error = new InfoMessage($('.info-error'));
+module.exports.error = errorMessage;
 
 
 function makeAjaxLink(e) {
@@ -48,7 +50,7 @@ function applyTemplate(url, container, template, body) {
     error: function (data) {
       var error = JSON.parse(data.responseText);
       console.log(data);
-      app.error.show(error.message);
+      errorMessage.show(error.message);
     }
   });
 }
@@ -71,7 +73,7 @@ function updateContainer(url, container, dontSave, body) {
     error: function (data) {
       var error = JSON.parse(data.responseText);
       console.log(data);
-      app.error.show(error.message);
+      errorMessage.show(error.message);
     }
   });
 }

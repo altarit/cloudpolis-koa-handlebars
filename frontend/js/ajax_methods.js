@@ -1,4 +1,4 @@
-var blog = require('./blog');
+var blog = require('js/blog');
 
 module.exports = {
   //posts/-id/library.ejs
@@ -78,5 +78,25 @@ module.exports = {
       console.log('Wrong regexp');
       console.log(e);
     }
+  },
+
+  "add-post-form" :function(target) {
+    var $form = $(target);
+    $.ajax({
+      url: window.location.pathname,
+      method: "POST",
+      data: $form.serialize(),
+      complete: function(e) {
+        console.log('complete');
+      },
+      success: function(e) {
+        console.log('success');
+      },
+      error: function (e) {
+        var error = JSON.parse(e.responseText);
+        $('.error', $form).html(error.message);
+      }
+    });
+    return false;
   }
 };

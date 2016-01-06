@@ -4,7 +4,7 @@
 {% block content %}
 <h1>{% block title %}{% endblock %}</h1>
 
-<a href="/posts/create" spa="main">Create</a><br><br>
+<a href="/posts/create" data-spa="main">Create</a><br><br>
 
 {% for post in posts %}
   <a href="/posts/{{post._id}}" data-spa="main">{{post.name}}</a> posted by <a href="/users/{{post.author}}" data-spa="main">{{post.author}}</a>

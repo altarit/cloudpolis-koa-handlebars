@@ -46,7 +46,7 @@ var entry =
 /***/ function(module, exports, __webpack_require__) {
 
 	var blog = __webpack_require__(1);
-	var methods = __webpack_require__(28);
+	var methods = __webpack_require__(30);
 	
 	$(document).ready(function (e) {
 	  //window.app = {};
@@ -78,10 +78,12 @@ var entry =
 	var mp3 = __webpack_require__(2);
 	var templates = __webpack_require__(3);
 	
+	var errorMessage = new InfoMessage($('.info-error'));
+	
 	module.exports.makeAjaxLink = makeAjaxLink;
 	module.exports.applyTemplate = applyTemplate;
 	module.exports.updateContainer = updateContainer;
-	module.exports.error = new InfoMessage($('.info-error'));
+	module.exports.error = errorMessage;
 	
 	
 	function makeAjaxLink(e) {
@@ -125,7 +127,7 @@ var entry =
 	    error: function (data) {
 	      var error = JSON.parse(data.responseText);
 	      console.log(data);
-	      app.error.show(error.message);
+	      errorMessage.show(error.message);
 	    }
 	  });
 	}
@@ -148,7 +150,7 @@ var entry =
 	    error: function (data) {
 	      var error = JSON.parse(data.responseText);
 	      console.log(data);
-	      app.error.show(error.message);
+	      errorMessage.show(error.message);
 	    }
 	  });
 	}
@@ -363,10 +365,11 @@ var entry =
 /***/ function(module, exports, __webpack_require__) {
 
 	var map = {
+		"./copy_song.hbs": 32,
 		"./copy_songlist.hbs": 5,
-		"./entry_template.hbs": 25,
-		"./song.hbs": 26,
-		"./songlist.hbs": 27
+		"./entry_template.hbs": 27,
+		"./song.hbs": 28,
+		"./songlist.hbs": 29
 	};
 	function webpackContext(req) {
 		return __webpack_require__(webpackContextResolve(req));
@@ -388,16 +391,16 @@ var entry =
 
 	var Handlebars = __webpack_require__(6);
 	module.exports = (Handlebars["default"] || Handlebars).template({"1":function(container,depth0,helpers,partials,data) {
-	    return "  "
-	    + container.escapeExpression((helpers.song || (depth0 && depth0.song) || helpers.helperMissing).call(depth0 != null ? depth0 : {},(depth0 != null ? depth0.dataset : depth0),{"name":"song","hash":{},"data":data}))
-	    + "\r\n";
+	    var stack1;
+	
+	  return ((stack1 = container.invokePartial(__webpack_require__(32),(depth0 != null ? depth0.dataset : depth0),{"name":"$templates/copy_song","data":data,"indent":"    ","helpers":helpers,"partials":partials,"decorators":container.decorators})) != null ? stack1 : "");
 	},"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
 	    var stack1;
 	
 	  return "<ul class=\"songlist\">\r\n"
 	    + ((stack1 = helpers.each.call(depth0 != null ? depth0 : {},(depth0 != null ? depth0.children : depth0),{"name":"each","hash":{},"fn":container.program(1, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
 	    + "</ul>";
-	},"useData":true});
+	},"usePartial":true,"useData":true});
 
 /***/ },
 /* 6 */
@@ -1575,7 +1578,9 @@ var entry =
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 25 */
+/* 25 */,
+/* 26 */,
+/* 27 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Handlebars = __webpack_require__(6);
@@ -1590,7 +1595,7 @@ var entry =
 	},"useData":true});
 
 /***/ },
-/* 26 */
+/* 28 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Handlebars = __webpack_require__(6);
@@ -1615,14 +1620,14 @@ var entry =
 	},"useData":true});
 
 /***/ },
-/* 27 */
+/* 29 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Handlebars = __webpack_require__(6);
 	module.exports = (Handlebars["default"] || Handlebars).template({"1":function(container,depth0,helpers,partials,data) {
 	    var stack1;
 	
-	  return ((stack1 = container.invokePartial(__webpack_require__(26),depth0,{"name":"song","data":data,"indent":"    ","helpers":helpers,"partials":partials,"decorators":container.decorators})) != null ? stack1 : "");
+	  return ((stack1 = container.invokePartial(__webpack_require__(28),depth0,{"name":"$templates/song","data":data,"indent":"    ","helpers":helpers,"partials":partials,"decorators":container.decorators})) != null ? stack1 : "");
 	},"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
 	    var stack1;
 	
@@ -1632,7 +1637,7 @@ var entry =
 	},"usePartial":true,"useData":true});
 
 /***/ },
-/* 28 */
+/* 30 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var blog = __webpack_require__(1);
@@ -1715,8 +1720,54 @@ var entry =
 	      console.log('Wrong regexp');
 	      console.log(e);
 	    }
+	  },
+	
+	  "add-post-form" :function(target) {
+	    var $form = $(target);
+	    $.ajax({
+	      url: window.location.pathname,
+	      method: "POST",
+	      data: $form.serialize(),
+	      complete: function(e) {
+	        console.log('complete');
+	      },
+	      success: function(e) {
+	        console.log('success');
+	      },
+	      error: function (e) {
+	        var error = JSON.parse(e.responseText);
+	        $('.error', $form).html(error.message);
+	      }
+	    });
+	    return false;
 	  }
 	};
+
+/***/ },
+/* 31 */,
+/* 32 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Handlebars = __webpack_require__(6);
+	module.exports = (Handlebars["default"] || Handlebars).template({"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
+	    var helper, alias1=depth0 != null ? depth0 : {}, alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
+	
+	  return "<li data-spa=\"player\" data-href=\""
+	    + alias4(((helper = (helper = helpers.href || (depth0 != null ? depth0.href : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"href","hash":{},"data":data}) : helper)))
+	    + "\" data-title=\""
+	    + alias4(((helper = (helper = helpers.title || (depth0 != null ? depth0.title : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"title","hash":{},"data":data}) : helper)))
+	    + "\" data-artist=\""
+	    + alias4(((helper = (helper = helpers.artist || (depth0 != null ? depth0.artist : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"artist","hash":{},"data":data}) : helper)))
+	    + "\" data-album=\""
+	    + alias4(((helper = (helper = helpers.album || (depth0 != null ? depth0.album : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"album","hash":{},"data":data}) : helper)))
+	    + "\">\r\n  <div class=\"track_end\"><span class=\"fa fa-plus\" data-add=\"plus\"></span></div>\r\n  <div class=\"track_cover\"><span class=\"fa fa-play\" data-add=\"play\"></span></div>\r\n  <div class=\"track_info\">\r\n    <div>"
+	    + alias4(((helper = (helper = helpers.title || (depth0 != null ? depth0.title : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"title","hash":{},"data":data}) : helper)))
+	    + "</div>\r\n    <div>"
+	    + alias4(((helper = (helper = helpers.artist || (depth0 != null ? depth0.artist : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"artist","hash":{},"data":data}) : helper)))
+	    + " - "
+	    + alias4(((helper = (helper = helpers.album || (depth0 != null ? depth0.album : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"album","hash":{},"data":data}) : helper)))
+	    + "</div>\r\n  </div>\r\n  <div class=\"clear_left\"></div>\r\n</li>";
+	},"useData":true});
 
 /***/ }
 /******/ ]);

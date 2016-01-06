@@ -2,6 +2,7 @@ var moment = require('moment');
 var Post = require('models/post').Post;
 var HttpError = require('error').HttpError;
 var PostError = require('models/post').PostError;
+var renderer = require('./renderer');
 
 exports.init = function * (next) {
   var posts = yield Post.find({});
@@ -13,9 +14,12 @@ exports.detail = function *(next) {
   var post = yield Post.findOne({_id: this.params.id});
   //if (err) return next(new HttpError(500, "Ошибка в /users/-id/index.js"));
   if (post) {
+    post.text = yield renderer.transform(post.text);
     yield this.render('posts/detail.html', {locals: this.locals, post: post, moment: moment});
   }
 };
+
+
 
 
 exports.comment = function *(next) {

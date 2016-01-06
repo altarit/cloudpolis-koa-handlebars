@@ -1,5 +1,5 @@
-var blog = require('./blog');
-var methods = require('./ajax_methods');
+var blog = require('js/blog');
+var methods = require('js/ajax_methods');
 
 $(document).ready(function (e) {
   //window.app = {};

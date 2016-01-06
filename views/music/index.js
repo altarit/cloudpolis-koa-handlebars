@@ -54,7 +54,6 @@ exports.search = function *(next) {
     yield this.render('music/search', {locals: this.locals, songs: filteredSongs});
   else
     this.body =  {data: {songs: filteredSongs}};
-
 };
 
 exports.artists = function*(next) {

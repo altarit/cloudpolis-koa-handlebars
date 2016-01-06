@@ -1,5 +1,5 @@
-var blog = require('./blog');
-var templates = require('./hb-templates');
+var blog = require('js/blog');
+var templates = require('js/hb-templates');
 
 var mp3player = document.getElementById('player');
 var mp3bar = document.getElementById('musicbar');

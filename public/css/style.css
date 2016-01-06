@@ -9,6 +9,10 @@ textarea {
   max-width: 100%;
 }
 
+.add-post-form textarea {
+  min-height: 400px;
+}
+
 .navbar-static-top{
   margin-bottom: 0px;
   margin-top: 50px;
@@ -19,6 +23,7 @@ textarea {
 body {
   /*background: #ADEBFF;*/
   background: rgba(188, 222, 242, 0.35);
+  min-width: 360px;
 }
 
 .section-container {

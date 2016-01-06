@@ -44,8 +44,8 @@ schema.statics.create = function *(name, text, author) {
 
   if (!/^.{4,200}$/.test(name))
     throw new PostError('Название поста должно быть от 4 до 200 знаков.');
-  if (text.length < 4 || text.length > 100)
-    throw new PostError('Содержание поста должно быть от 4 до 10000 знаков.');
+  if (text.length < 4 || text.length > 10000)
+    throw new PostError('Содержание поста должно быть от 4 до 10000 знаков. У вас '+text.length);
 
   var post_id = yield new Promise((resolve, reject) => {
     Counter.findByIdAndUpdate({_id: 'post_id'}, {$inc: {seq: 1}}, (err, cnt) => {
