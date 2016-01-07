@@ -2,7 +2,7 @@ var templates_names = [
   'entry_template',
   'copy_songlist',
   'songlist',
-  'song'
+  'partials/song'
 ];
 
 var templates = {};

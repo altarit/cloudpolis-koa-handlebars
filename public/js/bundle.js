@@ -349,7 +349,7 @@ var entry =
 	  'entry_template',
 	  'copy_songlist',
 	  'songlist',
-	  'song'
+	  'partials/song'
 	];
 	
 	var templates = {};
@@ -365,10 +365,10 @@ var entry =
 /***/ function(module, exports, __webpack_require__) {
 
 	var map = {
-		"./copy_song.hbs": 5,
-		"./copy_songlist.hbs": 25,
+		"./copy_songlist.hbs": 5,
 		"./entry_template.hbs": 26,
-		"./song.hbs": 27,
+		"./partials/copy_song.hbs": 25,
+		"./partials/song.hbs": 27,
 		"./songlist.hbs": 28
 	};
 	function webpackContext(req) {
@@ -390,25 +390,17 @@ var entry =
 /***/ function(module, exports, __webpack_require__) {
 
 	var Handlebars = __webpack_require__(6);
-	module.exports = (Handlebars["default"] || Handlebars).template({"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
-	    var helper, alias1=depth0 != null ? depth0 : {}, alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
+	module.exports = (Handlebars["default"] || Handlebars).template({"1":function(container,depth0,helpers,partials,data) {
+	    var stack1;
 	
-	  return "<li data-spa=\"player\" data-href=\""
-	    + alias4(((helper = (helper = helpers.href || (depth0 != null ? depth0.href : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"href","hash":{},"data":data}) : helper)))
-	    + "\" data-title=\""
-	    + alias4(((helper = (helper = helpers.title || (depth0 != null ? depth0.title : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"title","hash":{},"data":data}) : helper)))
-	    + "\" data-artist=\""
-	    + alias4(((helper = (helper = helpers.artist || (depth0 != null ? depth0.artist : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"artist","hash":{},"data":data}) : helper)))
-	    + "\" data-album=\""
-	    + alias4(((helper = (helper = helpers.album || (depth0 != null ? depth0.album : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"album","hash":{},"data":data}) : helper)))
-	    + "\">\r\n  <div class=\"track_end\"><span class=\"fa fa-plus\" data-add=\"plus\"></span></div>\r\n  <div class=\"track_cover\"><span class=\"fa fa-play\" data-add=\"play\"></span></div>\r\n  <div class=\"track_info\">\r\n    <div>"
-	    + alias4(((helper = (helper = helpers.title || (depth0 != null ? depth0.title : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"title","hash":{},"data":data}) : helper)))
-	    + "</div>\r\n    <div>"
-	    + alias4(((helper = (helper = helpers.artist || (depth0 != null ? depth0.artist : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"artist","hash":{},"data":data}) : helper)))
-	    + " - "
-	    + alias4(((helper = (helper = helpers.album || (depth0 != null ? depth0.album : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"album","hash":{},"data":data}) : helper)))
-	    + "</div>\r\n  </div>\r\n  <div class=\"clear_left\"></div>\r\n</li>";
-	},"useData":true});
+	  return ((stack1 = container.invokePartial(__webpack_require__(25),(depth0 != null ? depth0.dataset : depth0),{"name":"$templates/partials/copy_song","data":data,"indent":"    ","helpers":helpers,"partials":partials,"decorators":container.decorators})) != null ? stack1 : "");
+	},"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
+	    var stack1;
+	
+	  return "<ul class=\"songlist\">\r\n"
+	    + ((stack1 = helpers.each.call(depth0 != null ? depth0 : {},(depth0 != null ? depth0.children : depth0),{"name":"each","hash":{},"fn":container.program(1, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+	    + "</ul>";
+	},"usePartial":true,"useData":true});
 
 /***/ },
 /* 6 */
@@ -1590,17 +1582,25 @@ var entry =
 /***/ function(module, exports, __webpack_require__) {
 
 	var Handlebars = __webpack_require__(6);
-	module.exports = (Handlebars["default"] || Handlebars).template({"1":function(container,depth0,helpers,partials,data) {
-	    var stack1;
+	module.exports = (Handlebars["default"] || Handlebars).template({"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
+	    var helper, alias1=depth0 != null ? depth0 : {}, alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
 	
-	  return ((stack1 = container.invokePartial(__webpack_require__(5),(depth0 != null ? depth0.dataset : depth0),{"name":"$templates/copy_song","data":data,"indent":"    ","helpers":helpers,"partials":partials,"decorators":container.decorators})) != null ? stack1 : "");
-	},"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
-	    var stack1;
-	
-	  return "<ul class=\"songlist\">\r\n"
-	    + ((stack1 = helpers.each.call(depth0 != null ? depth0 : {},(depth0 != null ? depth0.children : depth0),{"name":"each","hash":{},"fn":container.program(1, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
-	    + "</ul>";
-	},"usePartial":true,"useData":true});
+	  return "<li data-spa=\"player\" data-href=\""
+	    + alias4(((helper = (helper = helpers.href || (depth0 != null ? depth0.href : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"href","hash":{},"data":data}) : helper)))
+	    + "\" data-title=\""
+	    + alias4(((helper = (helper = helpers.title || (depth0 != null ? depth0.title : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"title","hash":{},"data":data}) : helper)))
+	    + "\" data-artist=\""
+	    + alias4(((helper = (helper = helpers.artist || (depth0 != null ? depth0.artist : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"artist","hash":{},"data":data}) : helper)))
+	    + "\" data-album=\""
+	    + alias4(((helper = (helper = helpers.album || (depth0 != null ? depth0.album : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"album","hash":{},"data":data}) : helper)))
+	    + "\">\r\n  <div class=\"track_end\"><span class=\"fa fa-plus\" data-add=\"plus\"></span></div>\r\n  <div class=\"track_cover\"><span class=\"fa fa-play\" data-add=\"play\"></span></div>\r\n  <div class=\"track_info\">\r\n    <div>"
+	    + alias4(((helper = (helper = helpers.title || (depth0 != null ? depth0.title : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"title","hash":{},"data":data}) : helper)))
+	    + "</div>\r\n    <div>"
+	    + alias4(((helper = (helper = helpers.artist || (depth0 != null ? depth0.artist : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"artist","hash":{},"data":data}) : helper)))
+	    + " - "
+	    + alias4(((helper = (helper = helpers.album || (depth0 != null ? depth0.album : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"album","hash":{},"data":data}) : helper)))
+	    + "</div>\r\n  </div>\r\n  <div class=\"clear_left\"></div>\r\n</li>";
+	},"useData":true});
 
 /***/ },
 /* 26 */
@@ -1650,7 +1650,7 @@ var entry =
 	module.exports = (Handlebars["default"] || Handlebars).template({"1":function(container,depth0,helpers,partials,data) {
 	    var stack1;
 	
-	  return ((stack1 = container.invokePartial(__webpack_require__(27),depth0,{"name":"$templates/song","data":data,"indent":"    ","helpers":helpers,"partials":partials,"decorators":container.decorators})) != null ? stack1 : "");
+	  return ((stack1 = container.invokePartial(__webpack_require__(27),depth0,{"name":"$templates/partials/song","data":data,"indent":"    ","helpers":helpers,"partials":partials,"decorators":container.decorators})) != null ? stack1 : "");
 	},"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
 	    var stack1;
 	

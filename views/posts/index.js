@@ -14,7 +14,7 @@ exports.init = function * (next) {
 
 exports.detail = function *(next) {
   var post = yield Post.findOne({_id: this.params.id});
-  //if (err) return next(new HttpError(500, "������ � /users/-id/index.js"));
+  //if (err) return next(new HttpError(500, "Ошибка в /users/-id/index.js"));
   if (post) {
     post.text = yield renderer.transform(post.text);
     yield this.render('posts/detail.html', {locals: this.locals, post: post, moment: moment});
@@ -47,6 +47,8 @@ exports.addpost = function *(next) {
 exports.create = function *(next) {
   var name = this.request.body.postname.trim();
   var content = this.request.body.postcontent.trim();
+  if (content.match('(<|>)'))
+    throw new HttpError(403, '\'<\',\'>\' не поддерживаются. Используйте &amp;lt; и &amp;gt;');
 
   try {
     var post = yield Post.create(name, content, this.locals.user.username);
