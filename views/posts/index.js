@@ -6,6 +6,8 @@ var renderer = require('./renderer');
 
 exports.init = function * (next) {
   var posts = yield Post.find({});
+  for(var i=0, l=posts.length; i<l; i++)
+    posts[i].text = yield renderer.transform(posts[i].text);
   yield this.render('posts/index.html', {locals: this.locals, posts: posts, moment: moment});
 };
 

@@ -32,30 +32,8 @@ Promise.all(Object.keys(tags).map((tag)=> {
 
 function *transform(source) {
   var regexp = /\[(audio|video)=".*?"\]/g;
-  //var q = 'Friendship [audio="/Aviators/Acoustic - EP/Aviators - Acoustic - EP - 07 Friendship (Extended Acoustic Version).mp3"] Aviators - EP';
-  /*return source.replace(/\[(audio|video)=".*?"\]/g, function(el, tag) {
-   try {
-   var param = el.slice(tag.length + 3, -2);
-   //console.log(el.slice(tag.length + 3, -2));
-   //console.log(tag);
-   //var template = Handlebars.c
-   //return '<b>Strong</b><br>Not strong';
-   //console.log(templateText);
-
-   var song = yield Song.findOne({href: param});
-   var template = handlebars.compile(templates[tag]);
-   return new handlebars.SafeString(template(song));
-   //return new handlebars.SafeString(template({title: 'Friendship', artist: 'Aviators', href: el.slice(tag.length + 3, -2)}));
-   } catch (err) {
-   throw err;
-   //return 'missed';
-   }
-   });*/
-
-
-
   return new Promise((resolve, reject) => {
-    replaceAsync(source, /\[(audio|video)=".*?"\]/g,
+    replaceAsync(source, /\[(audio|video|image)=".*?"\]/g,
       replacePost,
       function (err, result) {
         if (err) reject(err);
@@ -63,36 +41,32 @@ function *transform(source) {
       }
     );
   });
+}
 
-
-  function replacePost(callback, match, tag) {
-    try {
-      console.log(match);
-      var param = match.slice('audio'.length + 3, -2);
-      console.log(param);
-      Song.find({href: param})
-        .then((song) => {
-          console.log(song);
-          if (song && song[0]) {
-            var html = new handlebars.SafeString(templates['audio'](song[0]));
-            callback(null, html);
-          } else {
-            callback(null, '<div>Missed content</div>')
-          }
-        });
-        /*.catch((err) => {
-          console.log('Error Error Error');
-          console.log(err);
-        })*/
-      //return new handlebars.SafeString(template(song));
-      //return new handlebars.SafeString(template({title: 'Friendship', artist: 'Aviators', href: el.slice(tag.length + 3, -2)}));
-    } catch (err) {
-      callback(err);
-      //return 'missed';
-    }
-    //callback(null, );
+function replacePost(callback, match, tag) {
+  try {
+    var param = match.slice(tag.length + 3, -2);
+    replaceFunctions[tag](callback, param);
+  } catch (err) {
+    callback(err);
+    //return 'missed';
   }
 }
+
+var replaceFunctions = {
+  'audio': function(callback, param) {
+    return Song.find({href: param})
+      .then((song) => {
+        //console.log(song);
+        if (song && song[0]) {
+          var html = new handlebars.SafeString(templates['audio'](song[0]));
+          callback(null, html);
+        } else {
+          callback(null, '<div>Missed content</div>')
+        }
+      });
+  }
+};
 
 function *getSongByHref(href) {
   var found = yield Song.find({href: href});
