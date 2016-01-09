@@ -9,6 +9,6 @@
 {% for post in posts %}
   <a href="/posts/{{post._id}}" data-spa="main">{{post.name}}</a> posted by <a href="/users/{{post.author}}" data-spa="main">{{post.author}}</a>
   <time datetime="{{moment(post.created).format('YYYY-MM-DDThh:mm:ss')}}">{{moment(post.created).fromNow()}}</time><br>
-  <div>{{post.text|safe}}</div><br>
+  <div>{{post.rendered|safe}}</div><br>
 {% endfor %}
 {% endblock %}

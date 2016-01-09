@@ -3,20 +3,17 @@ var Post = require('models/post').Post;
 var HttpError = require('error').HttpError;
 var PostError = require('models/post').PostError;
 var renderer = require('./renderer');
+var log = require('lib/log')(module);
 
 exports.init = function * (next) {
-  var posts = yield Post.find({});
-  for(var i=0, l=posts.length; i<l; i++)
-    posts[i].text = yield renderer.transform(posts[i].text);
+  var posts = yield Post.find({}).sort({_id: -1}).exec();
   yield this.render('posts/index.html', {locals: this.locals, posts: posts, moment: moment});
 };
 
 
 exports.detail = function *(next) {
   var post = yield Post.findOne({_id: this.params.id});
-  //if (err) return next(new HttpError(500, "Ошибка в /users/-id/index.js"));
   if (post) {
-    post.text = yield renderer.transform(post.text);
     yield this.render('posts/detail.html', {locals: this.locals, post: post, moment: moment});
   }
 };
@@ -41,7 +38,13 @@ exports.comment = function *(next) {
 
 
 exports.addpost = function *(next) {
-  yield this.render('posts/addpost', {locals: this.locals})
+  if (this.params.id) {
+    var post = yield Post.findOne({_id: this.params.id});
+    if (post)
+      yield this.render('posts/addpost.html', {locals: this.locals, post: post});
+  } else {
+    yield this.render('posts/addpost', {locals: this.locals});
+  }
 };
 
 exports.create = function *(next) {
@@ -49,9 +52,27 @@ exports.create = function *(next) {
   var content = this.request.body.postcontent.trim();
   if (content.match('(<|>)'))
     throw new HttpError(403, '\'<\',\'>\' не поддерживаются. Используйте &amp;lt; и &amp;gt;');
-
+  var rendered = yield renderer.transform(content, this.request);
   try {
-    var post = yield Post.create(name, content, this.locals.user.username);
+    var post = yield Post.create(name, content, this.locals.user.username, null, rendered);
+    yield this.redirect('/posts/'+post._id);
+  } catch (err) {
+    if (err instanceof PostError) {
+      throw new HttpError(403, err.message);
+    } else {
+      throw err;
+    }
+  }
+};
+
+exports.edit = function *(next) {
+  var name = this.request.body.postname.trim();
+  var content = this.request.body.postcontent.trim();
+  if (content.match('(<|>)'))
+    throw new HttpError(403, '\'<\',\'>\' не поддерживаются. Используйте &amp;lt; и &amp;gt;');
+  var rendered = yield renderer.transform(content, this.request);
+  try {
+    var post = yield Post.edit(name, content, this.locals.user.username, null, rendered, this.params.id);
     this.redirect('/posts/'+post._id);
   } catch (err) {
     if (err instanceof PostError) {

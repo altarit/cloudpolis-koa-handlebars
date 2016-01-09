@@ -2,11 +2,12 @@
 {% block title %}{{post.name}}{% endblock %}
 
 {% block content %}
+<h1>{% block title %}{% endblock %}</h1>
 <p>Опубликовано: <time datetime="<%=moment(post.created).format('YYYY-MM-DDThh:mm:ss')%>">{{moment(post.created).fromNow()}}</time>
   автором <a href="/users/{{post.author}}" data-spa="main">{{post.author}}</a></p>
-
+<a href="/posts/{{post._id}}/edit" data-spa="main">Edit</a>
 <article>
-  {{post.text|safe}}
+  {{post.rendered|safe}}
 </article>
 
 <br>

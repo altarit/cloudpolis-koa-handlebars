@@ -24,32 +24,65 @@ var tags = {
   'b': {
     closes: true,
     allowed: ['a']
+  },
+  'i': {
+    closes: true,
+    allowed: ['a']
+  },
+  'br': {
+    closes: false
   }
 };
 var templates = {};
 var regexp;
 
-function *transform(source) {
+function *transform(source, req) {
+  var self = this.request;
+  req.usedTags = [];
   //var regexp = /\[(audio|video|img|a|\/a|b|\/b)(="(.*?)"){0,1}\]/g;
   return new Promise((resolve, reject) => {
     replaceAsync(source, regexp,
-      replacePost,
+      replacePost.bind(req),
       function (err, result) {
         if (err) reject(err);
-        else resolve(result);
+        else {
+          var tagsClosing = req.usedTags.length ? '</'+req.usedTags.reverse().join('')+'>' : '';
+          if (tagsClosing)
+            log.debug(tagsClosing);
+          resolve(result + tagsClosing);
+        }
       }
     );
   });
 }
 
 function replacePost(callback, match, tag, eq, param) {
+  //console.log(match);
   if (eq && !replaceFunctions[tag])
     return callback(null, ' Extra param ');
-  if (tag[0] == '/' || !replaceFunctions[tag])
+  if (tag[0] == '/') {
+    if (this.usedTags.length == 0)
+      return callback(null, 'Extra ' + tag);
+    var prev = this.usedTags[this.usedTags.length-1];
+    if (prev != tag.slice(1)) {
+      this.usedTags = [];
+      return callback(null, '</'+this.usedTags.reverse().join('')+'>Close ' + prev + ' before ' + tag);
+    }
+    this.usedTags.pop();
     return callback(null, '<' + tag + '>');
+  }
+  if (!replaceFunctions[tag]) {
+    if (this.usedTags.length != 0 && !~tags[tag].allowed.indexOf(this.usedTags[this.usedTags.length - 1]))
+      return callback(null, tag + ' in ' + this.usedTags[this.usedTags.length - 1] + ' not allowed');
+    if (tags[tag].closes)
+      this.usedTags.push(tag);
+    return callback(null, '<' + tag + '>');
+  }
   if (!param || ~param.indexOf("\""))
     return callback(null, ' Damaged param ');
 
+  if (tags[tag].closes)
+    this.usedTags.push(tag);
   co(replaceFunctions[tag](param, tag))
     .then(
     (result) => {

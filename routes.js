@@ -18,9 +18,11 @@ module.exports = function(app) {
 
   //Posts
   router.get('/posts', require('./views/posts').init);
-  router.get('/posts/create', require('./views/posts').addpost);
+  router.get('/posts/create', checkAuth, require('./views/posts').addpost);
   router.post('/posts/create', checkAuth, require('./views/posts').create);
   router.get('/posts/:id', require('./views/posts').detail);
+  router.get('/posts/:id/edit', checkAuth, require('./views/posts').addpost);
+  router.post('/posts/:id/edit', checkAuth, require('./views/posts').edit);
   router.post('/posts/:id', checkAuth, require('./views/posts/').comment);
 
   //Music
