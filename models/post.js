@@ -87,6 +87,7 @@ schema.statics.edit = function *(name, text, author, head, rendered, id) {
     throw new PostError('Access denied');
   //log.debug(post);
   post.text = text;
+  post.name = name;
   post.head = head;
   post.rendered = rendered;
   return post.save();

@@ -10,16 +10,30 @@ var rootDir = 'views/posts/tags/';
 var tags = {
   'audio': {
     closes: false,
-    template: true
+    open: function *(param, tag) {
+      var aud = yield Song.find({href: param});
+      if (aud && aud[0]) {
+        var html = new handlebars.SafeString(templates[tag](aud[0]));
+        return html;
+      } else {
+        return '<div>Missed content</div>';
+      }
+    }
   },
   'img': {
     closes: false,
     allowed: ['a'],
-    template: true
+    open: function *(param, tag) {
+      return new handlebars.SafeString(templates[tag]({src: param}));
+    }
   },
   'a': {
     closes: true,
-    template: true
+    open: function *(param, tag) {
+      if (!param || param[0] != '/')
+        return new handlebars.SafeString(templates[tag]({href: '/403'}));
+      return new handlebars.SafeString(templates[tag]({href: param}));
+    }
   },
   'b': {
     closes: true,
@@ -35,7 +49,15 @@ var tags = {
   'imgleft': {
     closes: false,
     allowed: ['a'],
-    template: true
+    open: function *(param, tag) {
+      return new handlebars.SafeString(templates[tag]({src: param}));
+    }
+  },
+  'clear': {
+    closes: false,
+    open: function *(param, tag) {
+      return new handlebars.SafeString(templates[tag]());
+    }
   }
 };
 var templates = {};
@@ -63,7 +85,7 @@ function *transform(source, req) {
 
 function replacePost(callback, match, tag, eq, param) {
   //console.log(match);
-  if (eq && !replaceFunctions[tag])
+  if (eq && !tags[tag].open)
     return callback(null, ' Extra param ');
   if (tag[0] == '/') {
     if (this.usedTags.length == 0)
@@ -76,19 +98,19 @@ function replacePost(callback, match, tag, eq, param) {
     this.usedTags.pop();
     return callback(null, '<' + tag + '>');
   }
-  if (!replaceFunctions[tag]) {
+  if (!tags[tag].open) {
     if (this.usedTags.length != 0 && !~tags[tag].allowed.indexOf(this.usedTags[this.usedTags.length - 1]))
       return callback(null, tag + ' in ' + this.usedTags[this.usedTags.length - 1] + ' not allowed');
     if (tags[tag].closes)
       this.usedTags.push(tag);
     return callback(null, '<' + tag + '>');
   }
-  if (!param || ~param.indexOf("\""))
-    return callback(null, ' Damaged param ');
+  if (param && ~param.indexOf("\""))
+    return callback(null, ' Damaged param ' + ~param.indexOf("\"") + ' ' + param);
 
   if (tags[tag].closes)
     this.usedTags.push(tag);
-  co(replaceFunctions[tag](param, tag))
+  co(tags[tag].open(param, tag))
     .then(
     (result) => {
       callback(null, result);
@@ -99,29 +121,6 @@ function replacePost(callback, match, tag, eq, param) {
     }
   );
 }
-
-var replaceFunctions = {
-  'audio': function *(param, tag) {
-    var aud = yield Song.find({href: param});
-    if (aud && aud[0]) {
-      var html = new handlebars.SafeString(templates[tag](aud[0]));
-      return html;
-    } else {
-      return '<div>Missed content</div>';
-    }
-  },
-  'img': function *(param, tag) {
-    return new handlebars.SafeString(templates[tag]({src: param}));
-  },
-  'imgleft': function *(param, tag) {
-    return new handlebars.SafeString(templates[tag]({src: param}));
-  },
-  'a': function *(param, tag) {
-    if (!param || param[0] != '/')
-      return new handlebars.SafeString(templates[tag]({href: '/403'}));
-    return new handlebars.SafeString(templates[tag]({href: param}));
-  }
-};
 
 function *getSongByHref(href) {
   var found = yield Song.find({href: href});
@@ -135,7 +134,7 @@ Promise.all(Object.keys(tags).forEach((tag)=> {
   regexpStr += tag+'|';
   if (tags[tag].closes)
     regexpStr += '\\/'+tag+'|';
-  if (tags[tag].template)
+  if (tags[tag].open)
     return new Promise(function (resolve, reject) {
       var file = rootDir + tag + '.hbs';
       fs.readFile(file, "utf-8", function (err, text) {

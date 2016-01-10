@@ -42,17 +42,25 @@ body {
   padding: 10px;
 }
 
-.float-left {
+.left {
   float: left;
-  padding: 10px;
+}
+
+div.clear {
+  clear: both;
+  height: 1px;
+  overflow: hidden;
+  font-size: 0pt;
+  margin-top: -1px;
 }
 
 img {
   max-width: 100%;
 }
 
-.float-clear {
-  clear: left;
+img.left {
+  max-width: 100%;
+  padding-right: 8px;
 }
 
 /* Player */
@@ -261,25 +269,28 @@ html {
 }
 
 /* Songlist */
-
 .songlist li {
   display: block;
   list-style-type: none;
   margin-left: -40px;
   cursor: default;
   min-width: 300px;
+  overflow: hidden;
+  white-space: nowrap;
+  height: 50px;
 }
 
 .track_cover {
-  float: left;
+  display: inline-block;
   width: 32px;
   height: 32px;
-  padding-top: 8px;
   text-align: center;
+  padding-top: 8px;
+  vertical-align: top;
 }
 
 .track_info {
-  float: left;
+  display: inline-block;
   overflow: hidden;
   height: 48px;
 }
@@ -293,27 +304,15 @@ html {
 }
 
 .track_end {
+  display: inline-block;
   float: right;
-  clear: left;
 }
 
 .clear_left {
-  clear: left;
+  clear: both;
 }
 
 /* Playlist (based on songlist)*/
-
-/*.playlist li {
-  list-style-type: none;
-  font-size: 12px;
-  padding: 2px 5px 2px 5px;
-  margin-top: 1px;
-  margin-right: 5px;
-  margin-left: 5px;
-  background-color: #1c94c4;
-  border-radius: 2px;
-  cursor: default;
-}*/
 
 .playlist {
   margin-left: 0px;

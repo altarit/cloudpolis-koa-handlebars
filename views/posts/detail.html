@@ -6,10 +6,11 @@
 <p>Опубликовано: <time datetime="<%=moment(post.created).format('YYYY-MM-DDThh:mm:ss')%>">{{moment(post.created).fromNow()}}</time>
   автором <a href="/users/{{post.author}}" data-spa="main">{{post.author}}</a></p>
 <a href="/posts/{{post._id}}/edit" data-spa="main">Edit</a>
+<a href="/posts/{{post._id}}/delete" data-spa="main">Delete</a>
 <article>
   {{post.rendered|safe}}
+  <div class="clear"></div>
 </article>
-
 <br>
 <div class="container-fluid" id="comments">
   <div class="container-fluid">
