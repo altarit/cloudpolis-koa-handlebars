@@ -42,6 +42,19 @@ body {
   padding: 10px;
 }
 
+.float-left {
+  float: left;
+  padding: 10px;
+}
+
+img {
+  max-width: 100%;
+}
+
+.float-clear {
+  clear: left;
+}
+
 /* Player */
 
 .bar-player.navbar-static-top{

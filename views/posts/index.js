@@ -38,7 +38,7 @@ exports.comment = function *(next) {
 
 
 exports.addpost = function *(next) {
-  if (this.params.id) {
+  if (this.params.id && Number.isInteger(+this.params.id)) {
     var post = yield Post.findOne({_id: this.params.id});
     if (post)
       yield this.render('posts/addpost.html', {locals: this.locals, post: post});
@@ -52,7 +52,8 @@ exports.create = function *(next) {
   var content = this.request.body.postcontent.trim();
   if (content.match('(<|>)'))
     throw new HttpError(403, '\'<\',\'>\' не поддерживаются. Используйте &amp;lt; и &amp;gt;');
-  var rendered = yield renderer.transform(content, this.request);
+  var contentWithBr = content.replace(/([^\]])(\r\n)/g, '$1<br>$2');
+  var rendered = yield renderer.transform(contentWithBr, this.request);
   try {
     var post = yield Post.create(name, content, this.locals.user.username, null, rendered);
     yield this.redirect('/posts/'+post._id);
@@ -70,7 +71,8 @@ exports.edit = function *(next) {
   var content = this.request.body.postcontent.trim();
   if (content.match('(<|>)'))
     throw new HttpError(403, '\'<\',\'>\' не поддерживаются. Используйте &amp;lt; и &amp;gt;');
-  var rendered = yield renderer.transform(content, this.request);
+  var contentWithBr = content.replace(/([^\]])(\r\n)/g, '$1<br>$2');
+  var rendered = yield renderer.transform(contentWithBr, this.request);
   try {
     var post = yield Post.edit(name, content, this.locals.user.username, null, rendered, this.params.id);
     this.redirect('/posts/'+post._id);

@@ -61,6 +61,7 @@ schema.statics.create = function *(name, text, author, head, rendered) {
     });
   });
 
+
   if (!post_id) {
     throw new PostError('Пост занят');
   } else {

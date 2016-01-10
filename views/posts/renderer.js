@@ -31,6 +31,11 @@ var tags = {
   },
   'br': {
     closes: false
+  },
+  'imgleft': {
+    closes: false,
+    allowed: ['a'],
+    template: true
   }
 };
 var templates = {};
@@ -106,6 +111,9 @@ var replaceFunctions = {
     }
   },
   'img': function *(param, tag) {
+    return new handlebars.SafeString(templates[tag]({src: param}));
+  },
+  'imgleft': function *(param, tag) {
     return new handlebars.SafeString(templates[tag]({src: param}));
   },
   'a': function *(param, tag) {
