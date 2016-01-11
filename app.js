@@ -1,3 +1,14 @@
+var cluster = require('cluster');
+
+if (cluster.isMaster) {
+  //var cpuCount = require('os').cpus().length;
+  var cpuCount = 1;
+  for (var i = 0; i < cpuCount; i += 1) {
+    cluster.fork();
+  }
+  return;
+}
+
 var koa = require('koa'),
   path = require('path'),
   views = require('koa-views'),
