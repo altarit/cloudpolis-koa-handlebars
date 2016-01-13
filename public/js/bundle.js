@@ -49,11 +49,6 @@ var entry =
 	var methods = __webpack_require__(29);
 	
 	$(document).ready(function (e) {
-	  //window.app = {};
-	  //window.app.barPlayer = document.getElementsByClassName('bar-player')[0];
-	  //window.app.currentSong = null;
-	  //window.app.error = new blog.InfoMessage($('.info-error'));
-	
 	  $(document.body).click(blog.makeAjaxLink);
 	
 	  window.addEventListener('popstate', function (e) {
@@ -85,13 +80,12 @@ var entry =
 	module.exports.updateContainer = updateContainer;
 	module.exports.error = errorMessage;
 	
-	
+	//
 	function makeAjaxLink(e) {
 	  var target = $(e.target).closest('tr,li,a')[0];
 	  if (!target)
 	    return;
 	  var container = target.getAttribute('data-spa');
-	  //console.log(container);
 	  if (!container)
 	    return;
 	  e.preventDefault();
@@ -99,8 +93,7 @@ var entry =
 	  var href = target.href || target.dataset.href;
 	
 	  if (container == 'player') {
-	    var add = e.target.dataset.add;
-	    mp3.playMusic(target, add);
+	    mp3.hanldeSpaClick(target, e.target.dataset);
 	  } else if (container == 'main') {
 	    //updateContainer.apply(this, [target.href, container]);
 	    updateContainer(href, container);
@@ -186,6 +179,7 @@ var entry =
 	
 	var mp3player = document.getElementById('player');
 	var mp3bar = document.getElementById('musicbar');
+	var mp3load = document.getElementById('musicloadbar');
 	var mp3time = document.getElementsByClassName('musictime')[0];
 	var mp3length = document.getElementsByClassName('musiclength')[0];
 	var currentSong;
@@ -300,6 +294,27 @@ var entry =
 	});
 	
 	
+	player.addEventListener('progress', function () {
+	  var len = mp3player.buffered.length;
+	
+	  if (mp3player.buffered.length) {
+	    var start = mp3player.buffered.start(len - 1) / mp3player.duration;
+	    var end = mp3player.buffered.end(len - 1) / mp3player.duration;
+	    //                                                       hhmp3load.style.left = start * 100 + '%';
+	    mp3load.style.width = end * 100 + '%';
+	  } else {
+	    mp3load.style.left = 0;
+	    mp3load.style.width = 0;
+	  }
+	  /*
+	   var ln = player.buffered.length;
+	   for(var i=0; i<ln; i++) {
+	   console.log(player.buffered.start(i)+' - '+player.buffered.end(i));
+	   }
+	   */
+	});
+	
+	
 	function playMusic(target, add, order) {
 	  if (!target)
 	    target = currentSong;
@@ -335,11 +350,17 @@ var entry =
 	    document.getElementById('player').setAttribute('src', target.dataset.href);
 	    document.getElementById('musicinfo').innerHTML = '<b>' + target.dataset.title + '</b><br>' + target.dataset.artist + ' - ' + target.dataset.album;
 	    mp3bar.style.width = '0%';
+	    mp3load.style.left = 0;
+	    mp3load.style.width = 0;
 	    startPlaying();
 	  }
 	}
 	
-	module.exports.playMusic = playMusic;
+	function hanldeSpaClick(target, options) {
+	  playMusic(target, options);
+	}
+	
+	module.exports.hanldeSpaClick = hanldeSpaClick;
 
 /***/ },
 /* 3 */

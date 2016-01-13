@@ -3,6 +3,7 @@ var templates = require('js/hb-templates');
 
 var mp3player = document.getElementById('player');
 var mp3bar = document.getElementById('musicbar');
+var mp3load = document.getElementById('musicloadbar');
 var mp3time = document.getElementsByClassName('musictime')[0];
 var mp3length = document.getElementsByClassName('musiclength')[0];
 var currentSong;
@@ -117,6 +118,27 @@ player.addEventListener('timeupdate', function () {
 });
 
 
+player.addEventListener('progress', function () {
+  var len = mp3player.buffered.length;
+
+  if (mp3player.buffered.length) {
+    var start = mp3player.buffered.start(len - 1) / mp3player.duration;
+    var end = mp3player.buffered.end(len - 1) / mp3player.duration;
+    //                                                       hhmp3load.style.left = start * 100 + '%';
+    mp3load.style.width = end * 100 + '%';
+  } else {
+    mp3load.style.left = 0;
+    mp3load.style.width = 0;
+  }
+  /*
+   var ln = player.buffered.length;
+   for(var i=0; i<ln; i++) {
+   console.log(player.buffered.start(i)+' - '+player.buffered.end(i));
+   }
+   */
+});
+
+
 function playMusic(target, add, order) {
   if (!target)
     target = currentSong;
@@ -152,8 +174,14 @@ function playMusic(target, add, order) {
     document.getElementById('player').setAttribute('src', target.dataset.href);
     document.getElementById('musicinfo').innerHTML = '<b>' + target.dataset.title + '</b><br>' + target.dataset.artist + ' - ' + target.dataset.album;
     mp3bar.style.width = '0%';
+    mp3load.style.left = 0;
+    mp3load.style.width = 0;
     startPlaying();
   }
 }
 
-module.exports.playMusic = playMusic;
+function hanldeSpaClick(target, options) {
+  playMusic(target, options);
+}
+
+module.exports.hanldeSpaClick = hanldeSpaClick;

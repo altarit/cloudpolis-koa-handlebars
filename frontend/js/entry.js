@@ -2,11 +2,6 @@ var blog = require('js/blog');
 var methods = require('js/ajax_methods');
 
 $(document).ready(function (e) {
-  //window.app = {};
-  //window.app.barPlayer = document.getElementsByClassName('bar-player')[0];
-  //window.app.currentSong = null;
-  //window.app.error = new blog.InfoMessage($('.info-error'));
-
   $(document.body).click(blog.makeAjaxLink);
 
   window.addEventListener('popstate', function (e) {

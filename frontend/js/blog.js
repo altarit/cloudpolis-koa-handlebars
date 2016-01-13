@@ -8,13 +8,12 @@ module.exports.applyTemplate = applyTemplate;
 module.exports.updateContainer = updateContainer;
 module.exports.error = errorMessage;
 
-
+//
 function makeAjaxLink(e) {
   var target = $(e.target).closest('tr,li,a')[0];
   if (!target)
     return;
   var container = target.getAttribute('data-spa');
-  //console.log(container);
   if (!container)
     return;
   e.preventDefault();
@@ -22,8 +21,7 @@ function makeAjaxLink(e) {
   var href = target.href || target.dataset.href;
 
   if (container == 'player') {
-    var add = e.target.dataset.add;
-    mp3.playMusic(target, add);
+    mp3.hanldeSpaClick(target, e.target.dataset);
   } else if (container == 'main') {
     //updateContainer.apply(this, [target.href, container]);
     updateContainer(href, container);

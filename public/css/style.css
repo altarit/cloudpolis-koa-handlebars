@@ -93,27 +93,51 @@ img.left {
   height: 40px;
   position: relative;
   background: #ADEBFF;
+  overflow: hidden;
 }
 
-.musicinfo {
+
+#musicloadbar {
+  left: 0px;
+  -webkit-transition: none;
+  -moz-transition: none;
+  -o-transition: none;
+  transition: none;
+  height: 2px;
+  left: 30%;
+  bottom: 0px;
+  position: absolute;
+}
+
+#musicbar {
+  left: 0px;
+  -webkit-transition: none;
+  -moz-transition: none;
+  -o-transition: none;
+  transition: none;
+  height: 100%;
+  position: absolute;
+}
+
+#musicinfo {
   padding-top: 5px;
   padding-left: 15px;
-  height: 35px;
+  height: 40px;
+  position: absolute;
 }
 
-.musictime {
-  padding-top: 2px;
-  height: 35px;
-  float: right;
-  margin-right: 5px;
+div.musictime {
   width: 35px;
+  right: 3px;
+  top: 3px;
+  position: absolute;
 }
 
-.musiclength {
-  padding-top: 22px;
-  height: 35px;
-  float: right;
-  margin-right: -35px;
+div.musiclength {
+  width: 35px;
+  right: 3px;
+  top: 22px;
+  position: absolute;
 }
 
 
@@ -127,13 +151,6 @@ img.left {
   float: left;
   margin-right: 0px;
   margin-left: 0px;
-}
-
-#musicbar {
-  -webkit-transition: none;
-  -moz-transition: none;
-  -o-transition: none;
-  transition: none;
 }
 
 /* Playlist */

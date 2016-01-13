@@ -17,17 +17,11 @@
     </div>
     <div class="compilationinfo" id="compilationinfo" data-template="songlist">
       {% if songs[0] %}
-        <table class="table">
-          {% for song in songs['0'].songs %}
-            <tr data-spa="player" data-href="/artists/{{song.href}}" data-title="{{song.title}}" data-artist="{{song.artist}}" data-album="{{song.album}}">
-              <td><span class="fa fa-play" data-add="play"></span></td>
-              <td>{{song.title}}</td>
-              <td>{{song.artist}}</td>
-              <td>{{song.album}}</td>
-              <td><span class="fa fa-plus" data-add="plus"></span></td>
-            </tr>
-          {% endfor %}
-        </table>
+      <ul class="songlist">
+        {% for song in songs['0'].songs %}
+          {% include 'music/_song.html' %}
+        {% endfor %}
+      </ul>
       {% else %}
         <p>Select compilation for load songlist.</p>
       {% endif %}
