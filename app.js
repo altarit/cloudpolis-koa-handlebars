@@ -29,7 +29,8 @@ var Compilation = require('models/user').User;
 
 //koa
 var app = module.exports = koa();
-app.use(koalogger());
+app.use(require('middlewares/logRequest'));
+//app.use(koalogger());
 app.use(compression());
 app.use(bodyParser());
 
@@ -57,7 +58,6 @@ app.use(function *(next) {
 app.use(require('middlewares/sendHttpError'));
 app.use(require('middlewares/loadUser'));
 app.use(require('middlewares/setParams'));
-app.use(require('middlewares/logRequest'));
 
 
 

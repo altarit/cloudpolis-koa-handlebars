@@ -73,7 +73,7 @@ function *transform(source, req) {
       function (err, result) {
         if (err) reject(err);
         else {
-          var tagsClosing = req.usedTags.length ? '</'+req.usedTags.reverse().join('')+'>' : '';
+          var tagsClosing = req.usedTags.length ? '</' + req.usedTags.reverse().join('') + '>' : '';
           if (tagsClosing)
             log.debug(tagsClosing);
           resolve(result + tagsClosing);
@@ -90,10 +90,10 @@ function replacePost(callback, match, tag, eq, param) {
   if (tag[0] == '/') {
     if (this.usedTags.length == 0)
       return callback(null, 'Extra ' + tag);
-    var prev = this.usedTags[this.usedTags.length-1];
+    var prev = this.usedTags[this.usedTags.length - 1];
     if (prev != tag.slice(1)) {
       this.usedTags = [];
-      return callback(null, '</'+this.usedTags.reverse().join('')+'>Close ' + prev + ' before ' + tag);
+      return callback(null, '</' + this.usedTags.reverse().join('') + '>Close ' + prev + ' before ' + tag);
     }
     this.usedTags.pop();
     return callback(null, '<' + tag + '>');
@@ -130,32 +130,31 @@ function *getSongByHref(href) {
 
 //load templates
 regexpStr = '';
-Promise.all(Object.keys(tags).forEach((tag)=> {
-  regexpStr += tag+'|';
-  if (tags[tag].closes)
-    regexpStr += '\\/'+tag+'|';
-  if (tags[tag].open)
-    return new Promise(function (resolve, reject) {
-      var file = rootDir + tag + '.hbs';
-      fs.readFile(file, "utf-8", function (err, text) {
-        if (err) return reject(err);
-        resolve(text);
-      });
-    })
-      .then((text) => {
-        //console.log(text);
-        return handlebars.compile(text);
+Promise.all(Object.keys(tags).forEach(
+  (tag)=> {
+    regexpStr += tag + '|';
+    if (tags[tag].closes)
+      regexpStr += '\\/' + tag + '|';
+    if (tags[tag].open)
+      return new Promise(function (resolve, reject) {
+        var file = rootDir + tag + '.hbs';
+        fs.readFile(file, "utf-8", function (err, text) {
+          if (err) return reject(err);
+          resolve(text);
+        });
       })
-      .then((tmpl) => {
-        templates[tag] = tmpl;
-      })
-}))
+        .then((text) => {
+          //console.log(text);
+          return handlebars.compile(text);
+        })
+        .then((tmpl) => {
+          templates[tag] = tmpl;
+        })
+  }))
   .then((result) => {
     console.log('Templates has been loaded ');
   });
 regexp = new RegExp('\\[(' + regexpStr.slice(0, -1) + ')(="(.*?)"){0,1}\\]', 'g');
-
-
 
 
 module.exports.transform = transform;

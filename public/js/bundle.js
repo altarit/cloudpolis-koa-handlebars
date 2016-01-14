@@ -46,7 +46,7 @@ var entry =
 /***/ function(module, exports, __webpack_require__) {
 
 	var blog = __webpack_require__(1);
-	var methods = __webpack_require__(29);
+	var methods = __webpack_require__(30);
 	
 	$(document).ready(function (e) {
 	  $(document.body).click(blog.makeAjaxLink);
@@ -71,16 +71,14 @@ var entry =
 /***/ function(module, exports, __webpack_require__) {
 
 	var mp3 = __webpack_require__(2);
-	var templates = __webpack_require__(3);
-	
-	var errorMessage = new InfoMessage($('.info-error'));
+	var templates = __webpack_require__(4);
+	var info = __webpack_require__(3);
 	
 	module.exports.makeAjaxLink = makeAjaxLink;
 	module.exports.applyTemplate = applyTemplate;
 	module.exports.updateContainer = updateContainer;
-	module.exports.error = errorMessage;
 	
-	//
+	//handle click on a link
 	function makeAjaxLink(e) {
 	  var target = $(e.target).closest('tr,li,a')[0];
 	  if (!target)
@@ -95,7 +93,6 @@ var entry =
 	  if (container == 'player') {
 	    mp3.hanldeSpaClick(target, e.target.dataset);
 	  } else if (container == 'main') {
-	    //updateContainer.apply(this, [target.href, container]);
 	    updateContainer(href, container);
 	  } else {
 	    var template = document.getElementById(container).getAttribute('data-template');
@@ -120,7 +117,7 @@ var entry =
 	    error: function (data) {
 	      var error = JSON.parse(data.responseText);
 	      console.log(data);
-	      errorMessage.show(error.message);
+	      info.error.show(error.message);
 	    }
 	  });
 	}
@@ -132,8 +129,6 @@ var entry =
 	    method: "GET",
 	    data: body,
 	    success: function (data, status) {
-	      //console.log(container);
-	      //console.log(document.getElementById(container));
 	      $(document.getElementById(container)).html(data);
 	      var title = data.substring(6, data.indexOf('/') - 1); //cutting title from <h1>title</h1>
 	      document.title = title;
@@ -143,39 +138,19 @@ var entry =
 	    error: function (data) {
 	      var error = JSON.parse(data.responseText);
 	      console.log(data);
-	      errorMessage.show(error.message);
+	      info.error.show(error.message);
 	    }
 	  });
 	}
 	
-	
-	function InfoMessage(el) {
-	  var el = el;
-	  var timer = null;
-	
-	  this.show = function (text) {
-	    if (timer)
-	      clearTimeout(timer);
-	    el.fadeIn(500);
-	    el.html(text);
-	    timer = setTimeout(function () {
-	      el.fadeOut(500)
-	    }, 3000);
-	  };
-	
-	  this.hide = function () {
-	    if (timer)
-	      clearTimeout(timer);
-	    el.fadeOut(500);
-	  }
-	}
+
 
 /***/ },
 /* 2 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var blog = __webpack_require__(1);
-	var templates = __webpack_require__(3);
+	var info = __webpack_require__(3);
+	var templates = __webpack_require__(4);
 	
 	var mp3player = document.getElementById('player');
 	var mp3bar = document.getElementById('musicbar');
@@ -232,11 +207,11 @@ var entry =
 	  },
 	  pl_current: function (e) {
 	    if (!currentSong)
-	      return blog.error.show('Ничего не вопроизводится');
+	      return info.error.show('Ничего не вопроизводится');
 	    if (!currentSong.parentNode)
-	      return blog.error.show('Нет ссылки на список');
+	      return info.error.show('Нет ссылки на список');
 	    if (!currentSong.parentNode.children)
-	      return blog.error.show('Список пуст');
+	      return info.error.show('Список пуст');
 	    var pl = document.getElementById('playlist');
 	    var templateFunction = templates['copy_songlist'];
 	    $(document.getElementById('playlist')).html(templateFunction(currentSong.parentNode));
@@ -328,18 +303,18 @@ var entry =
 	          var children = target.parentNode.children;
 	          target = children[Math.floor(Math.random() * children.length) % children.length];
 	        } else
-	          return blog.error.show('Не удается загрузить исходный список');
+	          return info.error.show('Не удается загрузить исходный список');
 	      } else {
 	        if (target.nextElementSibling)
 	          target = target.nextElementSibling;
 	        else
-	          return blog.error.show('Последний файл в списке');
+	          return info.error.show('Последний файл в списке');
 	      }
 	    } else if (order == 'prev') {
 	      if (target.previousElementSibling)
 	        target = target.previousElementSibling;
 	      else
-	        return blog.error.show('Первый файл в списке');
+	        return info.error.show('Первый файл в списке');
 	    }
 	  }
 	
@@ -364,6 +339,33 @@ var entry =
 
 /***/ },
 /* 3 */
+/***/ function(module, exports) {
+
+	module.exports.error =  new InfoMessage($('.info-error'));
+	
+	function InfoMessage(el) {
+	  var el = el;
+	  var timer = null;
+	
+	  this.show = function (text) {
+	    if (timer)
+	      clearTimeout(timer);
+	    el.fadeIn(500);
+	    el.html(text);
+	    timer = setTimeout(function () {
+	      el.fadeOut(500)
+	    }, 3000);
+	  };
+	
+	  this.hide = function () {
+	    if (timer)
+	      clearTimeout(timer);
+	    el.fadeOut(500);
+	  }
+	}
+
+/***/ },
+/* 4 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var templates_names = [
@@ -375,22 +377,22 @@ var entry =
 	
 	var templates = {};
 	templates_names.forEach(function(name) {
-	  templates[name] = __webpack_require__(4)("./" + name + '.hbs');
+	  templates[name] = __webpack_require__(5)("./" + name + '.hbs');
 	});
 	
 	
 	module.exports = templates;
 
 /***/ },
-/* 4 */
+/* 5 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var map = {
-		"./copy_songlist.hbs": 5,
-		"./entry_template.hbs": 26,
-		"./partials/copy_song.hbs": 25,
-		"./partials/song.hbs": 27,
-		"./songlist.hbs": 28
+		"./copy_songlist.hbs": 6,
+		"./entry_template.hbs": 27,
+		"./partials/copy_song.hbs": 26,
+		"./partials/song.hbs": 28,
+		"./songlist.hbs": 29
 	};
 	function webpackContext(req) {
 		return __webpack_require__(webpackContextResolve(req));
@@ -403,18 +405,18 @@ var entry =
 	};
 	webpackContext.resolve = webpackContextResolve;
 	module.exports = webpackContext;
-	webpackContext.id = 4;
+	webpackContext.id = 5;
 
 
 /***/ },
-/* 5 */
+/* 6 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Handlebars = __webpack_require__(6);
+	var Handlebars = __webpack_require__(7);
 	module.exports = (Handlebars["default"] || Handlebars).template({"1":function(container,depth0,helpers,partials,data) {
 	    var stack1;
 	
-	  return ((stack1 = container.invokePartial(__webpack_require__(25),(depth0 != null ? depth0.dataset : depth0),{"name":"$templates/partials/copy_song","data":data,"indent":"    ","helpers":helpers,"partials":partials,"decorators":container.decorators})) != null ? stack1 : "");
+	  return ((stack1 = container.invokePartial(__webpack_require__(26),(depth0 != null ? depth0.dataset : depth0),{"name":"$templates/partials/copy_song","data":data,"indent":"    ","helpers":helpers,"partials":partials,"decorators":container.decorators})) != null ? stack1 : "");
 	},"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
 	    var stack1;
 	
@@ -424,16 +426,16 @@ var entry =
 	},"usePartial":true,"useData":true});
 
 /***/ },
-/* 6 */
+/* 7 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// Create a simple path alias to allow browserify to resolve
 	// the runtime on a supported path.
-	module.exports = __webpack_require__(7)['default'];
+	module.exports = __webpack_require__(8)['default'];
 
 
 /***/ },
-/* 7 */
+/* 8 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -447,30 +449,30 @@ var entry =
 	
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj['default'] = obj; return newObj; } }
 	
-	var _handlebarsBase = __webpack_require__(8);
+	var _handlebarsBase = __webpack_require__(9);
 	
 	var base = _interopRequireWildcard(_handlebarsBase);
 	
 	// Each of these augment the Handlebars object. No need to setup here.
 	// (This is done to easily share code between commonjs and browse envs)
 	
-	var _handlebarsSafeString = __webpack_require__(22);
+	var _handlebarsSafeString = __webpack_require__(23);
 	
 	var _handlebarsSafeString2 = _interopRequireDefault(_handlebarsSafeString);
 	
-	var _handlebarsException = __webpack_require__(10);
+	var _handlebarsException = __webpack_require__(11);
 	
 	var _handlebarsException2 = _interopRequireDefault(_handlebarsException);
 	
-	var _handlebarsUtils = __webpack_require__(9);
+	var _handlebarsUtils = __webpack_require__(10);
 	
 	var Utils = _interopRequireWildcard(_handlebarsUtils);
 	
-	var _handlebarsRuntime = __webpack_require__(23);
+	var _handlebarsRuntime = __webpack_require__(24);
 	
 	var runtime = _interopRequireWildcard(_handlebarsRuntime);
 	
-	var _handlebarsNoConflict = __webpack_require__(24);
+	var _handlebarsNoConflict = __webpack_require__(25);
 	
 	var _handlebarsNoConflict2 = _interopRequireDefault(_handlebarsNoConflict);
 	
@@ -505,7 +507,7 @@ var entry =
 
 
 /***/ },
-/* 8 */
+/* 9 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -516,17 +518,17 @@ var entry =
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 	
-	var _utils = __webpack_require__(9);
+	var _utils = __webpack_require__(10);
 	
-	var _exception = __webpack_require__(10);
+	var _exception = __webpack_require__(11);
 	
 	var _exception2 = _interopRequireDefault(_exception);
 	
-	var _helpers = __webpack_require__(11);
+	var _helpers = __webpack_require__(12);
 	
-	var _decorators = __webpack_require__(19);
+	var _decorators = __webpack_require__(20);
 	
-	var _logger = __webpack_require__(21);
+	var _logger = __webpack_require__(22);
 	
 	var _logger2 = _interopRequireDefault(_logger);
 	
@@ -615,7 +617,7 @@ var entry =
 
 
 /***/ },
-/* 9 */
+/* 10 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -745,7 +747,7 @@ var entry =
 
 
 /***/ },
-/* 10 */
+/* 11 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -791,7 +793,7 @@ var entry =
 
 
 /***/ },
-/* 11 */
+/* 12 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -802,31 +804,31 @@ var entry =
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 	
-	var _helpersBlockHelperMissing = __webpack_require__(12);
+	var _helpersBlockHelperMissing = __webpack_require__(13);
 	
 	var _helpersBlockHelperMissing2 = _interopRequireDefault(_helpersBlockHelperMissing);
 	
-	var _helpersEach = __webpack_require__(13);
+	var _helpersEach = __webpack_require__(14);
 	
 	var _helpersEach2 = _interopRequireDefault(_helpersEach);
 	
-	var _helpersHelperMissing = __webpack_require__(14);
+	var _helpersHelperMissing = __webpack_require__(15);
 	
 	var _helpersHelperMissing2 = _interopRequireDefault(_helpersHelperMissing);
 	
-	var _helpersIf = __webpack_require__(15);
+	var _helpersIf = __webpack_require__(16);
 	
 	var _helpersIf2 = _interopRequireDefault(_helpersIf);
 	
-	var _helpersLog = __webpack_require__(16);
+	var _helpersLog = __webpack_require__(17);
 	
 	var _helpersLog2 = _interopRequireDefault(_helpersLog);
 	
-	var _helpersLookup = __webpack_require__(17);
+	var _helpersLookup = __webpack_require__(18);
 	
 	var _helpersLookup2 = _interopRequireDefault(_helpersLookup);
 	
-	var _helpersWith = __webpack_require__(18);
+	var _helpersWith = __webpack_require__(19);
 	
 	var _helpersWith2 = _interopRequireDefault(_helpersWith);
 	
@@ -843,14 +845,14 @@ var entry =
 
 
 /***/ },
-/* 12 */
+/* 13 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	exports.__esModule = true;
 	
-	var _utils = __webpack_require__(9);
+	var _utils = __webpack_require__(10);
 	
 	exports['default'] = function (instance) {
 	  instance.registerHelper('blockHelperMissing', function (context, options) {
@@ -888,7 +890,7 @@ var entry =
 
 
 /***/ },
-/* 13 */
+/* 14 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -898,9 +900,9 @@ var entry =
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 	
-	var _utils = __webpack_require__(9);
+	var _utils = __webpack_require__(10);
 	
-	var _exception = __webpack_require__(10);
+	var _exception = __webpack_require__(11);
 	
 	var _exception2 = _interopRequireDefault(_exception);
 	
@@ -988,7 +990,7 @@ var entry =
 
 
 /***/ },
-/* 14 */
+/* 15 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -998,7 +1000,7 @@ var entry =
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 	
-	var _exception = __webpack_require__(10);
+	var _exception = __webpack_require__(11);
 	
 	var _exception2 = _interopRequireDefault(_exception);
 	
@@ -1019,14 +1021,14 @@ var entry =
 
 
 /***/ },
-/* 15 */
+/* 16 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	exports.__esModule = true;
 	
-	var _utils = __webpack_require__(9);
+	var _utils = __webpack_require__(10);
 	
 	exports['default'] = function (instance) {
 	  instance.registerHelper('if', function (conditional, options) {
@@ -1054,7 +1056,7 @@ var entry =
 
 
 /***/ },
-/* 16 */
+/* 17 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -1086,7 +1088,7 @@ var entry =
 
 
 /***/ },
-/* 17 */
+/* 18 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -1104,14 +1106,14 @@ var entry =
 
 
 /***/ },
-/* 18 */
+/* 19 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	exports.__esModule = true;
 	
-	var _utils = __webpack_require__(9);
+	var _utils = __webpack_require__(10);
 	
 	exports['default'] = function (instance) {
 	  instance.registerHelper('with', function (context, options) {
@@ -1143,7 +1145,7 @@ var entry =
 
 
 /***/ },
-/* 19 */
+/* 20 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1154,7 +1156,7 @@ var entry =
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 	
-	var _decoratorsInline = __webpack_require__(20);
+	var _decoratorsInline = __webpack_require__(21);
 	
 	var _decoratorsInline2 = _interopRequireDefault(_decoratorsInline);
 	
@@ -1165,14 +1167,14 @@ var entry =
 
 
 /***/ },
-/* 20 */
+/* 21 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	exports.__esModule = true;
 	
-	var _utils = __webpack_require__(9);
+	var _utils = __webpack_require__(10);
 	
 	exports['default'] = function (instance) {
 	  instance.registerDecorator('inline', function (fn, props, container, options) {
@@ -1200,14 +1202,14 @@ var entry =
 
 
 /***/ },
-/* 21 */
+/* 22 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	exports.__esModule = true;
 	
-	var _utils = __webpack_require__(9);
+	var _utils = __webpack_require__(10);
 	
 	var logger = {
 	  methodMap: ['debug', 'info', 'warn', 'error'],
@@ -1253,7 +1255,7 @@ var entry =
 
 
 /***/ },
-/* 22 */
+/* 23 */
 /***/ function(module, exports) {
 
 	// Build out our basic SafeString type
@@ -1274,7 +1276,7 @@ var entry =
 
 
 /***/ },
-/* 23 */
+/* 24 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1294,15 +1296,15 @@ var entry =
 	
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj['default'] = obj; return newObj; } }
 	
-	var _utils = __webpack_require__(9);
+	var _utils = __webpack_require__(10);
 	
 	var Utils = _interopRequireWildcard(_utils);
 	
-	var _exception = __webpack_require__(10);
+	var _exception = __webpack_require__(11);
 	
 	var _exception2 = _interopRequireDefault(_exception);
 	
-	var _base = __webpack_require__(8);
+	var _base = __webpack_require__(9);
 	
 	function checkRevision(compilerInfo) {
 	  var compilerRevision = compilerInfo && compilerInfo[0] || 1,
@@ -1572,7 +1574,7 @@ var entry =
 
 
 /***/ },
-/* 24 */
+/* 25 */
 /***/ function(module, exports) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/* global window */
@@ -1599,10 +1601,10 @@ var entry =
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 25 */
+/* 26 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Handlebars = __webpack_require__(6);
+	var Handlebars = __webpack_require__(7);
 	module.exports = (Handlebars["default"] || Handlebars).template({"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
 	    var helper, alias1=depth0 != null ? depth0 : {}, alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
 	
@@ -1624,10 +1626,10 @@ var entry =
 	},"useData":true});
 
 /***/ },
-/* 26 */
+/* 27 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Handlebars = __webpack_require__(6);
+	var Handlebars = __webpack_require__(7);
 	module.exports = (Handlebars["default"] || Handlebars).template({"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
 	    var helper, alias1=depth0 != null ? depth0 : {}, alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
 	
@@ -1639,10 +1641,10 @@ var entry =
 	},"useData":true});
 
 /***/ },
-/* 27 */
+/* 28 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Handlebars = __webpack_require__(6);
+	var Handlebars = __webpack_require__(7);
 	module.exports = (Handlebars["default"] || Handlebars).template({"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
 	    var helper, alias1=depth0 != null ? depth0 : {}, alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
 	
@@ -1664,14 +1666,14 @@ var entry =
 	},"useData":true});
 
 /***/ },
-/* 28 */
+/* 29 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Handlebars = __webpack_require__(6);
+	var Handlebars = __webpack_require__(7);
 	module.exports = (Handlebars["default"] || Handlebars).template({"1":function(container,depth0,helpers,partials,data) {
 	    var stack1;
 	
-	  return ((stack1 = container.invokePartial(__webpack_require__(27),depth0,{"name":"$templates/partials/song","data":data,"indent":"    ","helpers":helpers,"partials":partials,"decorators":container.decorators})) != null ? stack1 : "");
+	  return ((stack1 = container.invokePartial(__webpack_require__(28),depth0,{"name":"$templates/partials/song","data":data,"indent":"    ","helpers":helpers,"partials":partials,"decorators":container.decorators})) != null ? stack1 : "");
 	},"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
 	    var stack1;
 	
@@ -1681,7 +1683,7 @@ var entry =
 	},"usePartial":true,"useData":true});
 
 /***/ },
-/* 29 */
+/* 30 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var blog = __webpack_require__(1);

@@ -11,18 +11,18 @@ exports.detail = function *(next) {
   var req = this.request;
   var id = this.params.id;
   var user = yield User.findOneByName(id);
-  //if (err) return next(new HttpError(500, "Ошибка в /users/-id/index.js"));
+  //if (err) return next(new HttpError(500, "пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ /users/-id/index.js"));
   if (user) {
     yield this.render('users/detail.html', {locals: this.locals, profile: user});
   } else {
-    throw new HttpError(404, "Юзер не найден.");
-  }
+    throw new HttpError(404, "User not found.");
+}
 };
 
 exports.update = function *(next) {
   var id = this.params.id;
   var role = this.request.body.newrole;
   var affected = yield User.addRole(id, role);
-  //if(err) return next(new HttpError(500, 'Ошибка в /views/posts/-id/index.js'));
+  //if(err) return next(new HttpError(500, 'Error in /views/posts/-id/index.js'));
   return this.body = affected;
 };

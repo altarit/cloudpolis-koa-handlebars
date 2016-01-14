@@ -7,24 +7,24 @@ var Schema = mongoose.Schema;
 
 var schema = new Schema({
     username: {
-        type: String,
-        unique: true,
-        required: true
+      type: String,
+      unique: true,
+      required: true
     },
     hashedPassword: {
-        type: String,
-        requred: true
+      type: String,
+      requred: true
     },
     salt: {
-        type: String,
-        requred: true
+      type: String,
+      requred: true
     },
     created: {
-        type: Date,
-        default: Date.now
+      type: Date,
+      default: Date.now
     },
     email: {
-        type: String
+      type: String
     },
     roles: {
       type: Object
@@ -32,61 +32,56 @@ var schema = new Schema({
   }
 );
 
-schema.methods.encryptPassword = function(password) {
-    return crypto.createHmac('sha1', this.salt).update(password).digest('hex');
+schema.methods.encryptPassword = function (password) {
+  return crypto.createHmac('sha1', this.salt).update(password).digest('hex');
 };
 
 schema.virtual('password')
-    .set(function(password) {
-        this._plainPassword = password;
-        this.salt = Math.random() + '';
-        this.hashedPassword = this.encryptPassword(password);
-    })
-    .get(function() { return this._plainPassword; });
+  .set(function (password) {
+    this._plainPassword = password;
+    this.salt = Math.random() + '';
+    this.hashedPassword = this.encryptPassword(password);
+  })
+  .get(function () {
+    return this._plainPassword;
+  });
 
-schema.methods.checkPassword = function(password) {
-    return this.encryptPassword(password) == this.hashedPassword;
+schema.methods.checkPassword = function (password) {
+  return this.encryptPassword(password) == this.hashedPassword;
 };
 
-schema.statics.findOneByName = function(username) {
+schema.statics.findOneByName = function* (username) {
   var User = this;
-  return User.findOne({username: { $regex: new RegExp('^' + username + '$', 'i') } });
+  return User.findOne({username: {$regex: new RegExp('^' + username + '$', 'i')}});
 };
 
-
-
-schema.statics.authorize = function (username, password) {
+schema.statics.authorize = function* (username, password) {
   var User = this;
-  return User.findOneByName(username)
-    .then(function(user) {
-      if (user) {
-        if (user.checkPassword(password)) {
-          return user;
-        } else {
-          throw new AuthError('Пароль неверен');
-        }
-      } else {
-        throw new AuthError('Такого логина не существует');
-      }
-    });
+  var user = yield User.findOneByName(username);
+  if (user) {
+    if (user.checkPassword(password))
+      return user;
+    else
+      throw new AuthError('Пароль неверен');
+  } else {
+    throw new AuthError('Такого логина не существует');
+  }
 };
 
-schema.statics.register = function(username, password, email, additional) {
+schema.statics.register = function* (username, password, email, additional) {
   var User = this;
   if (!/^.{1,20}$/.test(username))
     throw new AuthError('Имя должно быть длиной до 20 символов, состоять из латинских букв, цифр и некоторых знаков. Ну Вы знаете, везде так.');
   if (!/^.{0,40}$/.test(password))
     throw new AuthError('Пароль 6-40 символов.');
 
-  return User.findOneByName(username)
-    .then(function(user) {
-      if (user) {
-        throw new AuthError('Логин занят');
-      } else {
-        var user = new User({username: username, password: password, email: email});
-        return user.save();
-      }
-    });
+  var user = yield User.findOneByName(username);
+  if (user) {
+    throw new AuthError('Логин занят');
+  } else {
+    var user = new User({username: username, password: password, email: email});
+    return user.save();
+  }
 };
 
 schema.statics.addRole = function (username, role) {
@@ -97,12 +92,11 @@ schema.statics.addRole = function (username, role) {
 exports.User = mongoose.model('User', schema);
 
 
-
 function AuthError(message) {
-    Error.apply(this, arguments);
-    Error.captureStackTrace(this, AuthError);
+  Error.apply(this, arguments);
+  Error.captureStackTrace(this, AuthError);
 
-    this.message = message;
+  this.message = message;
 }
 util.inherits(AuthError, Error);
 AuthError.prototype.name = 'AuthError';

@@ -1,4 +1,4 @@
-var blog = require('js/blog');
+var info = require('js/info');
 var templates = require('js/hb-templates');
 
 var mp3player = document.getElementById('player');
@@ -56,11 +56,11 @@ var actions = {
   },
   pl_current: function (e) {
     if (!currentSong)
-      return blog.error.show('Ничего не вопроизводится');
+      return info.error.show('Ничего не вопроизводится');
     if (!currentSong.parentNode)
-      return blog.error.show('Нет ссылки на список');
+      return info.error.show('Нет ссылки на список');
     if (!currentSong.parentNode.children)
-      return blog.error.show('Список пуст');
+      return info.error.show('Список пуст');
     var pl = document.getElementById('playlist');
     var templateFunction = templates['copy_songlist'];
     $(document.getElementById('playlist')).html(templateFunction(currentSong.parentNode));
@@ -152,18 +152,18 @@ function playMusic(target, add, order) {
           var children = target.parentNode.children;
           target = children[Math.floor(Math.random() * children.length) % children.length];
         } else
-          return blog.error.show('Не удается загрузить исходный список');
+          return info.error.show('Не удается загрузить исходный список');
       } else {
         if (target.nextElementSibling)
           target = target.nextElementSibling;
         else
-          return blog.error.show('Последний файл в списке');
+          return info.error.show('Последний файл в списке');
       }
     } else if (order == 'prev') {
       if (target.previousElementSibling)
         target = target.previousElementSibling;
       else
-        return blog.error.show('Первый файл в списке');
+        return info.error.show('Первый файл в списке');
     }
   }
 

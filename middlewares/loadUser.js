@@ -7,12 +7,8 @@ module.exports = function * (next) {
   req.user = this.locals.user = null;
 
   if (!this.session.user) return yield next;
-  //TODO: unknown predict
-  yield User.findById(this.session.user, function(err, user) {
-      if (err) throw err;
-
-      req.user = self.locals.user = user;
-  });
+  var user = yield User.findById(this.session.user);
+  req.user = self.locals.user = user;
 
   yield next;
 };
