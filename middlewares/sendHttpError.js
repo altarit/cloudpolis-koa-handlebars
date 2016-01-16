@@ -13,11 +13,11 @@ module.exports = function *(next) {
     //console.log(err.prototype.name);
     log.error(err);
 
-    this.response.status = err.status | 500;
+    this.response.status = err.status || 500;
     if (this.req.headers['x-requested-with'] == 'XMLHttpRequest') {
-      return this.body = err;
+      this.body = err;
     } else {
-      return yield this.render("error.html", {locals: this.locals, error: err});
+      yield this.render("error.html", {locals: this.locals, error: err});
     }
   }
 };

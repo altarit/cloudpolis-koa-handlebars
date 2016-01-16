@@ -130,7 +130,8 @@ var entry =
 	    data: body,
 	    success: function (data, status) {
 	      $(document.getElementById(container)).html(data);
-	      var title = data.substring(6, data.indexOf('/') - 1); //cutting title from <h1>title</h1>
+	      var titleEl = $(data).filter('h1')[0];
+	      var title = titleEl ? titleEl.innerHTML : document.title;
 	      document.title = title;
 	      if (!dontSave)
 	        history.pushState(title, title, url);
@@ -203,7 +204,7 @@ var entry =
 	    mp3player.muted = mp3options.volumeoff;
 	  },
 	  playlist: function (e) {
-	    $('#playmenu').stop(true,true).toggle("slide", { direction: "right" }, 200);
+	    $('#playmenu').stop(true, true).toggle("slide", {direction: "right"}, 200);
 	  },
 	  pl_current: function (e) {
 	    if (!currentSong)
@@ -341,7 +342,7 @@ var entry =
 /* 3 */
 /***/ function(module, exports) {
 
-	module.exports.error =  new InfoMessage($('.info-error'));
+	module.exports.error = new InfoMessage($('.info-error'));
 	
 	function InfoMessage(el) {
 	  var el = el;
@@ -376,7 +377,7 @@ var entry =
 	];
 	
 	var templates = {};
-	templates_names.forEach(function(name) {
+	templates_names.forEach(function (name) {
 	  templates[name] = __webpack_require__(5)("./" + name + '.hbs');
 	});
 	
@@ -1635,7 +1636,7 @@ var entry =
 	
 	  return "<div class=\"entry\">\r\n  <h1>"
 	    + alias4(((helper = (helper = helpers.title || (depth0 != null ? depth0.title : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"title","hash":{},"data":data}) : helper)))
-	    + "</h1>\r\n  <div class=\"body\">\r\n    "
+	    + "</h1>\r\n\r\n  <div class=\"body\">\r\n    "
 	    + alias4(((helper = (helper = helpers.body || (depth0 != null ? depth0.body : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"body","hash":{},"data":data}) : helper)))
 	    + "\r\n  </div>\r\n</div>";
 	},"useData":true});
@@ -1654,7 +1655,7 @@ var entry =
 	    + alias4(((helper = (helper = helpers.title || (depth0 != null ? depth0.title : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"title","hash":{},"data":data}) : helper)))
 	    + "\" data-artist=\""
 	    + alias4(((helper = (helper = helpers.artist || (depth0 != null ? depth0.artist : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"artist","hash":{},"data":data}) : helper)))
-	    + "\" data-album=\""
+	    + "\"\r\n    data-album=\""
 	    + alias4(((helper = (helper = helpers.album || (depth0 != null ? depth0.album : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"album","hash":{},"data":data}) : helper)))
 	    + "\">\r\n  <div class=\"track_end\"><span class=\"fa fa-plus\" data-add=\"plus\"></span></div>\r\n  <div class=\"track_cover\"><span class=\"fa fa-play\" data-add=\"play\"></span></div>\r\n  <div class=\"track_info\">\r\n    <div>"
 	    + alias4(((helper = (helper = helpers.title || (depth0 != null ? depth0.title : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"title","hash":{},"data":data}) : helper)))
@@ -1722,7 +1723,7 @@ var entry =
 	  },
 	
 	  //login/library.ejs
-	  "login-form" : function (target) {
+	  "login-form": function (target) {
 	    var form = $(target);
 	
 	    $('.error', form).html('');
@@ -1749,35 +1750,35 @@ var entry =
 	    return false;
 	  },
 	
-	  "form-search" : function(target) {
+	  "form-search": function (target) {
 	    var filter = document.forms['form-search'];
 	    var filterOptions = {};
 	    try {
 	      var fQuery = filter['filter-query'].value;
 	      if (fQuery) {
-	      new RegExp(fQuery);
-	      filterOptions.query = fQuery;
+	        new RegExp(fQuery);
+	        filterOptions.query = fQuery;
 	      }
 	
 	      //console.log(filterOptions);
 	      //updateContainer('/music/search', 'searchsongresult', true, filterOptions);
 	      blog.applyTemplate('/music/search', 'compilationinfo', 'songlist', filterOptions);
-	    } catch(e) {
+	    } catch (e) {
 	      console.log('Wrong regexp');
 	      console.log(e);
 	    }
 	  },
 	
-	  "add-post-form" :function(target) {
+	  "add-post-form": function (target) {
 	    var $form = $(target);
 	    $.ajax({
 	      url: window.location.pathname,
 	      method: "POST",
 	      data: $form.serialize(),
-	      complete: function(e) {
+	      complete: function (e) {
 	        console.log('complete');
 	      },
-	      success: function(e) {
+	      success: function (e) {
 	        console.log('success');
 	      },
 	      error: function (e) {

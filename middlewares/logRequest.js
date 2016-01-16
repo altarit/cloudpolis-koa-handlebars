@@ -7,7 +7,7 @@ module.exports = function *(next) {
   yield next;
 
   if (/\.(css|js|4\.0|map|img)$/.test(this.request.url))
-      return;
+    return;
   var responseTime = new Date() - start;
   var req = this.request;
   console.info('--> %s %s %sms %s', this.method, req.url, responseTime, this.response.status);

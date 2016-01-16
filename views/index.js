@@ -5,5 +5,3 @@ exports.index = function *(next) {
 exports.inprogress = function * (next) {
   this.body = 'Not implemented yet.'
 };
-
-//res.render('index', {part: req.isAjax});

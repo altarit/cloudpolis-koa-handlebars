@@ -13,11 +13,11 @@ textarea {
   min-height: 400px;
 }
 
-.navbar-static-top{
+.navbar-static-top {
   margin-bottom: 0px;
   margin-top: 50px;
   /*background: #DBF6FF;*/
-  background: rgba(255, 255, 255,0.7);
+  background: rgba(255, 255, 255, 0.7);
 }
 
 body {
@@ -32,7 +32,7 @@ body {
 
 .section {
   /*background: #DBF6FF;*/
-  background: rgba(255, 255, 255,0.7);
+  background: rgba(255, 255, 255, 0.7);
   /*margin: 10px 10px 10px 10px;*/
   /*border-radius: 10px;*/
   z-index: 100;
@@ -65,15 +65,15 @@ img.left {
 
 /* Player */
 
-.bar-player.navbar-static-top{
+.bar-player.navbar-static-top {
   margin-top: 0px;
 }
 
-.bar-player{
+.bar-player {
   height: 10px;
   padding-top: 5px;
   padding-bottom: 5px;
-  background: rgba(255, 255, 255,0.7);
+  background: rgba(255, 255, 255, 0.7);
 }
 
 .player-buttons {
@@ -83,7 +83,7 @@ img.left {
   margin-right: -10px;
 }
 
-.player-buttons .navbar-right{
+.player-buttons .navbar-right {
   float: right;
 }
 
@@ -95,7 +95,6 @@ img.left {
   background: #ADEBFF;
   overflow: hidden;
 }
-
 
 #musicloadbar {
   left: 0px;
@@ -140,7 +139,6 @@ div.musiclength {
   position: absolute;
 }
 
-
 .bar-player li {
   float: left;
   margin-right: 0px;
@@ -164,7 +162,7 @@ div.musiclength {
   z-index: 4000;
   display: none;
 
-  background: rgba(188, 222, 242,0.7);
+  background: rgba(188, 222, 242, 0.7);
   border-radius: 1px;
   padding: 5px;
 }
@@ -176,11 +174,11 @@ div.musiclength {
 
 .playlist {
   position: fixed;
-  top:90px;
+  top: 90px;
   bottom: 85px;
   width: 330px;
   overflow-y: auto;
-  background: rgba(255, 255, 255,0.7);
+  background: rgba(255, 255, 255, 0.7);
   padding-left: 0px;
   border-radius: 5px;
 }
@@ -201,23 +199,23 @@ div.musiclength {
   width: 320px;
 }
 
-.ui-effects-wrapper .playmenu{
+.ui-effects-wrapper .playmenu {
   right: 1px;
   bottom: 10px;
 }
 
-.ui-effects-wrapper .playlist{
+.ui-effects-wrapper .playlist {
   position: relative;
   top: -5px;
   height: 100%;
 }
 
-.ui-effects-wrapper .playmenu_bottom{
+.ui-effects-wrapper .playmenu_bottom {
   position: relative;
 }
 
 .playmenu .fa.active {
-  background: rgba(255, 255, 255,0.7);
+  background: rgba(255, 255, 255, 0.7);
 }
 
 .playmenu .fa {
@@ -232,7 +230,7 @@ div.musiclength {
 
 }
 
-.pagination>li>a:hover, .pagination>li>a:focus {
+.pagination > li > a:hover, .pagination > li > a:focus {
   background-color: transparent;
 }
 
@@ -246,8 +244,6 @@ html {
   float: right;
   margin-top: 5px;
 }
-
-
 
 /* Library */
 
@@ -267,7 +263,6 @@ html {
   top: 100px;
   bottom: 0px;
 }
-
 
 .compilationinfo {
   background-color: #EEF;
@@ -351,7 +346,6 @@ html {
   width: 230px;
 }
 
-
 /* Admin */
 .admin-access.table > thead > tr > th {
   padding: 2px;
@@ -360,21 +354,27 @@ html {
 .admin-access.table > thead > tr > *:nth-child(1) {
   width: 5%;
 }
+
 .admin-access.table > thead > tr > *:nth-child(2) {
   width: 40%;
 }
+
 .admin-access.table > thead > tr > *:nth-child(3) {
   width: 12%;
 }
+
 .admin-access.table > thead > tr > *:nth-child(4) {
   width: 18%;
 }
+
 .admin-access.table > thead > tr > *:nth-child(5) {
   width: 10%;
 }
+
 .admin-access.table > thead > tr > *:nth-child(6) {
   width: 10%;
 }
+
 .admin-access.table > thead > tr > *:nth-child(7) {
   width: 5%;
 }
@@ -385,9 +385,9 @@ html {
   position: fixed;
   bottom: 20px;
   height: 40px;
-  background: rgba(255, 48, 48,0.9);
+  background: rgba(255, 48, 48, 0.9);
   border-radius: 5px;
-  left:50%;
+  left: 50%;
   margin-left: -150px;
   width: 300px;
   text-align: center;

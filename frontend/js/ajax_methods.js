@@ -34,7 +34,7 @@ module.exports = {
   },
 
   //login/library.ejs
-  "login-form" : function (target) {
+  "login-form": function (target) {
     var form = $(target);
 
     $('.error', form).html('');
@@ -61,35 +61,35 @@ module.exports = {
     return false;
   },
 
-  "form-search" : function(target) {
+  "form-search": function (target) {
     var filter = document.forms['form-search'];
     var filterOptions = {};
     try {
       var fQuery = filter['filter-query'].value;
       if (fQuery) {
-      new RegExp(fQuery);
-      filterOptions.query = fQuery;
+        new RegExp(fQuery);
+        filterOptions.query = fQuery;
       }
 
       //console.log(filterOptions);
       //updateContainer('/music/search', 'searchsongresult', true, filterOptions);
       blog.applyTemplate('/music/search', 'compilationinfo', 'songlist', filterOptions);
-    } catch(e) {
+    } catch (e) {
       console.log('Wrong regexp');
       console.log(e);
     }
   },
 
-  "add-post-form" :function(target) {
+  "add-post-form": function (target) {
     var $form = $(target);
     $.ajax({
       url: window.location.pathname,
       method: "POST",
       data: $form.serialize(),
-      complete: function(e) {
+      complete: function (e) {
         console.log('complete');
       },
-      success: function(e) {
+      success: function (e) {
         console.log('success');
       },
       error: function (e) {

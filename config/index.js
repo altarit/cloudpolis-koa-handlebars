@@ -6,7 +6,7 @@ module.exports = {
   "template": {
     "path": 'views',
     "options": {
-      "map": { html: 'swig'}
+      "map": {html: 'swig'}
     }
   },
   "mongoose": {

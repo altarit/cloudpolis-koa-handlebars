@@ -6,7 +6,7 @@ var templates_names = [
 ];
 
 var templates = {};
-templates_names.forEach(function(name) {
+templates_names.forEach(function (name) {
   templates[name] = require('templates/' + name + '.hbs');
 });
 

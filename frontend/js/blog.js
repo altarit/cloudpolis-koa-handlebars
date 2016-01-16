@@ -58,7 +58,8 @@ function updateContainer(url, container, dontSave, body) {
     data: body,
     success: function (data, status) {
       $(document.getElementById(container)).html(data);
-      var title = data.substring(6, data.indexOf('/') - 1); //cutting title from <h1>title</h1>
+      var titleEl = $(data).filter('h1')[0];
+      var title = titleEl ? titleEl.innerHTML : document.title;
       document.title = title;
       if (!dontSave)
         history.pushState(title, title, url);

@@ -1,8 +1,8 @@
 var cluster = require('cluster');
 
-if (cluster.isMaster) {
-  //var cpuCount = require('os').cpus().length;
-  var cpuCount = 1;
+if (cluster.isMaster && 0) {
+  var cpuCount = require('os').cpus().length;
+  //var cpuCount = 1;
   for (var i = 0; i < cpuCount; i += 1) {
     cluster.fork();
   }
@@ -13,7 +13,6 @@ var koa = require('koa'),
   path = require('path'),
   views = require('koa-views'),
   static = require('koa-static'),
-  koalogger = require('koa-logger'),
   compression = require('koa-gzip'),
   session = require('koa-generic-session'),
   mongooseStore = require('koa-session-mongoose'),
@@ -30,7 +29,6 @@ var Compilation = require('models/user').User;
 //koa
 var app = module.exports = koa();
 app.use(require('middlewares/logRequest'));
-//app.use(koalogger());
 app.use(compression());
 app.use(bodyParser());
 

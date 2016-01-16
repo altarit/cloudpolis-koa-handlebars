@@ -52,7 +52,7 @@ var actions = {
     mp3player.muted = mp3options.volumeoff;
   },
   playlist: function (e) {
-    $('#playmenu').stop(true,true).toggle("slide", { direction: "right" }, 200);
+    $('#playmenu').stop(true, true).toggle("slide", {direction: "right"}, 200);
   },
   pl_current: function (e) {
     if (!currentSong)

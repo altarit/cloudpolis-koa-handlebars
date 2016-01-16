@@ -1,4 +1,4 @@
-module.exports.error =  new InfoMessage($('.info-error'));
+module.exports.error = new InfoMessage($('.info-error'));
 
 function InfoMessage(el) {
   var el = el;

@@ -11,7 +11,7 @@ var tags = {
   'audio': {
     closes: false,
     open: function *(param, tag) {
-      var aud = yield Song.find({href: param});
+      var aud = yield Song.find({href: param.replace(/ /g, '%20')});
       if (aud && aud[0]) {
         var html = new handlebars.SafeString(templates[tag](aud[0]));
         return html;

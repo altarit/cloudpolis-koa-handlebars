@@ -34,7 +34,7 @@ function createCompilations(root, reg) {
     printLine(el);
     var content = lookInside(root, el, '/', 1);
     if (!content.length) {
-      console.log("!-- "+content.length);
+      console.log("!-- " + content.length);
       if (options.removeEmptyFolders)
         deleteFolderRecursive(path.resolve(root, el));
     } else if (options.insertIntoDB) {
@@ -71,7 +71,7 @@ function lookInside(root, dir, fromroot, depth) {
     if (fs.lstatSync(fullpath).isDirectory()) {
       var insideData = lookInside(newroot, el, fromroot, depth + 1);
       if (!insideData.length) {
-        console.log("!-- "+insideData.length);
+        console.log("!-- " + insideData.length);
         if (options.removeEmptyFolders)
           deleteFolderRecursive(fullpath);
       }
@@ -176,7 +176,7 @@ var promise = new Promise((resolve, reject) => {
     console.log('Create models:');
     require('models/compilation');
     return Promise.all(Object.keys(mongoose.models).map((modelName) => {
-      console.log(' '+modelName);
+      console.log(' ' + modelName);
       return mongoose.models[modelName].ensureIndexes();
     }));
   })

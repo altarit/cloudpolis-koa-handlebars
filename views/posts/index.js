@@ -19,8 +19,6 @@ exports.detail = function *(next) {
 };
 
 
-
-
 exports.comment = function *(next) {
   var text = this.request.body.text.trim();
 
