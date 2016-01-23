@@ -1,6 +1,9 @@
-<% if (!part) layout('_layout/page') %>
-<% block('title', 'Admin'); %>
-<h1><%=blocks.title%></h1>
+{% extends '_layouts/page.html' %}
+{% block title %}Admin{% endblock %}
+
+
+{% block content %}
+<h1>{% block title %}{% endblock %}</h1>
 
 <form name="access-log">
 <div class="container-fluid">
@@ -37,17 +40,17 @@
       </tr>
     </thead>
     <tbody id="access">
-      <%requests.forEach(function(req, num) {%>
+      {% for req in requests %}
       <tr>
         <td>GET</td>
-        <td><a href="<%=req.url%>" spa="none"><%=req.url%></a></td>
-        <td><%=req.user%></td>
-        <td><%=req.session%></td>
-        <td><%=req.ip%></td>
-        <td><%=moment(req.created).format('YYYY-MM-DD HH:mm:ss')%></td>
-        <td><%req.body%></td>
+        <td><a href="{{req.url}}" spa="none">{{req.url}}</a></td>
+        <td>{{req.user}}</td>
+        <td>{{req.session}}</td>
+        <td>{{req.ip}}</td>
+        <td>{{moment(req.created).format('YYYY-MM-DD HH:mm:ss')}}</td>
+        <td>{{req.body}}</td>
       </tr>
-    <%});%>
+      {% endfor %}
     </tbody>
   </table>
 </div>
@@ -77,9 +80,11 @@
       }
 
       //console.log(filterOptions);
-      updateContainer('/admin/access', 'access', true, filterOptions);
+      entry.blog.updateContainer('/admin/access', 'access', true, filterOptions);
     } catch(e) {
-      console.log('Wrong regexp');
+      console.log('Wrong regexp'+e);
     }
   });
 </script>
+
+{% endblock %}

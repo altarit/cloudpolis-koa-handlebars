@@ -1,0 +1,11 @@
+{% for req in requests %}
+<tr>
+  <td>GET</td>
+  <td><a href="{{req.url}}" spa="none">{{req.url}}</a></td>
+  <td>{{req.user}}</td>
+  <td>{{req.session}}</td>
+  <td>{{req.ip}}</td>
+  <td>{{moment(req.created).format('YYYY-MM-DD HH:mm:ss')}}</td>
+  <td>{{req.body}}</td>
+</tr>
+{% endfor %}

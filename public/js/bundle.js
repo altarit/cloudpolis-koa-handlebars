@@ -65,6 +65,9 @@ var entry =
 	  else
 	    console.log('methods['+e.target.name+'] is not a function');
 	});
+	
+	
+	module.exports.blog = blog;
 
 /***/ },
 /* 1 */
@@ -1740,6 +1743,34 @@ var entry =
 	        form.html("Вы вошли в сайт").addClass('alert-success');
 	        //window.location.href = "/";
 	        blog.updateContainer('/', 'main');
+	        console.log('123');
+	      },
+	      error: function (jqXHR) {
+	        var error = JSON.parse(jqXHR.responseText);
+	        $('.error', form).html(error.message);
+	      }
+	    });
+	    return false;
+	  },
+	
+	  //users/:id/edit
+	  "form-profile-edit": function (target) {
+	    var form = $(target);
+	
+	    $('.error', form).html('');
+	    //$(":submit", form).button("loading");
+	
+	    $.ajax({
+	      url: window.location,
+	      method: "POST",
+	      data: form.serialize(),
+	      complete: function () {
+	        //$(":submit", form).button("reset");
+	      },
+	      success: function () {
+	        form.html("Сохранено").addClass('alert-success');
+	        //window.location.href = "/";
+	        //v blog.updateContainer('/', 'main');
 	        console.log('123');
 	      },
 	      error: function (jqXHR) {

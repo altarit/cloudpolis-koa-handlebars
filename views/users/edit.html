@@ -1,0 +1,48 @@
+{% extends '_layouts/page.html' %}
+{% block title %}{{profile.username}}{% endblock %}
+
+
+{% block content %}
+<h1>{% block title %}{% endblock %}</h1>
+<div class="container-fluid">
+  <div class="tab-content" col-lg-6>
+    <br/>
+    <form class="form-horizontal login-form" name="form-profile-edit">
+      <div class="form-group">
+        <label for="input-additional" class="col-lg-2 control-label">Инфо</label>
+        <div class="col-lg-10" >
+          <textarea name="additional" value="" type="textarea" class="form-control" id="input-additional" placeholder="О себе">{{profile.additional}}</textarea>
+        </div>
+      </div>
+
+      <hr class="col-lg-offset-2 col-lg-10">
+      <div class="form-group">
+        <label for="input-old-password" class="col-lg-2 control-label">Старый пароль</label>
+        <div class="col-lg-10">
+          <input name="oldpassword" value="" type="password" class="form-control" id="input-old-password" placeholder="Старый пароль">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="input-old-password" class="col-lg-2 control-label">Новый пароль</label>
+        <div class="col-lg-10">
+          <input name="newpassword" value="" type="password" class="form-control" id="input-new-password" placeholder="Новый пароль">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <div class="col-lg-offset-2 col-lg-10">
+          <button type="submit" class="btn btn-primary" data-loading-text="Отправляю...">Сохранить</button>
+          <span class="help-block error"></span>
+        </div>
+      </div>
+      <div id="in-form-params"></div>
+      <div class=".error">
+      </div>
+    </form>
+    <div id="out-of-form">
+      <input type="hidden" id="registration-mark" name="isreg" value="true">
+    </div>
+  </div>
+</div>
+
+{% endblock %}

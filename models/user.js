@@ -26,6 +26,12 @@ var schema = new Schema({
     email: {
       type: String
     },
+    additional: {
+      type: String
+    },
+    avatar: {
+      type: Boolean
+    },
     roles: {
       type: Object
     }
@@ -79,9 +85,27 @@ schema.statics.register = function* (username, password, email, additional) {
   if (user) {
     throw new AuthError('Логин занят');
   } else {
-    var user = new User({username: username, password: password, email: email});
+    var user = new User({username: username, password: password, email: email, additional: additional});
     return user.save();
   }
+};
+
+schema.statics.edit = function* (username, oldpassword, newpassword, email, additional) {
+  var User = this;
+
+  var user = yield User.findOneByName(username);
+  if (!user) {
+    throw new AuthError('Юзера не существует');
+  }
+  if (newpassword) {
+    if (!user.checkPassword(oldpassword))
+      throw new AuthError('Неверный пароль');
+    if (!/^.{0,40}$/.test(newpassword))
+      throw new AuthError('Пароль 6-40 символов');
+    user.password = newpassword;
+  }
+  user.additional = additional;
+  return user.save();
 };
 
 schema.statics.addRole = function (username, role) {

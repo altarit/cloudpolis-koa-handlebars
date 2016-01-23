@@ -14,7 +14,8 @@ module.exports = function(app) {
   //Users
   router.get('/users', require('./views/users').init);
   router.get('/users/:id', require('./views/users').detail);
-  router.post('/users/:id', require('./views/users').update);
+  router.get('/users/:id/edit', require('./views/users').edit);
+  router.post('/users/:id/edit', require('./views/users').update);
 
   //Posts
   router.get('/posts', require('./views/posts').init);
@@ -34,8 +35,8 @@ module.exports = function(app) {
   router.get('/music/search', require('./views/music').search);
 
   //Admin
-  router.get('/admin', checkAuth, require('./views').inprogress);
-  router.get('/admin/access', checkAuth, require('./views').inprogress);
+  router.get('/admin', checkAuth, require('./views/admin').init);
+  router.get('/admin/access', checkAuth, require('./views/admin').accesslog);
 
   app.use(router.middleware());
 };

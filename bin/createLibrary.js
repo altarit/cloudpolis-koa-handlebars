@@ -14,7 +14,8 @@ var options = {
   logMusic: true
 };
 
-var root = 'D:/Documents/Music/MAv16/Artists';
+//var root = 'D:/Documents/Music/MAv16/Artists';
+var root = '/media/twilight/Data/Documents/Music/MAv16/Artists';
 var rootlength = root.length;
 
 var errorIDv2 = [];

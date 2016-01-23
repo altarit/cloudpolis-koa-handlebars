@@ -18,3 +18,6 @@ $(document).on('submit',function(e) {
   else
     console.log('methods['+e.target.name+'] is not a function');
 });
+
+
+module.exports.blog = blog;
