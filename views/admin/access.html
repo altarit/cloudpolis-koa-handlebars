@@ -1,11 +1,92 @@
-{% for req in requests %}
-<tr>
-  <td>GET</td>
-  <td><a href="{{req.url}}" spa="none">{{req.url}}</a></td>
-  <td>{{req.user}}</td>
-  <td>{{req.session}}</td>
-  <td>{{req.ip}}</td>
-  <td>{{moment(req.created).format('YYYY-MM-DD HH:mm:ss')}}</td>
-  <td>{{req.body}}</td>
-</tr>
-{% endfor %}
+{% extends '_layouts/page.html' %}
+{% block title %}Admin{% endblock %}
+
+
+{% block content %}
+<h1>{% block title %}{% endblock %}</h1>
+
+<form name="access-log" class="form-horizontal form-search" autocomplete="off" method="GET" data-next="JSON" data-spa="access" data-template="accesslog">
+<div class="container-fluid">
+  <table class="table admin-access">
+    <thead>
+      <tr>
+        <th>
+          <select class="form-control">
+            <option></option>
+            <option>GET</option>
+            <option>POST</option>
+            <option>PUT</option>
+            <option>DELETE</option>
+          </select>
+        </th>
+        <th>
+          <input type="text" name="filter-url" class="form-control" placeholder="url">
+        </th>
+        <th>
+          <input type="text" name="filter-user" class="form-control" placeholder="username">
+        </th>
+        <th>
+          <input type="text" name="filter-session" class="form-control" placeholder="session">
+        </th>
+        <th>
+          <input type="text" name="filter-ip" class="form-control" placeholder="ip">
+        </th>
+        <th>
+          <input type="text" name="filter-time" class="form-control" placeholder="date">
+        </th>
+        <th>
+          <input type="text" name="filter-body" class="form-control" placeholder="body">
+        </th>
+      </tr>
+    </thead>
+    <tbody id="access">
+      {% for req in requests %}
+      <tr>
+        <td>GET</td>
+        <td><a href="{{req.url}}" spa="none">{{req.url}}</a></td>
+        <td>{{req.user}}</td>
+        <td>{{req.session}}</td>
+        <td>{{req.ip}}</td>
+        <td>{{moment(req.created).format('YYYY-MM-DD HH:mm:ss')}}</td>
+        <td>{{req.body}}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>1
+</form>
+
+<script>
+
+  $('.form-search input').keyup(function(e) { $('.form-search').submit() });
+  /*$('input').keyup(function(e) {
+    var filter = document.forms['access-log'];
+    var filterOptions = {};
+    try {
+      var fUrl = filter['filter-url'].value;
+      if (fUrl) {
+        new RegExp(fUrl);
+        filterOptions.url = fUrl;
+      }
+
+      var fUser = filter['filter-user'].value;
+      if (fUser) {
+        new RegExp(fUser);
+        filterOptions.user = fUser;
+      }
+
+      var fSession = filter['filter-session'].value;
+      if (fSession) {
+        new RegExp(fSession);
+        filterOptions.session = fSession;
+      }
+
+      //console.log(filterOptions);
+      entry.blog.updateContainer('/admin/access', 'access', true, filterOptions);
+    } catch(e) {
+      console.log('Wrong regexp'+e);
+    }
+  });*/
+</script>
+
+{% endblock %}

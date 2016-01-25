@@ -2,7 +2,8 @@ var templates_names = [
   'entry_template',
   'copy_songlist',
   'songlist',
-  'partials/song'
+  'partials/song',
+  'accesslog'
 ];
 
 var templates = {};

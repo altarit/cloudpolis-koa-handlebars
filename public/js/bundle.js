@@ -46,28 +46,36 @@ var entry =
 /***/ function(module, exports, __webpack_require__) {
 
 	var blog = __webpack_require__(1);
-	var methods = __webpack_require__(30);
 	
 	$(document).ready(function (e) {
 	  $(document.body).click(blog.makeAjaxLink);
 	
 	  window.addEventListener('popstate', function (e) {
-	    blog.updateContainer(location.pathname, 'main', true);
+	    blog.requestHTML(location.pathname, 'main', true);
 	  });
 	});
 	
 	$(document).on('submit',function(e) {
-	  var m = methods[e.target.name];
-	  if (m) {
-	    m(e.target);
-	    return false;
-	  }
-	  else
-	    console.log('methods['+e.target.name+'] is not a function');
+	  blog.sendForm(e.target);
+	  return false;
 	});
 	
-	
 	module.exports.blog = blog;
+	
+	/*
+	 var comment = $('<div />')
+	 .append($('<a />', {
+	 href: 'user',
+	 spa: 'main'
+	 }).text('user'))
+	 .append(' right now')
+	 .append($('<p />').append(form.context.text.value))
+	 $('#comments').append(comment);
+	 */
+	
+	/*
+	  "form-search": f
+	*/
 
 /***/ },
 /* 1 */
@@ -78,8 +86,9 @@ var entry =
 	var info = __webpack_require__(3);
 	
 	module.exports.makeAjaxLink = makeAjaxLink;
-	module.exports.applyTemplate = applyTemplate;
-	module.exports.updateContainer = updateContainer;
+	module.exports.requestData = requestData;
+	module.exports.requestHTML = requestHTML;
+	module.exports.sendForm = sendForm;
 	
 	//handle click on a link
 	function makeAjaxLink(e) {
@@ -96,58 +105,116 @@ var entry =
 	  if (container == 'player') {
 	    mp3.hanldeSpaClick(target, e.target.dataset);
 	  } else if (container == 'main') {
-	    updateContainer(href, container);
+	    requestHTML(href, container);
 	  } else {
 	    var template = document.getElementById(container).getAttribute('data-template');
-	    applyTemplate(href, container, template);
+	    requestData(href, container, template);
 	  }
 	}
 	
-	function applyTemplate(url, container, template, body) {
+	function sendForm(form) {
+	  var $form = $(form);
+	  var next = $form.data('next');
+	  /*var formHelper = $form.data('formHelper');
+	  if (formHelper)
+	    return window.formHelpers[formHelper](form);*/
+	
+	  $('.error', $form).html('');
+	  //$(":submit", form).button("loading");
+	
+	  var action = $form.attr('action') || window.location.pathname;
 	  $.ajax({
+	    url: action,
+	    method: $form.attr('method') || "POST",
+	    data: $form.serialize(),
+	    headers: next == 'JSON' ? {"X-Expected-Format": "JSON"} : null,
+	    complete: function () {
+	      //$(":submit", form).button("reset");
+	    },
+	    success: function (responsedData) {
+	      //form.html("Сохранено").addClass('alert-success');
+	
+	      if (next == 'JSON')
+	        return applyData(responsedData, $form.attr('action'), $form.data('spa'), $form.data('template'));
+	
+	      if (next == 'HTML')
+	        return applyHTML(responsedData, $form.attr('action'), $form.data('spa'), false);
+	
+	      var redirect = $form.data('redirect');
+	      if (redirect)
+	        return requestHTML(redirect, 'main');
+	    },
+	    error: function (jqXHR) {
+	      var error = JSON.parse(jqXHR.responseText);
+	      $('.error', form).html(error.message);
+	    }
+	  });
+	}
+	
+	var currentRequest = null;
+	
+	//requests JSON from server
+	function requestData(url, container, template, body) {
+	  currentRequest = $.ajax({
 	    url: url,
 	    method: "GET",
 	    data: body,
 	    headers: {"X-Expected-Format": "JSON"},
-	    success: function (json, status) {
-	      var templateFunction = templates[template];
-	      $(document.getElementById(container)).html(templateFunction(json.data));
-	      if (json.title) {
-	        document.title = json.title;
-	        history.pushState(json.title, json.title, url);
-	      }
+	    beforeSend: cancelCurrentRequest,
+	    success: function (responsedData, status) {
+	      applyData(responsedData, url, container, template);
 	    },
-	    error: function (data) {
-	      var error = JSON.parse(data.responseText);
-	      console.log(data);
-	      info.error.show(error.message);
-	    }
+	    error: errorHandler
 	  });
 	}
 	
+	function applyData(responsedData, url, container, template) {
+	  var templateFunction = templates[template];
+	  $(document.getElementById(container)).html(templateFunction(responsedData.data));
+	  if (responsedData.title) {
+	    document.title = responsedData.title;
+	    history.pushState(responsedData.title, responsedData.title, url);
+	  }
+	}
 	
-	function updateContainer(url, container, dontSave, body) {
-	  $.ajax({
+	//requests partial HTML from server
+	function requestHTML(url, container, dontSave, body) {
+	  currentRequest = $.ajax({
 	    url: url,
 	    method: "GET",
 	    data: body,
-	    success: function (data, status) {
-	      $(document.getElementById(container)).html(data);
-	      var titleEl = $(data).filter('h1')[0];
-	      var title = titleEl ? titleEl.innerHTML : document.title;
-	      document.title = title;
-	      if (!dontSave)
-	        history.pushState(title, title, url);
+	    beforeSend: cancelCurrentRequest,
+	    success: function (responsedData, status) {
+	      applyHTML(responsedData, url, container, dontSave);
 	    },
-	    error: function (data) {
-	      var error = JSON.parse(data.responseText);
-	      console.log(data);
-	      info.error.show(error.message);
-	    }
+	    error: errorHandler
 	  });
 	}
 	
-
+	function applyHTML(responsedData, url, container, dontSave) {
+	  $(document.getElementById(container)).html(responsedData);
+	  var titleEl = $(responsedData).filter('h1')[0];
+	  var title = titleEl ? titleEl.innerHTML : document.title;
+	  document.title = title;
+	  if (!dontSave)
+	    history.pushState(title, title, url);
+	}
+	
+	
+	function cancelCurrentRequest() {
+	  if (currentRequest != null) {
+	    currentRequest.abort();
+	  }
+	}
+	
+	function errorHandler (data) {
+	  if (data.responseText) {
+	    var error = JSON.parse(data.responseText);
+	    info.error.show(error.message);
+	  } else {
+	    console.log(data);
+	  }
+	}
 
 /***/ },
 /* 2 */
@@ -376,7 +443,8 @@ var entry =
 	  'entry_template',
 	  'copy_songlist',
 	  'songlist',
-	  'partials/song'
+	  'partials/song',
+	  'accesslog'
 	];
 	
 	var templates = {};
@@ -392,11 +460,12 @@ var entry =
 /***/ function(module, exports, __webpack_require__) {
 
 	var map = {
-		"./copy_songlist.hbs": 6,
-		"./entry_template.hbs": 27,
-		"./partials/copy_song.hbs": 26,
-		"./partials/song.hbs": 28,
-		"./songlist.hbs": 29
+		"./accesslog.hbs": 6,
+		"./copy_songlist.hbs": 26,
+		"./entry_template.hbs": 28,
+		"./partials/copy_song.hbs": 27,
+		"./partials/song.hbs": 29,
+		"./songlist.hbs": 30
 	};
 	function webpackContext(req) {
 		return __webpack_require__(webpackContextResolve(req));
@@ -418,16 +487,28 @@ var entry =
 
 	var Handlebars = __webpack_require__(7);
 	module.exports = (Handlebars["default"] || Handlebars).template({"1":function(container,depth0,helpers,partials,data) {
-	    var stack1;
+	    var helper, alias1=depth0 != null ? depth0 : {}, alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
 	
-	  return ((stack1 = container.invokePartial(__webpack_require__(26),(depth0 != null ? depth0.dataset : depth0),{"name":"$templates/partials/copy_song","data":data,"indent":"    ","helpers":helpers,"partials":partials,"decorators":container.decorators})) != null ? stack1 : "");
+	  return "<tr>\r\n  <td>GET</td>\r\n  <td><a href=\""
+	    + alias4(((helper = (helper = helpers.url || (depth0 != null ? depth0.url : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"url","hash":{},"data":data}) : helper)))
+	    + "\" spa=\"none\">"
+	    + alias4(((helper = (helper = helpers.url || (depth0 != null ? depth0.url : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"url","hash":{},"data":data}) : helper)))
+	    + "</a></td>\r\n  <td>"
+	    + alias4(((helper = (helper = helpers.user || (depth0 != null ? depth0.user : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"user","hash":{},"data":data}) : helper)))
+	    + "</td>\r\n  <td>"
+	    + alias4(((helper = (helper = helpers.session || (depth0 != null ? depth0.session : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"session","hash":{},"data":data}) : helper)))
+	    + "</td>\r\n  <td>"
+	    + alias4(((helper = (helper = helpers.ip || (depth0 != null ? depth0.ip : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"ip","hash":{},"data":data}) : helper)))
+	    + "</td>\r\n  <td>"
+	    + alias4(((helper = (helper = helpers.created || (depth0 != null ? depth0.created : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"created","hash":{},"data":data}) : helper)))
+	    + "</td> <!--moment(req.created).format('YYYY-MM-DD HH:mm:ss')-->\r\n  <td>"
+	    + alias4(((helper = (helper = helpers.body || (depth0 != null ? depth0.body : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"body","hash":{},"data":data}) : helper)))
+	    + "</td>\r\n</tr>\r\n";
 	},"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
 	    var stack1;
 	
-	  return "<ul class=\"songlist\">\r\n"
-	    + ((stack1 = helpers.each.call(depth0 != null ? depth0 : {},(depth0 != null ? depth0.children : depth0),{"name":"each","hash":{},"fn":container.program(1, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
-	    + "</ul>";
-	},"usePartial":true,"useData":true});
+	  return ((stack1 = helpers.each.call(depth0 != null ? depth0 : {},(depth0 != null ? depth0.requests : depth0),{"name":"each","hash":{},"fn":container.program(1, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "");
+	},"useData":true});
 
 /***/ },
 /* 7 */
@@ -1609,6 +1690,23 @@ var entry =
 /***/ function(module, exports, __webpack_require__) {
 
 	var Handlebars = __webpack_require__(7);
+	module.exports = (Handlebars["default"] || Handlebars).template({"1":function(container,depth0,helpers,partials,data) {
+	    var stack1;
+	
+	  return ((stack1 = container.invokePartial(__webpack_require__(27),(depth0 != null ? depth0.dataset : depth0),{"name":"$templates/partials/copy_song","data":data,"indent":"    ","helpers":helpers,"partials":partials,"decorators":container.decorators})) != null ? stack1 : "");
+	},"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
+	    var stack1;
+	
+	  return "<ul class=\"songlist\">\r\n"
+	    + ((stack1 = helpers.each.call(depth0 != null ? depth0 : {},(depth0 != null ? depth0.children : depth0),{"name":"each","hash":{},"fn":container.program(1, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+	    + "</ul>";
+	},"usePartial":true,"useData":true});
+
+/***/ },
+/* 27 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Handlebars = __webpack_require__(7);
 	module.exports = (Handlebars["default"] || Handlebars).template({"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
 	    var helper, alias1=depth0 != null ? depth0 : {}, alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
 	
@@ -1630,7 +1728,7 @@ var entry =
 	},"useData":true});
 
 /***/ },
-/* 27 */
+/* 28 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Handlebars = __webpack_require__(7);
@@ -1645,7 +1743,7 @@ var entry =
 	},"useData":true});
 
 /***/ },
-/* 28 */
+/* 29 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Handlebars = __webpack_require__(7);
@@ -1670,14 +1768,14 @@ var entry =
 	},"useData":true});
 
 /***/ },
-/* 29 */
+/* 30 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Handlebars = __webpack_require__(7);
 	module.exports = (Handlebars["default"] || Handlebars).template({"1":function(container,depth0,helpers,partials,data) {
 	    var stack1;
 	
-	  return ((stack1 = container.invokePartial(__webpack_require__(28),depth0,{"name":"$templates/partials/song","data":data,"indent":"    ","helpers":helpers,"partials":partials,"decorators":container.decorators})) != null ? stack1 : "");
+	  return ((stack1 = container.invokePartial(__webpack_require__(29),depth0,{"name":"$templates/partials/song","data":data,"indent":"    ","helpers":helpers,"partials":partials,"decorators":container.decorators})) != null ? stack1 : "");
 	},"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
 	    var stack1;
 	
@@ -1685,141 +1783,6 @@ var entry =
 	    + ((stack1 = helpers.each.call(depth0 != null ? depth0 : {},(depth0 != null ? depth0.songs : depth0),{"name":"each","hash":{},"fn":container.program(1, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
 	    + "</ul>";
 	},"usePartial":true,"useData":true});
-
-/***/ },
-/* 30 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var blog = __webpack_require__(1);
-	
-	module.exports = {
-	  //posts/-id/library.ejs
-	  "comment-form": function (target) {
-	    var form = $(target);
-	    $('.error', form).html('');
-	    //$(":submit", form).button("loading");
-	    $.ajax({
-	      url: window.location.pathname,
-	      method: "POST",
-	      data: form.serialize(),
-	      complete: function () {
-	        //$(":submit", form).button("reset");
-	      },
-	      success: function () {
-	        //form.html("Отправлено").addClass('alert-success');
-	        //console.log(form);
-	        var comment = $('<div />')
-	          .append($('<a />', {
-	            href: 'user',
-	            spa: 'main'
-	          }).text('user'))
-	          .append(' right now')
-	          .append($('<p />').append(form.context.text.value))
-	        $('#comments').append(comment);
-	      },
-	      error: function (jqXHR) {
-	        var error = JSON.parse(jqXHR.responseText);
-	        $('.error', form).html(error.message);
-	      }
-	    });
-	    return false;
-	  },
-	
-	  //login/library.ejs
-	  "login-form": function (target) {
-	    var form = $(target);
-	
-	    $('.error', form).html('');
-	    //$(":submit", form).button("loading");
-	
-	    $.ajax({
-	      url: "/login",
-	      method: "POST",
-	      data: form.serialize(),
-	      complete: function () {
-	        //$(":submit", form).button("reset");
-	      },
-	      success: function () {
-	        form.html("Вы вошли в сайт").addClass('alert-success');
-	        //window.location.href = "/";
-	        blog.updateContainer('/', 'main');
-	        console.log('123');
-	      },
-	      error: function (jqXHR) {
-	        var error = JSON.parse(jqXHR.responseText);
-	        $('.error', form).html(error.message);
-	      }
-	    });
-	    return false;
-	  },
-	
-	  //users/:id/edit
-	  "form-profile-edit": function (target) {
-	    var form = $(target);
-	
-	    $('.error', form).html('');
-	    //$(":submit", form).button("loading");
-	
-	    $.ajax({
-	      url: window.location,
-	      method: "POST",
-	      data: form.serialize(),
-	      complete: function () {
-	        //$(":submit", form).button("reset");
-	      },
-	      success: function () {
-	        form.html("Сохранено").addClass('alert-success');
-	        //window.location.href = "/";
-	        //v blog.updateContainer('/', 'main');
-	        console.log('123');
-	      },
-	      error: function (jqXHR) {
-	        var error = JSON.parse(jqXHR.responseText);
-	        $('.error', form).html(error.message);
-	      }
-	    });
-	    return false;
-	  },
-	
-	  "form-search": function (target) {
-	    var filter = document.forms['form-search'];
-	    var filterOptions = {};
-	    try {
-	      var fQuery = filter['filter-query'].value;
-	      if (fQuery) {
-	        new RegExp(fQuery);
-	        filterOptions.query = fQuery;
-	      }
-	
-	      //console.log(filterOptions);
-	      //updateContainer('/music/search', 'searchsongresult', true, filterOptions);
-	      blog.applyTemplate('/music/search', 'compilationinfo', 'songlist', filterOptions);
-	    } catch (e) {
-	      console.log('Wrong regexp');
-	      console.log(e);
-	    }
-	  },
-	
-	  "add-post-form": function (target) {
-	    var $form = $(target);
-	    $.ajax({
-	      url: window.location.pathname,
-	      method: "POST",
-	      data: $form.serialize(),
-	      complete: function (e) {
-	        console.log('complete');
-	      },
-	      success: function (e) {
-	        console.log('success');
-	      },
-	      error: function (e) {
-	        var error = JSON.parse(e.responseText);
-	        $('.error', $form).html(error.message);
-	      }
-	    });
-	    return false;
-	  }
-	};
 
 /***/ }
 /******/ ]);

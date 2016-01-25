@@ -1,0 +1,11 @@
+{{#each requests}}
+<tr>
+  <td>GET</td>
+  <td><a href="{{url}}" spa="none">{{url}}</a></td>
+  <td>{{user}}</td>
+  <td>{{session}}</td>
+  <td>{{ip}}</td>
+  <td>{{created}}</td> <!--moment(req.created).format('YYYY-MM-DD HH:mm:ss')-->
+  <td>{{body}}</td>
+</tr>
+{{/each}}

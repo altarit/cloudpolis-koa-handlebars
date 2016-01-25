@@ -36,7 +36,9 @@ module.exports = function(app) {
 
   //Admin
   router.get('/admin', checkAuth, require('./views/admin').init);
-  router.get('/admin/access', checkAuth, require('./views/admin').accesslog);
+  router.get('/admin/access_log', checkAuth, require('./views/admin').accesslog);
+  router.get('/admin/statistic', checkAuth, require('./views/admin').statistic);
+  router.get('/admin/control', checkAuth, require('./views/admin').control);
 
   app.use(router.middleware());
 };

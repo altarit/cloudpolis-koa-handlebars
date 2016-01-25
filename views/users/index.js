@@ -52,7 +52,7 @@ exports.update = function *(next) {
 
   try {
     yield User.edit(id, oldpassword, newpassword, 'email', additional);
-    this.redirect('/users/'+id);
+    this.body = {}; //actually it is not needed
   } catch (err) {
     if (err instanceof AuthError) {
       throw new HttpError(403, err.message);
