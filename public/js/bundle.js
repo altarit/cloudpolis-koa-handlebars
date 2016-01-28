@@ -489,21 +489,19 @@ var entry =
 	module.exports = (Handlebars["default"] || Handlebars).template({"1":function(container,depth0,helpers,partials,data) {
 	    var helper, alias1=depth0 != null ? depth0 : {}, alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
 	
-	  return "<tr>\r\n  <td>GET</td>\r\n  <td><a href=\""
+	  return "<div class=\"onerow\">\r\n  <div>GET</div>\r\n  <div><a href=\""
 	    + alias4(((helper = (helper = helpers.url || (depth0 != null ? depth0.url : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"url","hash":{},"data":data}) : helper)))
 	    + "\" spa=\"none\">"
 	    + alias4(((helper = (helper = helpers.url || (depth0 != null ? depth0.url : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"url","hash":{},"data":data}) : helper)))
-	    + "</a></td>\r\n  <td>"
+	    + "</a></div>\r\n  <div>"
 	    + alias4(((helper = (helper = helpers.user || (depth0 != null ? depth0.user : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"user","hash":{},"data":data}) : helper)))
-	    + "</td>\r\n  <td>"
+	    + " </div>\r\n  <div>"
 	    + alias4(((helper = (helper = helpers.session || (depth0 != null ? depth0.session : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"session","hash":{},"data":data}) : helper)))
-	    + "</td>\r\n  <td>"
+	    + " </div>\r\n  <div>"
 	    + alias4(((helper = (helper = helpers.ip || (depth0 != null ? depth0.ip : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"ip","hash":{},"data":data}) : helper)))
-	    + "</td>\r\n  <td>"
+	    + " </div>\r\n  <div>"
 	    + alias4(((helper = (helper = helpers.created || (depth0 != null ? depth0.created : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"created","hash":{},"data":data}) : helper)))
-	    + "</td> <!--moment(req.created).format('YYYY-MM-DD HH:mm:ss')-->\r\n  <td>"
-	    + alias4(((helper = (helper = helpers.body || (depth0 != null ? depth0.body : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"body","hash":{},"data":data}) : helper)))
-	    + "</td>\r\n</tr>\r\n";
+	    + " </div> <!--moment(req.created).format('YYYY-MM-DD HH:mm:ss')-->\r\n  <div class=\"clear_left\"></div>\r\n</div>\r\n";
 	},"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
 	    var stack1;
 	

@@ -1,11 +1,11 @@
 {{#each requests}}
-<tr>
-  <td>GET</td>
-  <td><a href="{{url}}" spa="none">{{url}}</a></td>
-  <td>{{user}}</td>
-  <td>{{session}}</td>
-  <td>{{ip}}</td>
-  <td>{{created}}</td> <!--moment(req.created).format('YYYY-MM-DD HH:mm:ss')-->
-  <td>{{body}}</td>
-</tr>
+<div class="onerow">
+  <div>GET</div>
+  <div><a href="{{url}}" spa="none">{{url}}</a></div>
+  <div>{{user}} </div>
+  <div>{{session}} </div>
+  <div>{{ip}} </div>
+  <div>{{created}} </div> <!--moment(req.created).format('YYYY-MM-DD HH:mm:ss')-->
+  <div class="clear_left"></div>
+</div>
 {{/each}}

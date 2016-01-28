@@ -23,8 +23,8 @@ exports.accesslog = function * (next) {
     };
 
     var requests = yield Request.find(filter).sort({created: -1}).limit(50).exec();
-    console.log(filter);
-    console.log(requests);
+    //console.log(filter);
+    //console.log(requests);
 
     if (!this.locals.isJson)
       yield this.render('admin/access.html', {locals: this.locals, requests: requests, moment: moment});
