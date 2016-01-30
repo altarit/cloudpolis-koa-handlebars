@@ -15,6 +15,13 @@ $(document).on('submit',function(e) {
 
 module.exports.blog = blog;
 
+module.exports.scripts = {};
+module.exports.scripts.chat = function() {
+  require(["js/chat"], function (chat) {
+    chat.prepare();
+  });
+};
+
 /*
  var comment = $('<div />')
  .append($('<a />', {

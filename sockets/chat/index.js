@@ -75,7 +75,9 @@ module.exports.use = function (io) {
       console.log('== Need to reload');
       var handshake = client.handshake;
 
-      /*co(function*(){
+      client.disconnect();
+
+      co(function*(){
         var koasid = 'koa:sess:' + sid;
 
         var sessionJSON = yield sessionStore.load(koasid);
@@ -96,7 +98,7 @@ module.exports.use = function (io) {
       })
         .catch((err) => {
           log.debug('Co error: ' + err);
-        });*/
+        });
     };
   };
 

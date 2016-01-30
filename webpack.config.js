@@ -1,7 +1,11 @@
 module.exports = {
   entry: "./frontend/js/entry",
+
+
   output: {
-    filename: "./public/js/bundle.js",
+    path: "public/js/",
+    publicPath: "/js/",
+    filename: "bundle.js",
     library: "entry"
   },
 
