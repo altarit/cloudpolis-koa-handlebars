@@ -1,6 +1,7 @@
 var HttpError = require('error').HttpError;
 var User = require('models/user').User;
 var AuthError = require('models/user').AuthError;
+var log = require('lib/log')(module);
 
 
 exports.init = function *(next) {
@@ -37,6 +38,9 @@ exports.auth = function *(next) {
 };
 
 exports.logout = function *(next) {
+  var sid = this.sessionId;
   this.session = null;
+  var ioChat = this.request.app['io.chat'];
+  ioChat.server.$sessionReload(sid);
   this.redirect('/');
 };

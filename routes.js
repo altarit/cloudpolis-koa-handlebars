@@ -40,5 +40,9 @@ module.exports = function(app) {
   router.get('/admin/statistic', checkAuth, require('./views/admin').statistic);
   router.get('/admin/control', checkAuth, require('./views/admin').control);
 
+  //Games
+  router.get('/games', require('./views/games').index);
+  router.get('/games/chat', require('./views/games').chat);
+
   app.use(router.middleware());
 };

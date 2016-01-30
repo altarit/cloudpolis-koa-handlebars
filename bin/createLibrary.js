@@ -14,8 +14,8 @@ var options = {
   logMusic: true
 };
 
-//var root = 'D:/Documents/Music/MAv16/Artists';
-var root = '/media/twilight/Data/Documents/Music/MAv16/Artists';
+var root = 'D:/Documents/Music/MAv16/Artists';
+//var root = '/media/twilight/Data/Documents/Music/MAv16/Artists';
 var rootlength = root.length;
 
 var errorIDv2 = [];
@@ -85,7 +85,7 @@ function lookInside(root, dir, fromroot, depth) {
           printLine(el, depth);
 
         var metadata = getTags(fullpath);
-        metadata.href = (fromroot + el).replace(/ /g, '%20');
+        metadata.href = (fromroot + el).replace(/%/g, '%25').replace(/ /g, '%20');
         if (!metadata.artist) {
           emptyArtist.push(fromroot + el);
           metadata.artist = fromroot.substring(1, fromroot.indexOf('/', 2));
