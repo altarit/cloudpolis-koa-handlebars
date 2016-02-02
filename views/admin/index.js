@@ -9,21 +9,22 @@ exports.init = function * (next) {
 
 exports.accesslog = function * (next) {
   var req = this.request;
-  var url = req.query.url;
-  var user = req.query.user || '.*';
-  var session = req.query.session || '.*';
-  /*console.log(url);
-   console.log(user);
-   console.log(session);*/
+  var url = req.query['filter-url'];
+  var user = req.query['filter-user'];
+  var session = req.query['filter-session'];
   try {
     var filter = {
-      url: {$regex: new RegExp(url)},
-      user: {$regex: new RegExp('^'+user+'$','i')}
+      url: {$regex: new RegExp(url)}
       //session: {$regex: new RegExp('^'+session+'$')}
     };
+    if (user)
+      filter.user = {$regex: new RegExp('^'+user+'$','i')};
 
-    var requests = yield Request.find(filter).sort({created: -1}).limit(50).exec();
-    //console.log(filter);
+    if (session)
+      filter.session = {$regex: new RegExp('^'+session+'$','i')};
+
+    var requests = yield Request.find(filter).sort({created: -1}).limit(100).exec();
+    console.log(filter);
     //console.log(requests);
 
     if (!this.locals.isJson)

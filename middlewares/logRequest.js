@@ -6,7 +6,7 @@ module.exports = function *(next) {
   var start = new Date();
   yield next;
 
-  if (/\.(css|js|4\.0|map|img)$/.test(this.request.url))
+  if (/\.(css|js|0|map|img)$/.test(this.request.url))
     return;
   var responseTime = new Date() - start;
   var req = this.request;
@@ -15,8 +15,8 @@ module.exports = function *(next) {
     url: req.url,
     body: req.body,
     user: req.user ? req.user._doc.username : null,
-    session: req.sessionId,
-    ip: req.headers['x-forwarded-for'] || req.ip,
+    session: this.sessionId,
+    ip: req.headers['x-real-ip'] || req.ip,
     time: responseTime,
     status: this.response.status
   });

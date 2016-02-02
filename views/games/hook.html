@@ -1,0 +1,10 @@
+{% extends '_layouts/page.html' %}
+{% block title %}Card game{% endblock %}
+
+
+{% block content %}
+<h1>{% block title %}{% endblock %}</h1>
+<div id="hook-canvas-container">
+</div>
+<script>$(function(){entry.scripts.hook();});</script>
+{% endblock %}

@@ -68,6 +68,7 @@ app.use(function*() {throw 404;});
 log.debug('EquestriaJS started');
 if (!module.parent) {
   var chat = require('sockets/chat').use(io.of('/chat'));
+  var hook = require('sockets/hook').use(io.of('/hook'));
   app['io.chat'] = chat;
 
   server.listen(3000);

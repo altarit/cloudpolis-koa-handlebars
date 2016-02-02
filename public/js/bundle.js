@@ -119,6 +119,11 @@ var entry =
 	    chat.prepare();
 	  }.apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__));});
 	};
+	module.exports.scripts.hook = function() {
+	  __webpack_require__.e/* require */(2/* empty */, function(__webpack_require__) { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [__webpack_require__(32)]; (function (hook) {
+	    hook.prepare();
+	  }.apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__));});
+	};
 	
 	/*
 	 var comment = $('<div />')

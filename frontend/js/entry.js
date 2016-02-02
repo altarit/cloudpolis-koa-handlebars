@@ -21,6 +21,11 @@ module.exports.scripts.chat = function() {
     chat.prepare();
   });
 };
+module.exports.scripts.hook = function() {
+  require(["js/hook"], function (hook) {
+    hook.prepare();
+  });
+};
 
 /*
  var comment = $('<div />')

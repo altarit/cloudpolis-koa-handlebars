@@ -42,7 +42,8 @@ module.exports = function(app) {
 
   //Games
   router.get('/games', require('./views/games').index);
-  router.get('/games/chat', require('./views/games').chat);
+  router.get('/games/chat', checkAuth, require('./views/games').chat);
+  router.get('/games/hook', require('./views/games').hook);
 
   app.use(router.middleware());
 };

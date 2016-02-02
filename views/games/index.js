@@ -5,3 +5,8 @@ exports.index = function *(next) {
 exports.chat = function *(next) {
   yield this.render('games/chat.html', {locals: this.locals});
 };
+
+
+exports.hook = function *(next) {
+  yield this.render('games/hook.html', {locals: this.locals});
+};
