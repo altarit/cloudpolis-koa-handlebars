@@ -1,135 +1,140 @@
 var Game = require('js/hook/game').Game;
 var Element = require('js/hook/element').Element;
-
-define(function() {
-  console.log("hook.js loaded");
-  var chat = io.connect(window.location.origin+'/hook');
-  var cv;
-  var ctx;
-  var w, h;
-  var loop;
-  var i = 0;
-
-  var game = new Game();
-  var box1 = new Element(40, 200, 200, 50, 'box1');
-  var box2 = new Element(30, 200, 20, 140, 'box1');
-  game.add(box1);
-  game.add(box2);
+var Menu = require('js/hook/menu').Menu;
+var Fps = require('js/hook/fps').Fps;
 
 
-  function prepare() {
-    if (!cv) {
-      cv = document.createElement('canvas');
-      setTimeout(march, 0);
-      setTimeout(fpsMetr, 1000);
-      cv.addEventListener('mousedown', canvasClick);
-    }
-    document.getElementById('hook-canvas-container').appendChild(cv);
-    repaint();
-    console.log('Context prepared');
-  }
+var fps = new Fps();
+var game = new Game();
 
-  function canvasClick(e) {
-    var rect = cv.getBoundingClientRect();
-    game.click(Math.floor(e.x - rect.left)+1, Math.floor(e.y - rect.top)+1);
+//var chat = io.connect(window.location.origin+'/hook');
+var cv;
+var vars = {
+  w: 0,
+  h: 0
+};
+var ctx;
+var loop;
+var frame = 0;
 
-  }
 
-  function repaint() {
-    //cv = document.getElementById('hook-cv');
-    var parentSize = cv.parentNode.getBoundingClientRect();
-    cv.width = w = parentSize.width;
-    var pageHeight = document.documentElement.clientHeight - 200;
-    cv.height = h =  w < pageHeight ? w : pageHeight;
-    ctx = cv.getContext('2d');
-    ctx.fillStyle = "#F0F0F0";
-    ctx.fillRect(0, 0, w, h);
-  }
-
-  window.onresize = repaint;
-
-  var lastFrameCnt = 0;
-  var lastFrameTime = Date.now();
-  function fpsMetr() {
-    var now = Date.now();
-    console.log(Math.floor((i - lastFrameCnt) / (now - lastFrameTime) * 1000));
-    lastFrameCnt = i;
-    lastFrameTime = now;
-    setTimeout(fpsMetr, 1000);
-  }
-
-  var lastX = 0, lastY = 0;
-  function march() {
-    i++;
-    cv.width = cv.width;
-    draw();
+function prepare() {
+  if (!cv) {
+    cv = document.createElement('canvas');
     setTimeout(march, 0);
+    cv.addEventListener('mousedown', canvasClick);
   }
+  document.getElementById('hook-canvas-container').appendChild(cv);
+  repaint();
+  console.log('Context prepared');
+}
 
-  function draw() {
-    //ctx.fillStyle = "#999999";
-    //ctx.fillRect(0, 0, w, h);
+function canvasClick(e) {
+  var rect = cv.getBoundingClientRect();
+  game.click(Math.floor(e.x - rect.left)+1, Math.floor(e.y - rect.top)+1);
+  e.preventDefault();
+}
+
+function repaint() {
+  //cv = document.getElementById('hook-cv');
+  var parentSize = cv.parentNode.getBoundingClientRect();
+  cv.width = vars.w = parentSize.width;
+  var pageHeight = document.documentElement.clientHeight - 200;
+  cv.height = vars.h =  vars.w < pageHeight ? vars.w : pageHeight;
 
 
-    box1.x = 300 + Math.floor(100*Math.sin(i/100));
-    box1.y = 300 + Math.floor(100*Math.cos(i/100));
+  ctx = cv.getContext('2d');
+  ctx.fillStyle = "#F0F0F0";
+  ctx.fillRect(0, 0, vars.w, vars.h);
+  game.resize(vars.w, vars.h);
+}
+
+window.onresize = repaint;
 
 
 
-    box2.x = 100 + Math.floor(140*Math.sin(i/100+7));
-    box2.y = 200 + Math.floor(100*Math.cos(i/100));
-    game.draw(ctx);
-    //console.log(box1.x);
+function march() {
+  frame++;
+  cv.width = cv.width;
+  if (!(frame % 100)) fps.update(frame);
+  draw();
+  window.requestAnimationFrame(march);
+}
 
-    /*cv.width = w;
-    lastX = rX;
-    lastY = rY;
-    var rX = Math.floor(Math.random() * w);
-    var rY = Math.floor(Math.random() * h);
-    ctx.moveTo(lastX, lastY);
-    ctx.lineTo(rX, rY);
-    ctx.lineTo(rX-50, rY);
-    ctx.lineTo(rX, rY-50);
-    ctx.lineTo(rX-50, rY-50);
-    ctx.stroke();*/
+function draw() {
+  ctx.fillText(''+fps.value, vars.w-20, vars.h-10, 20);
+  game.draw(ctx);
+}
+
+
+
+
+var mainMenuList = [
+  { title: 'Play online',
+    click: function() {
+      //game.activate('Searching online game');
+    }
+  },
+  { title: 'Play vs AI',
+    click: function() {
+    }
+  },
+  { title: 'Create lobbi',
+    click: function() {
+      game.activate('Creating lobbi');
+    }
+  },
+  { title: 'Join lobbi',
+    click: function () {
+      game.activate('Joining lobbi');
+    }
+  },
+  { title: 'Settings',
+    click: function () {
+      game.activate('Settings');
+    }
   }
+];
 
-
-
-
-  chat.on('news', function (text) {
-    printMessage('Server', text);
-  });
-
-  chat.on('join', function (username) {
-
-  });
-
-  chat.on('leave', function (username) {
-
-  });
-
-  chat.on('message', function (sender, text) {
-    printMessage(sender, text);
-  });
-
-  function eventSendButtonClick() {
-    var text = input.value;
-    chat.emit('message', text, function() {
-      console.log(text);
-      printMessage('You', text);
-    });
-    input.value = "";
+var settingMenuList = [
+  { title: 'Audio',
+    click: function() {
+      //game.activate('Searching online game');
+    }
+  },
+  { title: 'Video',
+    click: function() {
+    }
+  },
+  { title: 'Game',
+    click: function() {
+    }
+  },
+  { title: 'Back',
+    click: function () {
+      game.activate('Main menu');
+    }
   }
+];
 
-  function printMessage(username, text) {
-    /*var row = document.createElement('div');
-    row.innerHTML = '<b>'+username+'</b>: ' + text;
-    messageLog.appendChild(row);*/
-    console.log('<b>'+username+'</b>: ' + text);
-  }
 
-  return {
-    prepare: prepare
-  };
-});
+var mainMenu = new Menu('Main menu', mainMenuList);
+game.add('Main menu', mainMenu);
+
+var settingMenu = new Menu('Settings', settingMenuList);
+game.add('Settings', settingMenu);
+
+/*var box1 = new Element(40, 200, 200, 50, 'box1');
+ var box2 = new Element(30, 200, 20, 140, 'box2');
+ var mainMenu = new Menu(10, 10, 200, 600, 'Main menu');
+ game.add(box1);
+ game.add(box2);
+ game.add(mainMenu);
+ var innerBox = new Element(10, 10, 180, 60, 'Play');
+
+
+ */
+
+
+console.log("hook.js loaded");
+module.exports.prepare = prepare;

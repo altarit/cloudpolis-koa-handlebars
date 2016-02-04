@@ -1,12 +1,12 @@
 module.exports = {
-  entry: "./frontend/js/entry",
+  entry: "js/main",
 
 
   output: {
     path: "public/js/",
     publicPath: "/js/",
-    filename: "bundle.js",
-    library: "entry"
+    filename: "[name].js",
+    library: "[name]"
   },
 
   watch: true,
@@ -19,15 +19,14 @@ module.exports = {
 
   resolve: {
     root: [__dirname],
-    //modulesDirectories: __dirname+'node_modules',
+    modulesDirectories: ['node_modules', 'frontend'],
+    //extensions: ['*', '*.js', '*.hbs'],
     alias: {
       "handlebars-runtime": __dirname + "/bower_components/handlebars/handlebars.runtime.js",
       "js": "frontend/js",
       "templates": "frontend/templates"
     }
   },
-
-
 
   module: {
     loaders: [{ test: /\.hbs$/, loader: "handlebars-loader" }]

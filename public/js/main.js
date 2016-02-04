@@ -1,8 +1,8 @@
-var entry =
+var main =
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// install a JSONP callback for chunk loading
-/******/ 	var parentJsonpFunction = window["webpackJsonpentry"];
-/******/ 	window["webpackJsonpentry"] = function webpackJsonpCallback(chunkIds, moreModules) {
+/******/ 	var parentJsonpFunction = window["webpackJsonp_name_"];
+/******/ 	window["webpackJsonp_name_"] = function webpackJsonpCallback(chunkIds, moreModules) {
 /******/ 		// add "moreModules" to the modules object,
 /******/ 		// then flag all "chunkIds" as loaded and fire callback
 /******/ 		var moduleId, chunkId, i = 0, callbacks = [];
@@ -74,7 +74,7 @@ var entry =
 /******/ 			script.charset = 'utf-8';
 /******/ 			script.async = true;
 /******/
-/******/ 			script.src = __webpack_require__.p + "" + chunkId + ".bundle.js";
+/******/ 			script.src = __webpack_require__.p + "" + chunkId + "." + ({}[chunkId]||chunkId) + ".js";
 /******/ 			head.appendChild(script);
 /******/ 		}
 /******/ 	};
@@ -115,14 +115,14 @@ var entry =
 	
 	module.exports.scripts = {};
 	module.exports.scripts.chat = function() {
-	  __webpack_require__.e/* require */(1, function(__webpack_require__) { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [__webpack_require__(31)]; (function (chat) {
-	    chat.prepare();
-	  }.apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__));});
+	  __webpack_require__.e/* nsure */(1, function (require) {
+	    __webpack_require__(31).prepare();
+	  });
 	};
 	module.exports.scripts.hook = function() {
-	  __webpack_require__.e/* require */(2/* empty */, function(__webpack_require__) { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [__webpack_require__(32)]; (function (hook) {
-	    hook.prepare();
-	  }.apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__));});
+	  __webpack_require__.e/* nsure */(2, function (require) {
+	    __webpack_require__(32).prepare();
+	  });
 	};
 	
 	/*
@@ -1847,4 +1847,4 @@ var entry =
 
 /***/ }
 /******/ ]);
-//# sourceMappingURL=bundle.js.map
+//# sourceMappingURL=main.js.map

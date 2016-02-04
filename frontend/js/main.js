@@ -17,13 +17,13 @@ module.exports.blog = blog;
 
 module.exports.scripts = {};
 module.exports.scripts.chat = function() {
-  require(["js/chat"], function (chat) {
-    chat.prepare();
+  require.ensure([], function (require) {
+    require('js/chat').prepare();
   });
 };
 module.exports.scripts.hook = function() {
-  require(["js/hook"], function (hook) {
-    hook.prepare();
+  require.ensure([], function (require) {
+    require('js/hook').prepare();
   });
 };
 
