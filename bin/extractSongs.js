@@ -55,7 +55,9 @@ function extractSongs(callback) {
           artist: currentSong.artist,
           album: currentSong.album,
           compilation: currentCompilation.name,
-          href: currentSong.href
+          href: currentSong.href,
+          duration: currentSong.duration,
+          size: currentSong.size
         });
         newSong.save();
       });

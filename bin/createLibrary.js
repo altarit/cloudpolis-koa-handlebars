@@ -1,13 +1,14 @@
 var fs = require('fs');
 var path = require('path');
-//var async = require('async');
-//var audioMetaData = require('audio-metadata');
 var mongoose = require('lib/mongoose');
 var id3 = require('id3js');
 var deasync = require('deasync');
+var ffprobe = require('ffprobe');
+var co = require('co');
 
 //mongoose.disconnect();
 var options = {
+  //regexp: /^/i,
   regexp: /^/i,
   removeEmptyFolders: false,
   insertIntoDB: true,
@@ -34,6 +35,7 @@ function createCompilations(root, reg) {
     printSeparator();
     printLine(el);
     var content = lookInside(root, el, '/', 1);
+
     if (!content.length) {
       console.log("!-- " + content.length);
       if (options.removeEmptyFolders)
@@ -97,6 +99,7 @@ function lookInside(root, dir, fromroot, depth) {
         if (!metadata.album) {
           metadata.album = dir;
         }
+
         content.push(metadata);
       } else {
         //console.log('! '+el)
@@ -110,13 +113,16 @@ function lookInside(root, dir, fromroot, depth) {
 function getTags(path) {
   var ret;
   try {
-    id3({file: path, type: id3.OPEN_LOCAL}, function (err, tags) {
-      //console.log(err);
-      if (err)
-        id3Errors.push(err);
-      //console.log(tags);
-      ret = tags.v2;
-    });
+    //var ret = yield new Promise((resolve) => {
+      id3({file: path, type: id3.OPEN_LOCAL}, function (err, tags) {
+        //console.log(err);
+        if (err)
+          id3Errors.push(err);
+        //console.log(tags);
+        ret = tags.v2;
+        //resolve(tags.v2);
+      });
+    //});
     while (ret === undefined) {
       deasync.runLoopOnce();
     }
@@ -124,10 +130,28 @@ function getTags(path) {
     if (err)
       id3Errors.push(err);
   }
+
+  var probe;
+  /*console.log(path);
+  ffprobe(path, function(err, probeData) {
+    console.log('Probe: ' + err);
+    probe = probeData.format;
+  });
+  while (probe === undefined) {
+    deasync.runLoopOnce();
+  }*/
+
+  probe = {
+    duration: 180,
+    size: 1024*1024*2
+  };
+
   return {
     title: ret.title,
     artist: ret.artist,
-    album: ret.album
+    album: ret.album,
+    duration: toMMSS(probe.duration),
+    size: probe.size
   };
 }
 
@@ -161,35 +185,42 @@ function deleteFolderRecursive(path) {
   }
 }
 
+function toMMSS(sec_num) {
+  var minutes = Math.floor(sec_num / 60);
+  var seconds = Math.floor(sec_num - minutes * 60);
+  //if (minutes < 10) minutes = minutes; //2x alt255 (it's bad, I know)
+  if (seconds < 10) seconds = '0' + seconds;
+  return minutes+':'+seconds;
+}
 
-var promise = new Promise((resolve, reject) => {
-  console.log('Connection open');
-  mongoose.connection.on('open', resolve);
+
+
+co(function* () {
+  console.log('Open connection');
+  yield new Promise((resolve) => {
+    mongoose.connection.on('open', resolve);
+  });
+
+  console.log('Drop Compilations');
+  var compilations = mongoose.connection.collections['compilations'];
+  if (compilations)
+    yield compilations.drop();
+
+  console.log('Create models:');
+  require('models/compilation');
+  yield Promise.all(Object.keys(mongoose.models).map((modelName) => {
+    console.log(' ' + modelName);
+    return mongoose.models[modelName].ensureIndexes();
+  }));
+
+  console.log('Build FileSystem');
+  createCompilations(root, options.regexp);
+  //createCompilations(root, /^[r]/i);
+  //createCompilations(root, /^[n-p]/i);
+
+  console.log('\nDone. Press Ctrl+C for exit...');
 })
-  .then(() => {
-    console.log('Drop Compilations');
-    var compilations = mongoose.connection.collections['compilations'];
-    if (compilations)
-      return compilations.drop();
-    return null;
-  })
-  .then(() => {
-    console.log('Create models:');
-    require('models/compilation');
-    return Promise.all(Object.keys(mongoose.models).map((modelName) => {
-      console.log(' ' + modelName);
-      return mongoose.models[modelName].ensureIndexes();
-    }));
-  })
-  .then(() => {
-    console.log('Build FileSystem');
-    return createCompilations(root, options.regexp);
-    //createCompilations(root, /^[r]/i);
-    //createCompilations(root, /^[n-p]/i);
-  })
-  .catch((err) => {
-    console.log('\nerr=' + err + '\n');
-  })
-  .then(() => {
-    console.log('\nDone. Press Ctrl+C for exit...');
+.catch((err) => {
+    console.log('Error: ' + err);
+    console.log('\nPress Ctrl+C for exit...');
   });

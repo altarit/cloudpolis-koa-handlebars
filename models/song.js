@@ -23,6 +23,12 @@ var schema = new Schema({
   href: {
     type: String,
     requred: true
+  },
+  duration: {
+    type: String
+  },
+  size: {
+    type: Number
   }
 });
 

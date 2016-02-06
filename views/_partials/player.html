@@ -21,10 +21,8 @@
         Song
       </div>
       <div class="musictime">
-        13:37
       </div>
       <div class="musiclength">
-        20:00
       </div>
     </div>
   </div>
@@ -43,6 +41,28 @@
     <input type="range" min="1" max="20" value="20" id="volume">
   </div>
   <div class="playlist" id="playlist">
+    <ul class="nav nav-tabs" role="tablist">
+      <li role="presentation" class="active"><a href="#home" aria-controls="pl-stored" role="tab" data-toggle="tab" data-action="pl-tab-content">Stored</a></li>
+      <li role="presentation"><a href="#profile" aria-controls="pl-current" role="tab" data-toggle="tab" data-action="pl-tab-content">Current</a></li>
+      <li role="presentation"><a href="#messages" aria-controls="pl-random" role="tab" data-toggle="tab" data-action="pl-tab-content">Random</a></li>
+      <li role="presentation"><a href="#settings" aria-controls="pl-history" role="tab" data-toggle="tab" data-action="pl-tab-content">History</a></li>
+    </ul>
+
+    <div class="tab-content" id="pl-tab-content">
+      <div role="tabpanel" class="tab-pane active" id="pl-stored">
+        1
+      </div>
+      <div role="tabpanel" class="tab-pane" id="pl-current">
+        2
+      </div>
+      <div role="tabpanel" class="tab-pane" id="pl-random">
+        3
+      </div>
+      <div role="tabpanel" class="tab-pane" id="pl-history">
+        4
+      </div>
+    </div>
+
 
   </div>
   <div class="playmenu_bottom">

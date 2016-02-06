@@ -126,15 +126,13 @@ img.left {
 }
 
 div.musictime {
-  width: 35px;
-  right: 3px;
+  right: 5px;
   top: 3px;
   position: absolute;
 }
 
 div.musiclength {
-  width: 35px;
-  right: 3px;
+  right: 5px;
   top: 22px;
   position: absolute;
 }

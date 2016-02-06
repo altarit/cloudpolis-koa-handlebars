@@ -346,12 +346,16 @@ var main =
 	      return info.error.show('Нет ссылки на список');
 	    if (!currentSong.parentNode.children)
 	      return info.error.show('Список пуст');
-	    var pl = document.getElementById('playlist');
 	    var templateFunction = templates['copy_songlist'];
-	    $(document.getElementById('playlist')).html(templateFunction(currentSong.parentNode));
+	    var pl = document.getElementById('pl-stored');
+	    $(pl).html(templateFunction(currentSong.parentNode));
 	  },
 	  pl_clean: function (e) {
-	    document.getElementById('playlist').innerHTML = '';
+	    document.getElementById('pl-stored').innerHTML = '';
+	  },
+	  'pl-tab-content': function (e) {
+	    $('#pl-tab-content > div').hide();
+	    $(document.getElementById(e.target.getAttribute('aria-controls'))).show();
 	  }
 	};
 	
@@ -390,7 +394,8 @@ var main =
 	player.addEventListener('timeupdate', function () {
 	  var progress = mp3player.currentTime / mp3player.duration;
 	  mp3bar.style.width = progress * 100 + '%';
-	  //mp3time.innerHTML = Math.floor(mp3player.currentTime / 60) + ':' + Math.floor(mp3player.currentTime % 60);
+	  //if (Math.abs(mp3player.currentTime - lastTimeUpdate) >= 0.1)
+	  mp3time.innerHTML = toMMSS(mp3player.currentTime);
 	
 	  if (progress == 1) {
 	    if (mp3options.repeat) {
@@ -401,6 +406,15 @@ var main =
 	    playMusic(null, null, 'next');
 	  }
 	});
+	
+	function toMMSS(sec_num) {
+	  var minutes = Math.floor(sec_num / 60);
+	  var seconds = Math.floor(sec_num - minutes * 60);
+	
+	  //if (minutes < 10) minutes = minutes; //2x alt255 (it's bad, I know)
+	  if (seconds < 10) seconds = '0' + seconds;
+	 return minutes+':'+seconds;
+	}
 	
 	
 	player.addEventListener('progress', function () {
@@ -458,6 +472,8 @@ var main =
 	    currentSong = target;
 	    document.getElementById('player').setAttribute('src', target.dataset.href);
 	    document.getElementById('musicinfo').innerHTML = '<b>' + target.dataset.title + '</b><br>' + target.dataset.artist + ' - ' + target.dataset.album;
+	    mp3time.innerHTML = '0:00';
+	    mp3length.innerHTML = target.dataset.duration || '';
 	    mp3bar.style.width = '0%';
 	    mp3load.style.left = 0;
 	    mp3load.style.width = 0;
@@ -1779,7 +1795,13 @@ var main =
 	    + alias4(((helper = (helper = helpers.artist || (depth0 != null ? depth0.artist : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"artist","hash":{},"data":data}) : helper)))
 	    + "\" data-album=\""
 	    + alias4(((helper = (helper = helpers.album || (depth0 != null ? depth0.album : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"album","hash":{},"data":data}) : helper)))
-	    + "\">\r\n  <div class=\"track_end\"><span class=\"fa fa-plus\" data-add=\"plus\"></span></div>\r\n  <div class=\"track_cover\"><span class=\"fa fa-play\" data-add=\"play\"></span></div>\r\n  <div class=\"track_info\">\r\n    <div>"
+	    + "\"\r\n    data-duration=\""
+	    + alias4(((helper = (helper = helpers.duration || (depth0 != null ? depth0.duration : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"duration","hash":{},"data":data}) : helper)))
+	    + "\" data-size=\""
+	    + alias4(((helper = (helper = helpers.size || (depth0 != null ? depth0.size : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"size","hash":{},"data":data}) : helper)))
+	    + "\">\r\n  <div class=\"track_end\">"
+	    + alias4(((helper = (helper = helpers.duration || (depth0 != null ? depth0.duration : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"duration","hash":{},"data":data}) : helper)))
+	    + "</div>\r\n  <div class=\"track_cover\"><span class=\"fa fa-play\" data-add=\"play\"></span></div>\r\n  <div class=\"track_info\">\r\n    <div>"
 	    + alias4(((helper = (helper = helpers.title || (depth0 != null ? depth0.title : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"title","hash":{},"data":data}) : helper)))
 	    + "</div>\r\n    <div>"
 	    + alias4(((helper = (helper = helpers.artist || (depth0 != null ? depth0.artist : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"artist","hash":{},"data":data}) : helper)))
@@ -1817,9 +1839,15 @@ var main =
 	    + alias4(((helper = (helper = helpers.title || (depth0 != null ? depth0.title : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"title","hash":{},"data":data}) : helper)))
 	    + "\" data-artist=\""
 	    + alias4(((helper = (helper = helpers.artist || (depth0 != null ? depth0.artist : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"artist","hash":{},"data":data}) : helper)))
-	    + "\"\r\n    data-album=\""
+	    + "\" data-album=\""
 	    + alias4(((helper = (helper = helpers.album || (depth0 != null ? depth0.album : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"album","hash":{},"data":data}) : helper)))
-	    + "\">\r\n  <div class=\"track_end\"><span class=\"fa fa-plus\" data-add=\"plus\"></span></div>\r\n  <div class=\"track_cover\"><span class=\"fa fa-play\" data-add=\"play\"></span></div>\r\n  <div class=\"track_info\">\r\n    <div>"
+	    + "\"\r\n    data-duration=\""
+	    + alias4(((helper = (helper = helpers.duration || (depth0 != null ? depth0.duration : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"duration","hash":{},"data":data}) : helper)))
+	    + "\" data-size=\""
+	    + alias4(((helper = (helper = helpers.size || (depth0 != null ? depth0.size : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"size","hash":{},"data":data}) : helper)))
+	    + "\">\r\n  <div class=\"track_end\">"
+	    + alias4(((helper = (helper = helpers.duration || (depth0 != null ? depth0.duration : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"duration","hash":{},"data":data}) : helper)))
+	    + "</div>\r\n  <div class=\"track_cover\"><span class=\"fa fa-play\" data-add=\"play\"></span></div>\r\n  <div class=\"track_info\">\r\n    <div>"
 	    + alias4(((helper = (helper = helpers.title || (depth0 != null ? depth0.title : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"title","hash":{},"data":data}) : helper)))
 	    + "</div>\r\n    <div>"
 	    + alias4(((helper = (helper = helpers.artist || (depth0 != null ? depth0.artist : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"artist","hash":{},"data":data}) : helper)))
