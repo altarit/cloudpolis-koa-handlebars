@@ -9,6 +9,8 @@ module.exports.sendForm = sendForm;
 
 //handle click on a link
 function makeAjaxLink(e) {
+  if (e.which !== 1)
+    return;
   var target = $(e.target).closest('tr,li,a')[0];
   if (!target)
     return;
@@ -103,6 +105,7 @@ function requestHTML(url, container, dontSave, body) {
     beforeSend: cancelCurrentRequest,
     success: function (responsedData, status) {
       applyHTML(responsedData, url, container, dontSave);
+      return false;
     },
     error: errorHandler
   });

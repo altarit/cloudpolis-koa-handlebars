@@ -1,6 +1,6 @@
-<div class="navbar navbar-default navbar-fixed-top bar-player">
+<div class="navbar navbar-default navbar-fixed-top pl-component">
   <div class="container-fluid">
-    <div class="player-buttons">
+    <div class="pl-buttons">
       <ul class="nav navbar-nav">
         <li><a href="#" data-action="prev" class="fa fa-fast-backward hidden-xs"></a></li>
         <li><a href="#" data-action="play" class="fa fa-play button-pause"></a></li>
@@ -12,25 +12,25 @@
         <li><a href="#" data-action="playlist" class="fa fa-gear"></a></li>
       </ul>
     </div>
-    <div class="progress progress-player">
-      <div class="progress-bar progress-bar-info" id="musicbar" role="progressbar" style="width: 0%;">
+    <div class="progress pl-progress">
+      <div class="progress-bar progress-bar-info pl-musicbar" role="progressbar" style="width: 0%;">
       </div>
-      <div class="progress-bar progress-bar-striped" id="musicloadbar" role="progressbar" style="width: 0%;">
+      <div class="progress-bar progress-bar-striped pl-musicloadbar" role="progressbar" style="width: 0%;">
       </div>
-      <div id="musicinfo">
+      <div class="pl-musicinfo">
         Song
       </div>
-      <div class="musictime">
+      <div class="pl-musictime">
       </div>
-      <div class="musiclength">
+      <div class="pl-musiclength">
       </div>
     </div>
   </div>
-  <audio id="player" src="/artists/Not%20a%20Clever%20Pony/Princess%20Luna%20as%20Imagined/Not%20a%20Clever%20Pony%20-%20Princess%20Luna%20as%20Imagined%20-%2004%20For%20The%20New%20Lunar%20Republic.mp3"></audio>
+  <audio id="pl-audio" src="/artists/Not%20a%20Clever%20Pony/Princess%20Luna%20as%20Imagined/Not%20a%20Clever%20Pony%20-%20Princess%20Luna%20as%20Imagined%20-%2004%20For%20The%20New%20Lunar%20Republic.mp3"></audio>
 </div>
 
-<div class="playmenu" id="playmenu">
-  <div class="playermenu_top">
+<div class="pl-menu">
+  <div class="pl-menu-top">
     <ul class="pagination">
       <li><a href="#" data-action="prev" class="fa fa-fast-backward"></a></li>
       <li><a href="#" data-action="next" class="fa fa-fast-forward"></a></li>
@@ -39,42 +39,66 @@
       <li><a href="#" data-action="volumeoff" class="fa fa-volume-up"></a></li>
     </ul>
     <input type="range" min="1" max="20" value="20" id="volume">
-  </div>
-  <div class="playlist" id="playlist">
-    <ul class="nav nav-tabs" role="tablist">
-      <li role="presentation" class="active"><a href="#home" aria-controls="pl-stored" role="tab" data-toggle="tab" data-action="pl-tab-content">Stored</a></li>
-      <li role="presentation"><a href="#profile" aria-controls="pl-current" role="tab" data-toggle="tab" data-action="pl-tab-content">Current</a></li>
-      <li role="presentation"><a href="#messages" aria-controls="pl-random" role="tab" data-toggle="tab" data-action="pl-tab-content">Random</a></li>
-      <li role="presentation"><a href="#settings" aria-controls="pl-history" role="tab" data-toggle="tab" data-action="pl-tab-content">History</a></li>
-    </ul>
+  </div>    <ul class="nav nav-tabs" role="tablist">
+  <li role="presentation" class="active"><a href="#home" aria-controls="stored" role="tab" data-toggle="tab" data-action="changetab">Stored</a></li>
+  <li role="presentation"><a href="#profile" aria-controls="current" role="tab" data-toggle="tab" data-action="changetab">Current</a></li>
+  <li role="presentation"><a href="#messages" aria-controls="random" role="tab" data-toggle="tab" data-action="changetab">Random</a></li>
+  <li role="presentation"><a href="#settings" aria-controls="history" role="tab" data-toggle="tab" data-action="changetab">History</a></li>
+</ul>
+  <div class="pl-playlist">
+
 
     <div class="tab-content" id="pl-tab-content">
-      <div role="tabpanel" class="tab-pane active" id="pl-stored">
+      <div role="tabpanel" class="tab-pane active" id="pl-tab-stored">
         1
       </div>
-      <div role="tabpanel" class="tab-pane" id="pl-current">
+      <div role="tabpanel" class="tab-pane" id="pl-tab-current">
         2
       </div>
-      <div role="tabpanel" class="tab-pane" id="pl-random">
+      <div role="tabpanel" class="tab-pane" id="pl-tab-random">
         3
       </div>
-      <div role="tabpanel" class="tab-pane" id="pl-history">
+      <div role="tabpanel" class="tab-pane" id="pl-tab-history">
         4
       </div>
     </div>
 
 
   </div>
-  <div class="playmenu_bottom">
-    <div class="playmenu_current">Играет <a href="/music/library/4everfreebrony" data-spa="main">4everfreebrony</a></div>
-    <div class="btn-group dropup">
+  <div class="pl-menu-bottom" id="pl-extra-menu">
+    <div class="btn-group dropup" id="pl-tabmenu-stored" >
+      <button type="button" data-toggle="dropdown"class="btn btn-info dropdown-toggle dropup">Управление списками воспроизведения <span class="caret"></span></button>
+      <ul class="dropdown-menu">
+        <li><a href="#" data-action="current" class="fa fa-arrow-right"> Добавить в список</a></li>
+        <li><a href="#" data-action="random" class="fa fa-random"> Сортировать</a></li>
+        <li><a href="#" data-action="random" class="fa fa-random"> Перемешать</a></li>
+        <li><a href="#" data-action="open" class="fa fa-folder-open-o"> Открыть плейлист</a></li>
+        <li><a href="#" data-action="save" class="fa fa-save"> Сохранить</a></li>
+        <li><a href="#" data-action="clean" class="fa fa-cut"> Очистить</a></li>
+      </ul>
+    </div>
+
+    <div class="btn-group dropup" id="pl-tabmenu-current" style="display: none;">
       <button type="button" data-toggle="dropdown" class="btn btn-info dropdown-toggle dropup">Управление списками воспроизведения <span class="caret"></span></button>
       <ul class="dropdown-menu">
-        <li><a href="#" data-action="pl_current" class="fa fa-arrow-right"> Загрузить в текущий список</a></li>
-        <li><a href="#" data-action="pl_random" class="fa fa-random"> Случайный плейлист</a></li>
-        <li><a href="#" data-action="pl_open" class="fa fa-folder-open-o"> Открыть плейлист</a></li>
-        <li><a href="#" data-action="pl_save" class="fa fa-save"> Сохранить</a></li>
-        <li><a href="#" data-action="pl_clean" class="fa fa-cut"> Очистить</a></li>
+        <li><a href="#" data-action="random" class="fa fa-random"> Сортировать</a></li>
+        <li><a href="#" data-action="random" class="fa fa-random"> Перемешать</a></li>
+        <li><a href="#" data-action="save" class="fa fa-save"> Сохранить</a></li>
+      </ul>
+    </div>
+
+    <div class="btn-group dropup" id="pl-tabmenu-random" style="display: none;">
+      <button type="button" data-toggle="dropdown" class="btn btn-info dropdown-toggle dropup">Управление списками воспроизведения <span class="caret"></span></button>
+      <ul class="dropdown-menu">
+        <li><a href="#" data-action="random" class="fa fa-random"> Обновить</a></li>
+        <li><a href="#" data-action="save" class="fa fa-save"> Сохранить</a></li>
+      </ul>
+    </div>
+
+    <div class="btn-group dropup" id="pl-tabmenu-history" style="display: none;">
+      <button type="button" data-toggle="dropdown" class="btn btn-info dropdown-toggle dropup">Управление списками воспроизведения <span class="caret"></span></button>
+      <ul class="dropdown-menu">
+        <li><a href="#" data-action="clean" class="fa fa-cut"> Очистить</a></li>
       </ul>
     </div>
   </div>

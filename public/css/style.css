@@ -65,29 +65,29 @@ img.left {
 
 /* Player */
 
-.bar-player.navbar-static-top {
+.pl-component.navbar-static-top {
   margin-top: 0px;
 }
 
-.bar-player {
+.pl-component {
   height: 10px;
   padding-top: 5px;
   padding-bottom: 5px;
   background: rgba(255, 255, 255, 0.7);
 }
 
-.player-buttons {
+.pl-buttons {
   cursor: default;
   font-size: 14pt;
   margin-left: -10px;
   margin-right: -10px;
 }
 
-.player-buttons .navbar-right {
+.pl-buttons .navbar-right {
   float: right;
 }
 
-.progress-player {
+.pl-progress{
   cursor: default;
   font-size: 10pt;
   height: 40px;
@@ -96,7 +96,7 @@ img.left {
   overflow: hidden;
 }
 
-#musicloadbar {
+.pl-musicloadbar {
   left: 0px;
   -webkit-transition: none;
   -moz-transition: none;
@@ -108,7 +108,7 @@ img.left {
   position: absolute;
 }
 
-#musicbar {
+.pl-musicbar {
   left: 0px;
   -webkit-transition: none;
   -moz-transition: none;
@@ -118,32 +118,32 @@ img.left {
   position: absolute;
 }
 
-#musicinfo {
+.pl-musicinfo {
   padding-top: 5px;
   padding-left: 15px;
   height: 40px;
   position: absolute;
 }
 
-div.musictime {
+div.pl-musictime {
   right: 5px;
   top: 3px;
   position: absolute;
 }
 
-div.musiclength {
+div.pl-musiclength {
   right: 5px;
   top: 22px;
   position: absolute;
 }
 
-.bar-player li {
+.pl-component li {
   float: left;
   margin-right: 0px;
   margin-left: 0px;
 }
 
-.bar-player ul {
+.pl-component ul {
   float: left;
   margin-right: 0px;
   margin-left: 0px;
@@ -151,7 +151,7 @@ div.musiclength {
 
 /* Playlist */
 
-.playmenu {
+.pl-menu {
   position: fixed;
   right: 1px;
   width: 340px;
@@ -165,14 +165,14 @@ div.musiclength {
   padding: 5px;
 }
 
-.playmenu .pagination {
+.pl-menu .pagination {
   margin-top: 0px;
   margin-bottom: 0px;
 }
 
-.playlist {
+.pl-playlist {
   position: fixed;
-  top: 90px;
+  top: 135px;
   bottom: 85px;
   width: 330px;
   overflow-y: auto;
@@ -181,7 +181,7 @@ div.musiclength {
   border-radius: 5px;
 }
 
-.playmenu_bottom {
+.pl-menu-bottom {
   position: fixed;
   bottom: 15px;
   width: 330px;
@@ -189,40 +189,40 @@ div.musiclength {
   border-radius: 5px;
 }
 
-.playmenu_bottom button {
+.pl-menu-bottom button {
   width: 320px;
 }
 
-.playmenu_bottom li {
+.pl-menu-bottom li {
   width: 320px;
 }
 
-.ui-effects-wrapper .playmenu {
+.ui-effects-wrapper .pl-menu {
   right: 1px;
   bottom: 10px;
 }
 
-.ui-effects-wrapper .playlist {
+.ui-effects-wrapper .pl-playlist {
   position: relative;
   top: -5px;
   height: 100%;
 }
 
-.ui-effects-wrapper .playmenu_bottom {
+.ui-effects-wrapper .pl-menu-bottom {
   position: relative;
 }
 
-.playmenu .fa.active {
+.pl-menu .fa.active {
   background: rgba(255, 255, 255, 0.7);
 }
 
-.playmenu .fa {
+.pl-menu .fa {
   font-size: 12pt;
   padding-right: 15px;
   padding-left: 15px;
 }
 
-.playmenu li > a {
+.pl-menu li > a {
   background: none;
   border: none;
 
@@ -236,7 +236,7 @@ html {
   overflow-y: scroll;
 }
 
-.playmenu #volume {
+.pl-menu #volume {
   width: 90px;
   position: relative;
   float: right;
@@ -324,22 +324,22 @@ html {
 
 /* Playlist (based on songlist)*/
 
-.playlist {
+.pl-playlist {
   margin-left: 0px;
 }
 
-.playlist .track_info {
+.pl-playlist .track_info {
   overflow: hidden;
   width: 230px;
   white-space: nowrap;
 }
 
-.playlist .track_info div:nth-child(1) {
+.pl-playlist .track_info div:nth-child(1) {
   font-size: 10pt;
   width: 230px;
 }
 
-.playlist .track_info div:nth-child(2) {
+.pl-playlist .track_info div:nth-child(2) {
   font-size: 8pt;
   width: 230px;
 }

@@ -1,5 +1,5 @@
 var Request = require('models/request').Request;
-//var log = require('lib/log')(module);
+var log = require('lib/log')(module);
 
 module.exports = function *(next) {
 
@@ -8,6 +8,7 @@ module.exports = function *(next) {
 
   if (/\.(css|js|0|map|img)$/.test(this.request.url))
     return;
+
   var responseTime = new Date() - start;
   var req = this.request;
   console.info('--> %s %s %sms %s', this.method, req.url, responseTime, this.response.status);

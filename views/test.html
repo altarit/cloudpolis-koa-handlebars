@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Test</title>
+  <script src="/jquery/dist/jquery.js"></script>
+</head>
+<body>
+<h1>Test page</h1>
+<nav>
+  <ul class="nav navbar-nav">
+    <li><a href="/music" data-spa="main">Music</a></li>
+    <li><a href="/posts" data-spa="main">Posts</a></li>
+    <li><a href="/users" data-spa="main">Users</a></li>
+    <!--<li><a href="/about" data-spa="main">About</a></li>-->
+    <li><a href="/games" data-spa="main">Games</a></li>
+    <li><a href="/admin" data-spa="main">Admin</a></li>
+    <li><a href="/music/search" data-spa="main">Search</a></li>
+  </ul>
+</nav>
+
+<div id="main">
+
+</div>
+<script>
+  $(document.body).click(makeAjaxLink);
+  $(document).ready(function(e) {
+    console.log(1);
+
+  });
+
+  function makeAjaxLink(e) {
+    var href = e.target.href;
+    var title = href.replace(/\//g, '_');
+    $.ajax({
+      url: href,
+      method: "GET",
+      success: function (responsedData, status) {
+        console.log('Status ' + status);
+        $("#main").html(responsedData);
+        //history.pushState(title, title, href);
+        history.pushState(null, title, href);
+      }
+    });
+
+    e.preventDefault();
+  }
+</script>
+</body>
+</html>

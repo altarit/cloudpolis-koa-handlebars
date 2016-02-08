@@ -1,12 +1,15 @@
 var info = require('js/info');
 var templates = require('js/hb-templates');
 
-var mp3player = document.getElementById('player');
-var mp3bar = document.getElementById('musicbar');
-var mp3load = document.getElementById('musicloadbar');
-var mp3time = document.getElementsByClassName('musictime')[0];
-var mp3length = document.getElementsByClassName('musiclength')[0];
+var mp3player = document.getElementById('pl-audio');
+var mp3bar = document.getElementsByClassName('pl-musicbar')[0];
+var mp3load = document.getElementsByClassName('pl-musicloadbar')[0];
+var mp3time = document.getElementsByClassName('pl-musictime')[0];
+var mp3length = document.getElementsByClassName('pl-musiclength')[0];
+var mp3info = document.getElementsByClassName('pl-musicinfo')[0];
+var sidemenu = document.getElementsByClassName('pl-menu')[0];
 var currentSong;
+var currentPlaylist;
 
 
 var mp3options = {
@@ -17,34 +20,24 @@ var mp3options = {
 
 
 var actions = {
-  prev: function (e) {
+  'prev': function (e) {
     playMusic(null, null, 'prev');
   },
-  next: function (e) {
+  'next': function (e) {
     playMusic(null, null, 'next');
   },
-  play: function (e) {
-    if (mp3player.paused) {
-      mp3player.play();
-      e.target.classList.remove('fa-play');
-      e.target.classList.add('fa-pause');
-      mp3player.setAttribute('autoplay', '');
-    } else {
-      mp3player.pause();
-      e.target.classList.add('fa-play');
-      e.target.classList.remove('fa-pause');
-      mp3player.removeAttribute('autoplay');
-    }
+  'play': function (e) {
+    startPlaying(mp3player.paused);
   },
-  repeat: function (e) {
+  'repeat': function (e) {
     mp3options.repeat = !mp3options.repeat;
     e.target.classList.toggle('active', mp3options.repeat);
   },
-  random: function (e) {
+  'random': function (e) {
     mp3options.random = !mp3options.random;
     e.target.classList.toggle('active', mp3options.random);
   },
-  volumeoff: function (e) {
+  'volumeoff': function (e) {
     mp3options.volumeoff = !mp3options.volumeoff;
     e.target.classList.toggle('active', mp3options.volumeoff);
     e.target.classList.toggle('fa-volume-off', mp3options.volumeoff);
@@ -52,9 +45,9 @@ var actions = {
     mp3player.muted = mp3options.volumeoff;
   },
   playlist: function (e) {
-    $('#playmenu').stop(true, true).toggle("slide", {direction: "right"}, 200);
+    $(sidemenu).stop(true, true).toggle("slide", {direction: "right"}, 200);
   },
-  pl_current: function (e) {
+  'current': function (e) {
     if (!currentSong)
       return info.error.show('Ничего не вопроизводится');
     if (!currentSong.parentNode)
@@ -62,38 +55,50 @@ var actions = {
     if (!currentSong.parentNode.children)
       return info.error.show('Список пуст');
     var templateFunction = templates['copy_songlist'];
-    var pl = document.getElementById('pl-stored');
+    var pl = document.getElementById('pl-tab-stored');
     $(pl).html(templateFunction(currentSong.parentNode));
   },
-  pl_clean: function (e) {
+  'clean': function (e) {
     document.getElementById('pl-stored').innerHTML = '';
   },
-  'pl-tab-content': function (e) {
+  'changetab': function (e) {
+    console.log(e.target.getAttribute('aria-controls'));
     $('#pl-tab-content > div').hide();
-    $(document.getElementById(e.target.getAttribute('aria-controls'))).show();
+    $('#pl-extra-menu > div').hide();
+    $(document.getElementById('pl-tab-' + e.target.getAttribute('aria-controls'))).show();
+    $(document.getElementById('pl-tabmenu-' + e.target.getAttribute('aria-controls'))).show();
   }
 };
 
-startPlaying = function () {
+function startPlaying (play) {
+  if (play === undefined)
+    play = true;
   var pausebutton = $('.button-pause')[0];
-  mp3player.play();
-  pausebutton.classList.remove('fa-play');
-  pausebutton.classList.add('fa-pause');
-  mp3player.setAttribute('autoplay', '');
-};
+  if (play) {
+    mp3player.play();
+    mp3player.setAttribute('autoplay', '');
+  } else {
+    mp3player.pause();
+    mp3player.removeAttribute('autoplay');
+  }
+  pausebutton.classList.toggle('fa-play', !play);
+  pausebutton.classList.toggle('fa-pause', play);
+}
 
+$('.pl-buttons').click(handlePlayMenu);
+sidemenu.addEventListener('click', handlePlayMenu);
 
-$('.player-buttons').click(function (e) {
+function handlePlayMenu(e) {
   e.preventDefault();
-  if (e.target.tagName == 'A')
-    actions[e.target.getAttribute('data-action')](e);
-});
+  if (e.target.tagName == 'A') {
+    var name = e.target.getAttribute('data-action')
+    if (actions[name])
+      actions[name](e);
+    else
+      console.log('Action "' + name + '" not found');
+  }
+}
 
-playmenu.addEventListener('click', function (e) {
-  e.preventDefault();
-  if (e.target.tagName == 'A')
-    actions[e.target.getAttribute('data-action')](e);
-});
 
 document.getElementById('volume').addEventListener('change', function (e) {
   mp3player.volume = e.target.value / 20;
@@ -106,16 +111,18 @@ mp3bar.parentNode.addEventListener('click', function (e) {
   e.preventDefault();
 });
 
-player.addEventListener('timeupdate', function () {
+mp3player.addEventListener('timeupdate', function () {
   var progress = mp3player.currentTime / mp3player.duration;
   mp3bar.style.width = progress * 100 + '%';
-  //if (Math.abs(mp3player.currentTime - lastTimeUpdate) >= 0.1)
   mp3time.innerHTML = toMMSS(mp3player.currentTime);
+  if (!mp3length.innerHTML)
+    mp3length.innerHTML = toMMSS(mp3player.duration); //delete when actual duration info has been getted
 
   if (progress == 1) {
     if (mp3options.repeat) {
       mp3player.currentTime = 0;
       mp3bar.style.width = '0%';
+      startPlaying();
       return;
     }
     playMusic(null, null, 'next');
@@ -125,14 +132,14 @@ player.addEventListener('timeupdate', function () {
 function toMMSS(sec_num) {
   var minutes = Math.floor(sec_num / 60);
   var seconds = Math.floor(sec_num - minutes * 60);
-
-  //if (minutes < 10) minutes = minutes; //2x alt255 (it's bad, I know)
   if (seconds < 10) seconds = '0' + seconds;
- return minutes+':'+seconds;
+  return minutes+':'+seconds;
 }
 
 
-player.addEventListener('progress', function () {
+
+
+mp3player.addEventListener('progress', function () {
   var len = mp3player.buffered.length;
 
   if (mp3player.buffered.length) {
@@ -144,12 +151,6 @@ player.addEventListener('progress', function () {
     mp3load.style.left = 0;
     mp3load.style.width = 0;
   }
-  /*
-   var ln = player.buffered.length;
-   for(var i=0; i<ln; i++) {
-   console.log(player.buffered.start(i)+' - '+player.buffered.end(i));
-   }
-   */
 });
 
 
@@ -184,14 +185,17 @@ function playMusic(target, add, order) {
   if (add == 'plus') {
     console.log('plus');
   } else /*if (add == 'play' || target.tagName == 'TR')*/ {
-    currentSong = target;
-    document.getElementById('player').setAttribute('src', target.dataset.href);
-    document.getElementById('musicinfo').innerHTML = '<b>' + target.dataset.title + '</b><br>' + target.dataset.artist + ' - ' + target.dataset.album;
+    if (!currentSong || currentSong.dataset.href != target.dataset.href) {
+      currentSong = target;
+      mp3player.setAttribute('src', target.dataset.href);
+      mp3info.innerHTML = '<b>' + target.dataset.title + '</b><br>' + target.dataset.artist + ' - ' + target.dataset.album;
+      mp3length.innerHTML = target.dataset.duration || '';
+      mp3load.style.width = 0;
+    }
+    mp3player.currentTime = 0;
     mp3time.innerHTML = '0:00';
-    mp3length.innerHTML = target.dataset.duration || '';
     mp3bar.style.width = '0%';
     mp3load.style.left = 0;
-    mp3load.style.width = 0;
     startPlaying();
   }
 }
