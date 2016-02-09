@@ -44,6 +44,8 @@ module.exports = function(app) {
   router.get('/games', require('./views/games').index);
   router.get('/games/chat', checkAuth, require('./views/games').chat);
 
+  router.get('/games/hook', require('./views/games').hook);
+
 
   router.get('/test', require('./views/index.js').test);
 

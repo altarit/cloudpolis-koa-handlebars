@@ -305,6 +305,11 @@ html {
   height: 48px;
 }
 
+.playing{
+  background-color: rgba(20, 40, 20, 0.2);
+  border-radius: 7px;
+}
+
 .track_info div:nth-child(1) {
   font-size: 14pt;
 }
@@ -328,9 +333,15 @@ html {
   margin-left: 0px;
 }
 
+.pl-playlist li {
+  height: 40px;
+  padding-top: 5px;
+  margin-top: 5px;
+}
+
 .pl-playlist .track_info {
   overflow: hidden;
-  width: 230px;
+  width: 240px;
   white-space: nowrap;
 }
 

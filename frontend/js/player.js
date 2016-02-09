@@ -1,18 +1,19 @@
 var info = require('js/info');
 var templates = require('js/hb-templates');
 
-var mp3player = document.getElementById('pl-audio');
-var mp3bar = document.getElementsByClassName('pl-musicbar')[0];
-var mp3load = document.getElementsByClassName('pl-musicloadbar')[0];
-var mp3time = document.getElementsByClassName('pl-musictime')[0];
-var mp3length = document.getElementsByClassName('pl-musiclength')[0];
-var mp3info = document.getElementsByClassName('pl-musicinfo')[0];
-var sidemenu = document.getElementsByClassName('pl-menu')[0];
+var player = document.getElementById('pl-audio');
+var progressBar = document.getElementsByClassName('pl-musicbar')[0];
+var loadBar = document.getElementsByClassName('pl-musicloadbar')[0];
+var progressInfo = document.getElementsByClassName('pl-musictime')[0];
+var durationInfo = document.getElementsByClassName('pl-musiclength')[0];
+var trackInfo = document.getElementsByClassName('pl-musicinfo')[0];
+var sideMenu = document.getElementsByClassName('pl-menu')[0];
 var currentSong;
-var currentPlaylist;
+var currentSonglist;
+var currentSonglistAndNotPlaylist;
 
 
-var mp3options = {
+var playerOptions = {
   repeat: false,
   random: false,
   volumeoff: false
@@ -27,25 +28,25 @@ var actions = {
     playMusic(null, null, 'next');
   },
   'play': function (e) {
-    startPlaying(mp3player.paused);
+    startPlaying(player.paused);
   },
   'repeat': function (e) {
-    mp3options.repeat = !mp3options.repeat;
-    e.target.classList.toggle('active', mp3options.repeat);
+    playerOptions.repeat = !playerOptions.repeat;
+    e.target.classList.toggle('active', playerOptions.repeat);
   },
   'random': function (e) {
-    mp3options.random = !mp3options.random;
-    e.target.classList.toggle('active', mp3options.random);
+    playerOptions.random = !playerOptions.random;
+    e.target.classList.toggle('active', playerOptions.random);
   },
   'volumeoff': function (e) {
-    mp3options.volumeoff = !mp3options.volumeoff;
-    e.target.classList.toggle('active', mp3options.volumeoff);
-    e.target.classList.toggle('fa-volume-off', mp3options.volumeoff);
-    e.target.classList.toggle('fa-volume-up', !mp3options.volumeoff);
-    mp3player.muted = mp3options.volumeoff;
+    playerOptions.volumeoff = !playerOptions.volumeoff;
+    e.target.classList.toggle('active', playerOptions.volumeoff);
+    e.target.classList.toggle('fa-volume-off', playerOptions.volumeoff);
+    e.target.classList.toggle('fa-volume-up', !playerOptions.volumeoff);
+    player.muted = playerOptions.volumeoff;
   },
   playlist: function (e) {
-    $(sidemenu).stop(true, true).toggle("slide", {direction: "right"}, 200);
+    $(sideMenu).stop(true, true).toggle("slide", {direction: "right"}, 200);
   },
   'current': function (e) {
     if (!currentSong)
@@ -62,7 +63,6 @@ var actions = {
     document.getElementById('pl-stored').innerHTML = '';
   },
   'changetab': function (e) {
-    console.log(e.target.getAttribute('aria-controls'));
     $('#pl-tab-content > div').hide();
     $('#pl-extra-menu > div').hide();
     $(document.getElementById('pl-tab-' + e.target.getAttribute('aria-controls'))).show();
@@ -75,18 +75,18 @@ function startPlaying (play) {
     play = true;
   var pausebutton = $('.button-pause')[0];
   if (play) {
-    mp3player.play();
-    mp3player.setAttribute('autoplay', '');
+    player.play();
+    player.setAttribute('autoplay', '');
   } else {
-    mp3player.pause();
-    mp3player.removeAttribute('autoplay');
+    player.pause();
+    player.removeAttribute('autoplay');
   }
   pausebutton.classList.toggle('fa-play', !play);
   pausebutton.classList.toggle('fa-pause', play);
 }
 
 $('.pl-buttons').click(handlePlayMenu);
-sidemenu.addEventListener('click', handlePlayMenu);
+sideMenu.addEventListener('click', handlePlayMenu);
 
 function handlePlayMenu(e) {
   e.preventDefault();
@@ -101,33 +101,40 @@ function handlePlayMenu(e) {
 
 
 document.getElementById('volume').addEventListener('change', function (e) {
-  mp3player.volume = e.target.value / 20;
+  player.volume = e.target.value / 20;
 });
 
-mp3bar.parentNode.addEventListener('click', function (e) {
+progressBar.parentNode.addEventListener('click', function (e) {
   if (window.getSelection().toString())
     return;
-  mp3player.currentTime = (e.pageX - this.offsetLeft) / this.clientWidth * mp3player.duration;
+  player.currentTime = (e.pageX - this.offsetLeft) / this.clientWidth * player.duration;
   e.preventDefault();
 });
 
-mp3player.addEventListener('timeupdate', function () {
-  var progress = mp3player.currentTime / mp3player.duration;
-  mp3bar.style.width = progress * 100 + '%';
-  mp3time.innerHTML = toMMSS(mp3player.currentTime);
-  if (!mp3length.innerHTML)
-    mp3length.innerHTML = toMMSS(mp3player.duration); //delete when actual duration info has been getted
+player.addEventListener('timeupdate', function () {
+  var progress = player.currentTime / player.duration;
+  progressBar.style.width = progress * 100 + '%';
+  progressInfo.innerHTML = toMMSS(player.currentTime);
 
   if (progress == 1) {
-    if (mp3options.repeat) {
-      mp3player.currentTime = 0;
-      mp3bar.style.width = '0%';
+    if (playerOptions.repeat) {
+      player.currentTime = 0;
+      progressBar.style.width = '0%';
       startPlaying();
       return;
     }
     playMusic(null, null, 'next');
   }
 });
+
+player.addEventListener('error', function(e) {
+  //info.error.show('File cannot be loaded');
+});
+
+player.addEventListener('durationchange', function(e) {
+  durationInfo.innerHTML = toMMSS(player.duration); //delete when actual duration info has been getted
+});
+
 
 function toMMSS(sec_num) {
   var minutes = Math.floor(sec_num / 60);
@@ -139,19 +146,78 @@ function toMMSS(sec_num) {
 
 
 
-mp3player.addEventListener('progress', function () {
-  var len = mp3player.buffered.length;
+player.addEventListener('progress', function () {
+  var len = player.buffered.length;
 
-  if (mp3player.buffered.length) {
-    var start = mp3player.buffered.start(len - 1) / mp3player.duration;
-    var end = mp3player.buffered.end(len - 1) / mp3player.duration;
-    //                                                       hhmp3load.style.left = start * 100 + '%';
-    mp3load.style.width = end * 100 + '%';
+  if (player.buffered.length) {
+    var start = player.buffered.start(len - 1) / player.duration;
+    var end = player.buffered.end(len - 1) / player.duration;
+    //hhloadBar.style.left = start * 100 + '%';
+    loadBar.style.width = end * 100 + '%';
   } else {
-    mp3load.style.left = 0;
-    mp3load.style.width = 0;
+    loadBar.style.left = 0;
+    loadBar.style.width = 0;
   }
 });
+
+function selectTarget(target, order) {
+  if (order == 'next') {
+    if (playerOptions.random) {
+      if (target.parentNode) {
+        var children = target.parentNode.children;
+        return children[Math.floor(Math.random() * children.length) % children.length];
+      } else
+        return info.error.show('Не удается загрузить исходный список');
+    } else {
+      if (target.nextElementSibling)
+        return target.nextElementSibling;
+      else
+        return info.error.show('Последний файл в списке');
+    }
+  } else if (order == 'prev') {
+    if (target.previousElementSibling)
+      return target.previousElementSibling;
+    else
+      return info.error.show('Первый файл в списке');
+  }
+}
+
+function setTimeToZero() {
+  player.currentTime = 0;
+  progressInfo.innerHTML = '0:00';
+  progressBar.style.width = '0%';
+  loadBar.style.left = 0;
+}
+
+function loadSong(target) {
+  $('li.playing').removeClass('playing');
+  $(target).addClass('playing');
+  if (target.parentNode == currentSonglistAndNotPlaylist)
+    $('li[data-href="' + target.dataset.href + '"]', '#pl-tab-current').addClass('playing');
+
+  if(player.getAttribute('src') === target.dataset.href)
+    return;
+  console.debug('loadSong ' + target.dataset.href);
+  currentSong = target;
+  player.setAttribute('src', target.dataset.href);
+  trackInfo.innerHTML = '<b>' + target.dataset.title + '</b><br>' + target.dataset.artist + ' - ' + target.dataset.album;
+  durationInfo.innerHTML = target.dataset.duration || '';
+  loadBar.style.width = 0;
+}
+
+function setCurrentPlaylist(target) {
+  if (!target.parentNode || target.parentNode == currentSonglistAndNotPlaylist)
+    return;
+  currentSonglist = target.parentNode;
+  if ($(target).closest('.pl-playlist').length)
+    return;
+  currentSonglistAndNotPlaylist = target.parentNode;
+  console.debug('setCurrentPlaylist ');
+  var templateFunction = templates['copy_songlist'];
+  var pl = document.getElementById('pl-tab-current');
+  $(pl).html(templateFunction(currentSonglist));
+  return $('li[data-href="' + target.dataset.href + '"]', pl)[0];
+}
 
 
 function playMusic(target, add, order) {
@@ -161,41 +227,19 @@ function playMusic(target, add, order) {
     return;
 
   if (order) {
-    if (order == 'next') {
-      if (mp3options.random) {
-        if (target.parentNode) {
-          var children = target.parentNode.children;
-          target = children[Math.floor(Math.random() * children.length) % children.length];
-        } else
-          return info.error.show('Не удается загрузить исходный список');
-      } else {
-        if (target.nextElementSibling)
-          target = target.nextElementSibling;
-        else
-          return info.error.show('Последний файл в списке');
-      }
-    } else if (order == 'prev') {
-      if (target.previousElementSibling)
-        target = target.previousElementSibling;
-      else
-        return info.error.show('Первый файл в списке');
-    }
+    target = selectTarget(target, order);
+    if (!target)
+      return startPlaying(false);
   }
 
   if (add == 'plus') {
     console.log('plus');
-  } else /*if (add == 'play' || target.tagName == 'TR')*/ {
-    if (!currentSong || currentSong.dataset.href != target.dataset.href) {
-      currentSong = target;
-      mp3player.setAttribute('src', target.dataset.href);
-      mp3info.innerHTML = '<b>' + target.dataset.title + '</b><br>' + target.dataset.artist + ' - ' + target.dataset.album;
-      mp3length.innerHTML = target.dataset.duration || '';
-      mp3load.style.width = 0;
+  } else {
+    if (!currentSong || target) {
+      currentSong = setCurrentPlaylist(target) || currentSong;
+      loadSong(target);
     }
-    mp3player.currentTime = 0;
-    mp3time.innerHTML = '0:00';
-    mp3bar.style.width = '0%';
-    mp3load.style.left = 0;
+    setTimeToZero();
     startPlaying();
   }
 }
