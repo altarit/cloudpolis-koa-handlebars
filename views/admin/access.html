@@ -1,9 +1,4 @@
-{% extends '_layouts/page.html' %}
-{% block title %}Admin{% endblock %}
-
-
-{% block content %}
-<h1>{% block title %}{% endblock %}</h1>
+<h1>Admin</h1>
 
 <form name="access-log" class="form-horizontal form-search" autocomplete="off" method="GET" data-next="JSON" data-spa="access" data-template="accesslog">
 <div class="container-fluid">
@@ -38,17 +33,17 @@
       </div>
     </div>
     <div class="form-body" id="access">
-      {% for req in requests %}
+      {{#each requests}}
       <div class="onerow">
         <div>GET</div>
-        <div><a href="{{req.url}}" spa="none">{{req.url}}</a></div>
-        <div>{{req.user}} </div>
-        <div>{{req.session}} </div>
-        <div>{{req.ip}} </div>
-        <div>{{moment(req.created).format('YYYY-MM-DD HH:mm:ss')}} </div>
+        <div><a href="{{req.url}}" spa="none">{{url}}</a></div>
+        <div>{{user}} </div>
+        <div>{{session}} </div>
+        <div>{{ip}} </div>
+        <div>{{moment created}} </div>
         <div class="clear_left"></div>
       </div>
-      {% endfor %}
+      {{/each}}
     </div>
   </div>
 </div>
@@ -86,5 +81,3 @@
     }
   });*/
 </script>
-
-{% endblock %}

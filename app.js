@@ -12,15 +12,15 @@ if (cluster.isMaster && 0) {
 var koa = require('koa'),
   http = require('http'),
   path = require('path'),
-  views = require('koa-views'),
   static = require('koa-static'),
   compression = require('koa-gzip'),
   session = require('koa-generic-session'),
-  swig = require('swig'),
   bodyParser = require('koa-bodyparser'),
   socketIO = require('socket.io'),
+  //handlebars = require('koa-handlebars'),
+  handlebars = require('lib/vinyl-koa-handlebars'),
 
-  //Project modules
+//Project modules
   config = require('config'),
   log = require('lib/log')(module),
   sessionStore = require('lib/sessionStore');
@@ -39,8 +39,13 @@ app.keys = ['very secret'];
 app.use(session({ store: sessionStore }));
 
 //templates
-swig.setDefaults({ loader: swig.loaders.fs(__dirname + '/views' )});
-app.use(views('views', {map: {html: 'swig'}}));
+app.use(handlebars({
+  cache: true,//app.env !== 'development',
+  layoutsDir: 'views/_layouts',
+  defaultLayout: 'page.html',
+  partialsDir: 'views',
+  helpers: require('views/helpers')
+}));
 
 app.use(function *(next) {
   var n = this.session.views || 0;

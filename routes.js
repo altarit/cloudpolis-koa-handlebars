@@ -33,6 +33,7 @@ module.exports = function(app) {
   router.get('/music/artists', require('./views/music').artists);
   router.get('/music/artists/:id', require('./views/music').songs);
   router.get('/music/search', require('./views/music').search);
+  router.get('/music/random', require('./views/music').random);
 
   //Admin
   router.get('/admin', checkAuth, require('./views/admin').init);

@@ -1,14 +1,8 @@
-{% extends '_layouts/page.html' %}
-{% block title %}{{profile.username}}{% endblock %}
-
-
-{% block content %}
-<h1>{% block title %}{% endblock %}</h1>
+<h1>{{profile.username}}</h1>
 <div class="container-fluid">
   <div>
-    {% if user._doc.username == profile.username %}
+    if user._doc.username == profile.username
     <a href="/users/{{profile.username}}/edit" data-spa="main">Edit</a>
-    {% endif %}
   </div>
   <div>
     <div><img src="/img/users/{{profile.username}}"></div>
@@ -16,5 +10,3 @@
     {{profile.additional}}
   </div>
 </div>
-
-{% endblock %}

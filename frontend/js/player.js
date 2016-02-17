@@ -60,13 +60,16 @@ var actions = {
     $(pl).html(templateFunction(currentSong.parentNode));
   },
   'clean': function (e) {
-    document.getElementById('pl-stored').innerHTML = '';
+    //e.target.parentNode.innerHTML = '';
   },
   'changetab': function (e) {
     $('#pl-tab-content > div').hide();
     $('#pl-extra-menu > div').hide();
     $(document.getElementById('pl-tab-' + e.target.getAttribute('aria-controls'))).show();
     $(document.getElementById('pl-tabmenu-' + e.target.getAttribute('aria-controls'))).show();
+  },
+  'getrandom': function (e) {
+    getRandom();
   }
 };
 
@@ -182,6 +185,29 @@ function selectTarget(target, order) {
   }
 }
 
+
+function getRandom() {
+  main.blog.requestData('/music/random', 'pl-tab-random', 'songlist');
+}
+
+function addToHistory() {
+  var max = 50;
+  var historyTab = $('#pl-tab-history')[0];
+  var songlist = historyTab.children[0];
+  if (currentSong.parentNode == songlist)
+    return;
+  if (!songlist.children.length ||
+    songlist.children[songlist.children.length - 1].dataset.href !== currentSong.dataset.href) {
+    var newRecord = templates['partials/copy_song'](currentSong.dataset);
+    $(songlist).append(newRecord);
+  }
+  if (songlist.children.length > max) {
+    songlist.removeChild(songlist.children[0]);
+  }
+}
+
+
+
 function setTimeToZero() {
   player.currentTime = 0;
   progressInfo.innerHTML = '0:00';
@@ -197,8 +223,9 @@ function loadSong(target) {
 
   if(player.getAttribute('src') === target.dataset.href)
     return;
-  console.debug('loadSong ' + target.dataset.href);
+  //console.debug('loadSong ' + target.dataset.href);
   currentSong = target;
+  addToHistory();
   player.setAttribute('src', target.dataset.href);
   trackInfo.innerHTML = '<b>' + target.dataset.title + '</b><br>' + target.dataset.artist + ' - ' + target.dataset.album;
   durationInfo.innerHTML = target.dataset.duration || '';

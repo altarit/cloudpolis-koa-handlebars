@@ -1,11 +1,5 @@
-{% extends '_layouts/page.html' %}
-{% block title %}Users{% endblock %}
+<h1>Users</h1>
 
-
-{% block content %}
-<h1>{% block title %}{% endblock %}</h1>
-
-{% for user in users %}
-<a href="/users/{{user.username}}" data-spa="main">{{user.username}}</a><br>
-{% endfor %}
-{% endblock %}
+{{#each users}}
+<a href="/users/{{username}}" data-spa="main">{{username}}</a><br>
+{{/each}}

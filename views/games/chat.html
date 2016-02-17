@@ -1,13 +1,7 @@
-{% extends '_layouts/page.html' %}
-{% block title %}Chat{% endblock %}
-
-
-{% block content %}
-<h1>{% block title %}{% endblock %}</h1>
+<h1>Chat</h1>
 <div>
   <textarea id="chat-input" class="form-control"></textarea><br>
   <button id="chat-button-send" class="btn btn-primary">Send</button><br>
   <div id="chat-messagelog"></div>
 </div>
 <script>$(function(){main.scripts.chat();});</script>
-{% endblock %}

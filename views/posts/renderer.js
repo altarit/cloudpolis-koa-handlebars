@@ -63,7 +63,11 @@ var tags = {
 var templates = {};
 var regexp;
 
-function *transform(source, req) {
+function *transform(content, req) {
+  if (content.match('(<|>)'))
+    throw new HttpError(403, '\'<\',\'>\' не поддерживаются. Используйте &amp;lt; и &amp;gt;');
+  var source = content.replace(/([^\]])(\r\n)/g, '$1<br>$2');
+
   var self = this.request;
   req.usedTags = [];
   //var regexp = /\[(audio|video|img|a|\/a|b|\/b)(="(.*?)"){0,1}\]/g;
@@ -83,34 +87,39 @@ function *transform(source, req) {
   });
 }
 
-function replacePost(callback, match, tag, eq, param) {
+function replacePost(callback, match, tagName, eq, param) {
   //console.log(match);
-  if (eq && !tags[tag].open)
+
+  if (eq && !tags[tagName].open)
     return callback(null, ' Extra param ');
-  if (tag[0] == '/') {
+
+  if (tagName[0] == '/') {
     if (this.usedTags.length == 0)
-      return callback(null, 'Extra ' + tag);
+      //extra closing tag
+      return callback(null, 'Extra ' + tagName);
     var prev = this.usedTags[this.usedTags.length - 1];
-    if (prev != tag.slice(1)) {
+    if (prev != tagName.slice(1)) {
+      //wrong tags order, closing other tags
       this.usedTags = [];
-      return callback(null, '</' + this.usedTags.reverse().join('') + '>Close ' + prev + ' before ' + tag);
+      return callback(null, '</' + this.usedTags.reverse().join('') + '>Close ' + prev + ' before ' + tagName);
     }
     this.usedTags.pop();
-    return callback(null, '<' + tag + '>');
+    return callback(null, '<' + tagName + '>');
   }
-  if (!tags[tag].open) {
-    if (this.usedTags.length != 0 && !~tags[tag].allowed.indexOf(this.usedTags[this.usedTags.length - 1]))
-      return callback(null, tag + ' in ' + this.usedTags[this.usedTags.length - 1] + ' not allowed');
-    if (tags[tag].closes)
-      this.usedTags.push(tag);
-    return callback(null, '<' + tag + '>');
+
+  if (!tags[tagName].open) {
+    if (this.usedTags.length != 0 && !~tags[tagName].allowed.indexOf(this.usedTags[this.usedTags.length - 1]))
+      return callback(null, tagName + ' in ' + this.usedTags[this.usedTags.length - 1] + ' not allowed');
+    if (tags[tagName].closes)
+      this.usedTags.push(tagName);
+    return callback(null, '<' + tagName + '>');
   }
   if (param && ~param.indexOf("\""))
     return callback(null, ' Damaged param ' + ~param.indexOf("\"") + ' ' + param);
 
-  if (tags[tag].closes)
-    this.usedTags.push(tag);
-  co(tags[tag].open(param, tag))
+  if (tags[tagName].closes)
+    this.usedTags.push(tagName);
+  co(tags[tagName].open(param, tagName))
     .then(
     (result) => {
       callback(null, result);
@@ -152,7 +161,7 @@ Promise.all(Object.keys(tags).forEach(
         })
   }))
   .then((result) => {
-    console.log('Templates has been loaded ');
+    console.log('Templates have been loaded ');
   });
 regexp = new RegExp('\\[(' + regexpStr.slice(0, -1) + ')(="(.*?)"){0,1}\\]', 'g');
 

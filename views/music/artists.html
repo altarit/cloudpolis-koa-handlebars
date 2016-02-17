@@ -1,14 +1,8 @@
-{% extends '_layouts/page.html' %}
-{% block title %}Artists{% endblock %}
-
-
-{% block content %}
-
+<h1>Artists</h1>
 <div>
   <ul class="artists">
-    {% for artist in artists %}
-    <li><a href="/music/artists/{{artist.name}}" data-spa="main">{{artist.name}}</a></li>
-    {% endfor %}
+    {{#each artists }}
+    <li><a href="/music/artists/{{name}}" data-spa="main">{{name}}</a></li>
+    {{/each}}
   </ul>
 </div>
-{% endblock %}

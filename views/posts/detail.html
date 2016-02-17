@@ -1,31 +1,27 @@
-{% extends '_layouts/page.html' %}
-{% block title %}{{post.name}}{% endblock %}
-
-{% block content %}
-<h1>{% block title %}{% endblock %}</h1>
-<p>Опубликовано: <time datetime="<%=moment(post.created).format('YYYY-MM-DDThh:mm:ss')%>">{{moment(post.created).fromNow()}}</time>
+<h1>{{post.name}}</h1>
+<p>Опубликовано: <time datetime="{{momentTag post.created}}">{{momentFrom post.created}}</time>
   автором <a href="/users/{{post.author}}" data-spa="main">{{post.author}}</a></p>
 <a href="/posts/{{post._id}}/edit" data-spa="main">Edit</a>
 <a href="/posts/{{post._id}}/delete" data-spa="main">Delete</a>
 <article>
-  {{post.rendered|safe}}
+  {{safe post.rendered}}
   <div class="clear"></div>
 </article>
 <br>
 <div class="container-fluid" id="comments">
   <div class="container-fluid">
-    {% if post.comments %}
+    {{#if comments}}
 
-      <h4>Комментарии ({{post.comments.length}}): </h4>
-      {% for comment in post.comments %}
+      <h4>Комментарии ({{comments.length}}): </h4>
+      {{#each post.comments}}
       <div>
-        <a href="/users/{{comment.author}}" data-spa="main">{{comment.author}}</a> <time datetime="{{moment(comment.created).format('YYYY-MM-DDThh:mm:ss')}}">{{moment(comment.created).fromNow()}}</time>
-        <p>{{comment.text}}</p>
+        <a href="/users/{{author}}" data-spa="main">{{author}}</a> <time datetime="{{momentTag created}}">{{momentFrom created}}</time>
+        <p>{{text}}</p>
       </div>
-      {% endfor %}
-    {% else %}
+      {{/each}}
+    {{else}}
         <h4>Комментариев пока нет...</h4>
-    {% endif %}
+    {{/if}}
   </div>
   <form class="form-horizontal" name="comment-form" method="post">
     <div class="form-group">
@@ -37,4 +33,3 @@
     </div>
   </form>
 </div>
-{% endblock %}

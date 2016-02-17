@@ -1,31 +1,22 @@
-{% extends '_layouts/page.html' %}
-{% block title %}{{songs[0] ? songs[0].name : 'Music'}} {% endblock %}
-
-
-{% block content %}
-<h1>{% block title %}{% endblock %}</h1>
-
-
-
+<h1>songs[0] ? songs[0].name : 'Music'</h1>
 
 <div class="container-fluid">
   <div class="row-fluid library">
     <div class="compilations">
-      {% for compilation in compilations %}
-      <a href="/music/library/{{compilation.name}}" data-spa="compilationinfo">{{compilation.name}}</a><br>
-      {% endfor %}
+      {{#each compilations }}
+      <a href="/music/library/{{name}}" data-spa="compilationinfo">{{name}}</a><br>
+      {{/each}}
     </div>
     <div class="compilationinfo" id="compilationinfo" data-template="songlist">
-      {% if songs[0] %}
+      {{#if songs}}
       <ul class="songlist">
-        {% for song in songs['0'].songs %}
-          {% include 'music/_song.html' %}
-        {% endfor %}
+        {{#each songs.songs as |song songId|}}
+          {{> musicSong song}}
+        {{/each}}
       </ul>
-      {% else %}
+      {{else}}
         <p>Select compilation for load songlist.</p>
-      {% endif %}
+      {{/if}}
     </div>
   </div>
 </div>
-{% endblock %}

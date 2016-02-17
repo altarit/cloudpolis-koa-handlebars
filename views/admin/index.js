@@ -28,7 +28,7 @@ exports.accesslog = function * (next) {
     //console.log(requests);
 
     if (!this.locals.isJson)
-      yield this.render('admin/access.html', {locals: this.locals, requests: requests, moment: moment});
+      yield this.render('admin/access.html', {locals: this.locals, requests: requests});
     else
       this.body = { data: { requests: requests } };
   } catch(e) {

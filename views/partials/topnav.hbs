@@ -20,13 +20,13 @@
         <li><a href="/music/search" data-spa="main">Search</a></li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        {% if user %}
+        {{#if user }}
         <li><a href=""
                onclick="$('<form method=POST action=/logout>').appendTo('body').submit();return false">Выйти</a></form>
         </li>
-        {% else %}
+        {{else}}
         <li><a href="/login" data-spa="main">Войти</a></li>
-        {% endif %}
+        {{/if}}
       </ul>
     </div>
   </div>

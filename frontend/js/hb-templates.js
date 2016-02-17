@@ -3,6 +3,7 @@ var templates_names = [
   'copy_songlist',
   'songlist',
   'partials/song',
+  'partials/copy_song',
   'accesslog'
 ];
 

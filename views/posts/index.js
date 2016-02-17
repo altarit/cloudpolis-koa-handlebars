@@ -48,10 +48,8 @@ exports.addpost = function *(next) {
 exports.create = function *(next) {
   var name = this.request.body.postname.trim();
   var content = this.request.body.postcontent.trim();
-  if (content.match('(<|>)'))
-    throw new HttpError(403, '\'<\',\'>\' не поддерживаются. Используйте &amp;lt; и &amp;gt;');
-  var contentWithBr = content.replace(/([^\]])(\r\n)/g, '$1<br>$2');
-  var rendered = yield renderer.transform(contentWithBr, this.request);
+
+  var rendered = yield renderer.transform(content, this.request);
   try {
     var post = yield Post.create(name, content, this.locals.user.username, null, rendered);
     yield this.redirect('/posts/'+post._id);
@@ -67,10 +65,7 @@ exports.create = function *(next) {
 exports.edit = function *(next) {
   var name = this.request.body.postname.trim();
   var content = this.request.body.postcontent.trim();
-  if (content.match('(<|>)'))
-    throw new HttpError(403, '\'<\',\'>\' не поддерживаются. Используйте &amp;lt; и &amp;gt;');
-  var contentWithBr = content.replace(/([^\]])(\r\n)/g, '$1<br>$2');
-  var rendered = yield renderer.transform(contentWithBr, this.request);
+  var rendered = yield renderer.transform(content, this.request);
   try {
     var post = yield Post.edit(name, content, this.locals.user.username, null, rendered, this.params.id);
     this.redirect('/posts/'+post._id);
