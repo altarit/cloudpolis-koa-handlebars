@@ -4,31 +4,35 @@ var info = require('js/info');
 
 module.exports.makeAjaxLink = makeAjaxLink;
 module.exports.requestData = requestData;
-module.exports.requestHTML = requestHTML;
 module.exports.sendForm = sendForm;
 
 //handle click on a link
 function makeAjaxLink(e) {
   if (e.which !== 1)
     return;
+
   var target = $(e.target).closest('tr,li,a')[0];
   if (!target)
     return;
+
+  var app = target.getAttribute('data-app');
   var container = target.getAttribute('data-spa');
   if (!container)
     return;
-  e.preventDefault();
 
+  e.preventDefault();
   var href = target.href || target.dataset.href;
 
   if (container == 'player') {
     mp3.hanldeSpaClick(target, e.target.dataset);
-  } else if (container == 'main') {
-    requestHTML(href, container);
   } else {
     var template = document.getElementById(container).getAttribute('data-template');
     requestData(href, container, template);
   }
+}
+
+function sendRequest(target) {
+
 }
 
 function sendForm(form) {
@@ -54,14 +58,14 @@ function sendForm(form) {
       //form.html("Сохранено").addClass('alert-success');
 
       if (next == 'JSON')
-        return applyData(responsedData, $form.attr('action'), $form.data('spa'), $form.data('template'));
+        return applyResponse(responsedData, $form.attr('action'), $form.data('spa'), $form.data('template'));
 
       if (next == 'HTML')
-        return applyHTML(responsedData, $form.attr('action'), $form.data('spa'), false);
+        return applyResponse(responsedData, $form.attr('action'), $form.data('spa'));
 
       var redirect = $form.data('redirect');
       if (redirect)
-        return requestHTML(redirect, 'main');
+        return requestData(redirect, 'main');
     },
     error: function (jqXHR) {
       var error = JSON.parse(jqXHR.responseText);
@@ -73,51 +77,60 @@ function sendForm(form) {
 var currentRequest = null;
 
 //requests JSON from server
-function requestData(url, container, template, body) {
+function requestData(url, container, template, body, dontSave) {
   currentRequest = $.ajax({
     url: url,
     method: "GET",
     data: body,
-    headers: {"X-Expected-Format": "JSON"},
+    headers: template ? {"X-Expected-Format": "JSON"} : null,
     beforeSend: cancelCurrentRequest,
     success: function (responsedData, status) {
-      applyData(responsedData, url, container, template);
+      //applyData(responsedData, url, container, template);
+      applyResponse(responsedData, url, container, template);
     },
     error: errorHandler
   });
 }
 
-function applyData(responsedData, url, container, template) {
-  var templateFunction = templates[template];
-  $(document.getElementById(container)).html(templateFunction(responsedData.data));
-  if (responsedData.title) {
-    document.title = responsedData.title;
-    history.pushState(responsedData.title, responsedData.title, url);
+function applyResponse(responsedData, url, container, template, dontSave) {
+
+
+  return applyResponseObj({
+    responsedData: responsedData,
+    url: url,
+    container: container,
+    template: template,
+    dontSave: dontSave
+  });
+}
+
+function applyResponseObj(par) {
+  var responsedData = par.responsedData;
+  var url = par.url || window.location.pathname;
+  var container = par.container;
+  if (!responsedData || !url || !container)
+    throw new Error('Params are empty');
+  var template = par.template;
+  var dontSave = par.dontSave;
+
+
+  var html = null;
+  if (template) {
+    var templateFunction = templates[template];
+    html = templateFunction(responsedData.data);
+    if (responsedData.title) {
+      document.title = responsedData.title;
+      history.pushState(responsedData.title, responsedData.title, url);
+    }
+  } else {
+    html = responsedData;
+    var titleEl = $(html).filter('h1')[0];
+    var title = titleEl ? titleEl.innerHTML : document.title;
+    document.title = title;
+    if (!dontSave)
+      history.pushState(title, title, url);
   }
-}
-
-//requests partial HTML from server
-function requestHTML(url, container, dontSave, body) {
-  currentRequest = $.ajax({
-    url: url,
-    method: "GET",
-    data: body,
-    beforeSend: cancelCurrentRequest,
-    success: function (responsedData, status) {
-      applyHTML(responsedData, url, container, dontSave);
-      return false;
-    },
-    error: errorHandler
-  });
-}
-
-function applyHTML(responsedData, url, container, dontSave) {
-  $(document.getElementById(container)).html(responsedData);
-  var titleEl = $(responsedData).filter('h1')[0];
-  var title = titleEl ? titleEl.innerHTML : document.title;
-  document.title = title;
-  if (!dontSave)
-    history.pushState(title, title, url);
+  $(document.getElementById(container)).html(html);
 }
 
 

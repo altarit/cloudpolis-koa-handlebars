@@ -4,7 +4,7 @@ $(document).ready(function (e) {
   $(document.body).click(blog.makeAjaxLink);
 
   window.addEventListener('popstate', function (e) {
-    blog.requestHTML(location.pathname, 'main', true);
+    blog.requestData(location.pathname, 'main', null, null, true);
   });
 });
 
