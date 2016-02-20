@@ -1,0 +1,15 @@
+/* Info, Errors */
+
+.info-error {
+  position: fixed;
+  bottom: 20px;
+  height: 40px;
+  background: rgba(255, 48, 48, 0.9);
+  border-radius: 5px;
+  left: 50%;
+  margin-left: -150px;
+  width: 300px;
+  text-align: center;
+  line-height: 40px;
+  z-index: 9000;
+}

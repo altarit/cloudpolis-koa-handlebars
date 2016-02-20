@@ -1,0 +1,86 @@
+/* Player */
+
+.pl-component.navbar-static-top {
+  margin-top: 0px;
+}
+
+.pl-component {
+  height: 10px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  background: rgba(255, 255, 255, 0.7);
+}
+
+.pl-buttons {
+  cursor: default;
+  font-size: 14pt;
+  margin-left: -10px;
+  margin-right: -10px;
+}
+
+.pl-buttons .navbar-right {
+  float: right;
+}
+
+.pl-progress{
+  cursor: default;
+  font-size: 10pt;
+  height: 40px;
+  position: relative;
+  background: #ADEBFF;
+  overflow: hidden;
+}
+
+.pl-musicloadbar {
+  left: 0px;
+  -webkit-transition: none;
+  -moz-transition: none;
+  -o-transition: none;
+  transition: none;
+  height: 2px;
+  left: 30%;
+  bottom: 0px;
+  position: absolute;
+}
+
+.pl-musicbar {
+  left: 0px;
+  -webkit-transition: none;
+  -moz-transition: none;
+  -o-transition: none;
+  transition: none;
+  height: 100%;
+  position: absolute;
+}
+
+.pl-musicinfo {
+  padding-top: 5px;
+  padding-left: 15px;
+  height: 40px;
+  position: absolute;
+}
+
+div.pl-musictime {
+  right: 5px;
+  top: 3px;
+  position: absolute;
+}
+
+div.pl-musiclength {
+  right: 5px;
+  top: 22px;
+  position: absolute;
+}
+
+.pl-component li {
+  float: left;
+  margin-right: 0px;
+  margin-left: 0px;
+}
+
+.pl-component ul {
+  float: left;
+  margin-right: 0px;
+  margin-left: 0px;
+}
+

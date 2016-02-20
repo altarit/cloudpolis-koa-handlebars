@@ -1,0 +1,111 @@
+/* Library */
+
+.library {
+  padding: 10px;
+  z-index: 200;
+}
+
+.compilations {
+  background-color: #EFF;
+  padding: 10px;
+  overflow-y: auto;
+
+  position: fixed;
+  width: 200px;
+  left: 0px;
+  top: 100px;
+  bottom: 0px;
+}
+
+.compilationinfo {
+  background-color: #EEF;
+  padding: 10px;
+  overflow-y: auto;
+
+  position: fixed;
+  left: 200px;
+  top: 100px;
+  bottom: 0px;
+  right: 0px;
+}
+
+.library tr {
+  cursor: default;
+}
+
+/* Songlist */
+.songlist li {
+  display: block;
+  list-style-type: none;
+  margin-left: -40px;
+  cursor: default;
+  min-width: 300px;
+  overflow: hidden;
+  white-space: nowrap;
+  height: 50px;
+}
+
+.track_cover {
+  display: inline-block;
+  width: 32px;
+  height: 32px;
+  text-align: center;
+  padding-top: 8px;
+  vertical-align: top;
+}
+
+.track_info {
+  display: inline-block;
+  overflow: hidden;
+  height: 48px;
+}
+
+.playing{
+  background-color: rgba(20, 40, 20, 0.2);
+  border-radius: 7px;
+}
+
+.track_info div:nth-child(1) {
+  font-size: 14pt;
+}
+
+.track_info div:nth-child(2) {
+  font-size: 10pt;
+}
+
+.track_end {
+  display: inline-block;
+  float: right;
+}
+
+.clear_left {
+  clear: both;
+}
+
+/* Playlist (based on songlist)*/
+
+.pl-playlist {
+  margin-left: 0px;
+}
+
+.pl-playlist li {
+  height: 40px;
+  padding-top: 5px;
+  margin-top: 5px;
+}
+
+.pl-playlist .track_info {
+  overflow: hidden;
+  width: 240px;
+  white-space: nowrap;
+}
+
+.pl-playlist .track_info div:nth-child(1) {
+  font-size: 10pt;
+  width: 230px;
+}
+
+.pl-playlist .track_info div:nth-child(2) {
+  font-size: 8pt;
+  width: 230px;
+}

@@ -1,0 +1,64 @@
+/* General */
+
+a {
+  color: #00B7FF;
+
+}
+
+textarea {
+  max-width: 100%;
+}
+
+.add-post-form textarea {
+  min-height: 400px;
+}
+
+.navbar-static-top {
+  margin-bottom: 0px;
+  margin-top: 50px;
+  /*background: #DBF6FF;*/
+  background: rgba(255, 255, 255, 0.7);
+}
+
+body {
+  /*background: #ADEBFF;*/
+  background: rgba(188, 222, 242, 0.35);
+  min-width: 360px;
+}
+
+.section-container {
+  padding-top: 10px;
+}
+
+.section {
+  /*background: #DBF6FF;*/
+  background: rgba(255, 255, 255, 0.7);
+  /*margin: 10px 10px 10px 10px;*/
+  /*border-radius: 10px;*/
+  z-index: 100;
+}
+
+.section-right {
+  padding: 10px;
+}
+
+.left {
+  float: left;
+}
+
+div.clear {
+  clear: both;
+  height: 1px;
+  overflow: hidden;
+  font-size: 0pt;
+  margin-top: -1px;
+}
+
+img {
+  max-width: 100%;
+}
+
+img.left {
+  max-width: 100%;
+  padding-right: 8px;
+}

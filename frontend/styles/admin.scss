@@ -1,0 +1,39 @@
+/* Admin */
+
+div.onerow {
+  height: 60px;
+}
+
+.admin-access > div.form-head > div.onerow > div {
+  float: left;
+}
+
+.admin-access > div.form-body > div.onerow > div {
+  float: left;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.admin-access > div > div > div:nth-child(1) {
+  width: 10%;
+}
+
+.admin-access > div > div > div:nth-child(2) {
+  width: 90%;
+}
+
+.admin-access > div > div > div:nth-child(3) {
+  width: 20%;
+}
+
+.admin-access > div > div > div:nth-child(4) {
+  width: 35%;
+}
+
+.admin-access > div > div > div:nth-child(5) {
+  width: 20%;
+}
+
+.admin-access > div > div > div:nth-child(6) {
+  width: 25%;
+}

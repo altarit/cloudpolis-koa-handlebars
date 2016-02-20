@@ -1,0 +1,93 @@
+/* Playlist */
+
+.pl-menu {
+  position: fixed;
+  right: 1px;
+  width: 340px;
+  top: 50px;
+  bottom: 10px;
+  z-index: 4000;
+  display: none;
+
+  background: rgba(188, 222, 242, 0.7);
+  border-radius: 1px;
+  padding: 5px;
+}
+
+.pl-menu .pagination {
+  margin-top: 0px;
+  margin-bottom: 0px;
+}
+
+.pl-playlist {
+  position: fixed;
+  top: 135px;
+  bottom: 85px;
+  width: 330px;
+  overflow-y: auto;
+  background: rgba(255, 255, 255, 0.7);
+  padding-left: 0px;
+  border-radius: 5px;
+}
+
+.pl-menu-bottom {
+  position: fixed;
+  bottom: 15px;
+  width: 330px;
+  padding-left: 0px;
+  border-radius: 5px;
+}
+
+.pl-menu-bottom button {
+  width: 320px;
+}
+
+.pl-menu-bottom li {
+  width: 320px;
+}
+
+.ui-effects-wrapper .pl-menu {
+  right: 1px;
+  bottom: 10px;
+}
+
+.ui-effects-wrapper .pl-playlist {
+  position: relative;
+  top: -5px;
+  height: 100%;
+}
+
+.ui-effects-wrapper .pl-menu-bottom {
+  position: relative;
+}
+
+.pl-menu .fa.active {
+  background: rgba(255, 255, 255, 0.7);
+}
+
+.pl-menu .fa {
+  font-size: 12pt;
+  padding-right: 15px;
+  padding-left: 15px;
+}
+
+.pl-menu li > a {
+  background: none;
+  border: none;
+
+}
+
+.pagination > li > a:hover, .pagination > li > a:focus {
+  background-color: transparent;
+}
+
+html {
+  overflow-y: scroll;
+}
+
+.pl-menu #volume {
+  width: 90px;
+  position: relative;
+  float: right;
+  margin-top: 5px;
+}
