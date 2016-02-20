@@ -41,7 +41,7 @@ exports.addpost = function *(next) {
     if (post)
       yield this.render('posts/addpost.html', {locals: this.locals, post: post});
   } else {
-    yield this.render('posts/addpost', {locals: this.locals});
+    yield this.render('posts/addpost.html', {locals: this.locals});
   }
 };
 
