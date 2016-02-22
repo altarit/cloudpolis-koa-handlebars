@@ -138,7 +138,7 @@ function *getSongByHref(href) {
 
 
 //load templates
-regexpStr = '';
+let regexpStr = '';
 Promise.all(Object.keys(tags).forEach(
   (tag)=> {
     regexpStr += tag + '|';

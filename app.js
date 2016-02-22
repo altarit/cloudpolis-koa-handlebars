@@ -12,7 +12,7 @@ if (cluster.isMaster && 0) {
 var koa = require('koa'),
   http = require('http'),
   path = require('path'),
-  static = require('koa-static'),
+  statics = require('koa-static'),
   compression = require('koa-gzip'),
   session = require('koa-generic-session'),
   bodyParser = require('koa-bodyparser'),
@@ -40,7 +40,7 @@ app.use(session({ store: sessionStore }));
 
 //templates
 app.use(handlebars({
-  cache: true,//app.env !== 'development',
+  cache: false,//app.env !== 'development',
   layoutsDir: 'views/_layouts',
   defaultLayout: 'page.html',
   partialsDir: 'views',
@@ -66,8 +66,8 @@ require('routes')(app);
 var server = require('http').Server(app.callback()),
   io = require('socket.io')(server);
 
-app.use(static('public'));
-app.use(static('bower_components'));
+app.use(statics('public'));
+app.use(statics('bower_components'));
 app.use(function*() {throw 404;});
 
 log.debug('EquestriaJS started');

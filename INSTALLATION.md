@@ -6,19 +6,22 @@ Nginx (optional)
 
 Init
 1. Global npm modules
-npm i -g bower webpack
+npm i -g bower webpack gulpjs/gulp#4.0
 
 2. Project modules & client libraries
 npm i
 bower i
 
-3. Build frontent app
+3. Generate syles and copy images
+gulp build
+
+4. Build frontent app
 webpack
 
-4. Init database
+5. Init database
 npm run initdb
 
-5. Config nginx (optional)
+6. Config nginx (optional)
 Copy nginx.conf to nginx folder
 Set your url to server_name roperty
 Set alias for 'location /artists/'  to your music collection 
@@ -38,3 +41,5 @@ exports NODE_PATH=.
 node app.js
 
 4. Start Nginx (optional)
+
+5. Visit http://localhost:3000 (or http://localhost if nginx is running)
