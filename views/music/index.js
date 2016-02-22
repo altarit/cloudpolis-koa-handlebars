@@ -7,7 +7,7 @@ function * sendHTMLResult(next) {
   var compilations = yield Compilation.find({}, {name: 1}).sort({name: 1}).exec();
   var songs = yield Compilation.find({name: this.params.compilation}).sort({name: 1}).exec();
   console.log('songs: '+songs[0]);
-  yield this.render('music/library.html', {locals: this.locals, compilations: compilations, songs: songs[0]});
+  yield this.render('music/library.html', {compilations: compilations, songs: songs[0]});
 }
 
 function * sendJSONResult(next) {
@@ -37,20 +37,20 @@ exports.search = function *(next) {
 
   var filteredSongs = yield Song.find(filter).limit(50).exec();
   if (!this.locals.isJson)
-    yield this.render('music/search.html', {locals: this.locals, songs: filteredSongs});
+    yield this.render('music/search.html', {songs: filteredSongs});
   else
     this.body =  {data: {songs: filteredSongs}};
 };
 
 exports.artists = function *(next) {
   var found = yield Compilation.find({}, {name: 1, _id: 0}).sort({name: 1}).exec();
-  yield this.render('music/artists.html', {locals: this.locals, artists: found});
+  yield this.render('music/artists.html', {artists: found});
 };
 
 exports.songs = function *(next) {
   var found = yield Compilation.find({name: this.params.id}).sort({name: 1}).exec();
   if (found[0])
-    return yield this.render('music/songs.html', {locals: this.locals, artist: found[0]});
+    return yield this.render('music/songs.html', {artist: found[0]});
   else
     throw 404;
 };
@@ -64,5 +64,5 @@ exports.random = function *(next) {
 };
 
 exports.init = function *(next) {
-  yield this.render('music/index.html', {locals: this.locals});
+  yield this.render('music/index.html', {});
 };

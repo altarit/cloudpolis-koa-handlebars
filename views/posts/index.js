@@ -7,14 +7,14 @@ var log = require('lib/log')(module);
 
 exports.init = function * (next) {
   var posts = yield Post.find({}).sort({_id: -1}).exec();
-  yield this.render('posts/index.html', {locals: this.locals, posts: posts, moment: moment});
+  yield this.render('posts/index.html', {posts: posts, moment: moment});
 };
 
 
 exports.detail = function *(next) {
   var post = yield Post.findOne({_id: this.params.id});
   if (post) {
-    yield this.render('posts/detail.html', {locals: this.locals, post: post, moment: moment});
+    yield this.render('posts/detail.html', {post: post, moment: moment});
   }
 };
 
@@ -39,9 +39,9 @@ exports.addpost = function *(next) {
   if (this.params.id && Number.isInteger(+this.params.id)) {
     var post = yield Post.findOne({_id: this.params.id});
     if (post)
-      yield this.render('posts/addpost.html', {locals: this.locals, post: post});
+      yield this.render('posts/addpost.html', {post: post});
   } else {
-    yield this.render('posts/addpost.html', {locals: this.locals});
+    yield this.render('posts/addpost.html', {});
   }
 };
 

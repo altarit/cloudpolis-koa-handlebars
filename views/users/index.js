@@ -4,7 +4,7 @@ var AuthError = require('models/user').AuthError;
 
 exports.init = function *(next) {
   var found = yield User.find({});
-  yield this.render('users/index.html', {locals: this.locals, users: found});
+  yield this.render('users/index.html', {users: found});
 };
 
 
@@ -13,7 +13,7 @@ exports.detail = function *(next) {
   var id = this.params.id;
   var user = yield User.findOneByName(id);
   if (user) {
-    yield this.render('users/detail.html', {locals: this.locals, profile: user});
+    yield this.render('users/detail.html', {profile: user});
   } else {
     throw new HttpError(404, "User not found.");
   }
@@ -33,7 +33,7 @@ exports.edit = function *(next) {
     throw new HttpError(403, "Access denied");
   var user = yield User.findOneByName(id);
   if (user) {
-    yield this.render('users/edit.html', {locals: this.locals, profile: user});
+    yield this.render('users/edit.html', {profile: user});
   } else {
     throw new HttpError(404, "User not found.");
   }

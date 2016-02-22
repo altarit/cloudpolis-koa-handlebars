@@ -5,7 +5,7 @@ var log = require('lib/log')(module);
 
 
 exports.init = function *(next) {
-  yield this.render('auth/index.html', {locals: this.locals});
+  yield this.render('auth/index.html', {});
 };
 
 exports.auth = function *(next) {

@@ -8,10 +8,6 @@ const del = require('del');
 
 const isDev = !process.env.NODE_ENV || process.env.NODE_ENV == 'development';
 
-gulp.task('default', (cb) => {
-  console.log('Hello');
-  cb();
-});
 
 gulp.task('sass', function () {
   return gulp.src('frontend/styles/**/*.scss')
@@ -34,6 +30,11 @@ gulp.task('img', function () {
 
 gulp.task('clean', function() {
   return del('public');
+});
+
+gulp.task('copy_modules', function() {
+  return gulp.src('temp_modules/**/*.*')
+    .pipe(gulp.dest('node_fixed_modules'));
 });
 
 

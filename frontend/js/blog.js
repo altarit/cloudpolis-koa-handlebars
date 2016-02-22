@@ -116,19 +116,23 @@ function applyResponseObj(par) {
 
   var html = null;
   if (template) {
-    var templateFunction = templates[template];
+    var templateFunction = Handlebars.compile(templates[template]);
     html = templateFunction(responsedData.data);
     if (responsedData.title) {
       document.title = responsedData.title;
       history.pushState(responsedData.title, responsedData.title, url);
     }
   } else {
-    html = responsedData;
+    //console.log(responsedData);
+    var templateFunction = Handlebars.compile(responsedData.template);
+    html = templateFunction(responsedData.locals);
     var titleEl = $(html).filter('h1')[0];
     var title = titleEl ? titleEl.innerHTML : document.title;
     document.title = title;
     if (!dontSave)
       history.pushState(title, title, url);
+
+
   }
   $(document.getElementById(container)).html(html);
 }

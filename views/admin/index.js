@@ -3,7 +3,7 @@ var Request = require('models/request').Request;
 var HttpError = require('error').HttpError;
 
 exports.init = function * (next) {
-  yield this.render('admin/index.html', {locals: this.locals});
+  yield this.render('admin/index.html', {});
 };
 
 
@@ -28,20 +28,21 @@ exports.accesslog = function * (next) {
     //console.log(requests);
 
     if (!this.locals.isJson)
-      yield this.render('admin/access.html', {locals: this.locals, requests: requests});
+      yield this.render('admin/access.html', {requests: requests});
     else
       this.body = { data: { requests: requests } };
   } catch(e) {
-    throw new HttpError(402, 'Неверный фильтр'+e);
+    //throw new HttpError(402, 'Неверный фильтр'+e);
+    throw e;
   }
 };
 
 
 exports.statistic = function * (next) {
-  yield this.render('admin/index.html', {locals: this.locals});
+  yield this.render('admin/index.html', {});
 };
 
 
 exports.control = function * (next) {
-  yield this.render('admin/index.html', {locals: this.locals});
+  yield this.render('admin/index.html', {});
 };

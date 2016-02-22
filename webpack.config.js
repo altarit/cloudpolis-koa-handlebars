@@ -1,3 +1,5 @@
+var path = require('path');
+
 module.exports = {
   entry: "js/main",
 
@@ -24,11 +26,16 @@ module.exports = {
     alias: {
       "handlebars-runtime": __dirname + "/bower_components/handlebars/handlebars.runtime.js",
       "js": "frontend/js",
-      "templates": "frontend/templates"
+      "templates": "views/_templates"
     }
   },
-
   module: {
-    loaders: [{ test: /\.hbs$/, loader: "handlebars-loader" }]
+    //loaders: [{ test: /\.hbs$/, loader: "handlebars-loader" }]
+    loaders: [{
+      test: /\.hbs$/,
+      include: [path.resolve(__dirname, 'views/_templates/partials')],
+      loader: "raw-loader"
+    }]
   }
 };
+console.log(__dirname);

@@ -55,7 +55,7 @@ var actions = {
       return info.error.show('Нет ссылки на список');
     if (!currentSong.parentNode.children)
       return info.error.show('Список пуст');
-    var templateFunction = templates['copy_songlist'];
+    var templateFunction = Handlebars.compile(templates['copy_songlist']);
     var pl = document.getElementById('pl-tab-stored');
     $(pl).html(templateFunction(currentSong.parentNode));
   },
@@ -94,7 +94,7 @@ sideMenu.addEventListener('click', handlePlayMenu);
 function handlePlayMenu(e) {
   e.preventDefault();
   if (e.target.tagName == 'A') {
-    var name = e.target.getAttribute('data-action')
+    var name = e.target.getAttribute('data-action');
     if (actions[name])
       actions[name](e);
     else
@@ -198,7 +198,8 @@ function addToHistory() {
     return;
   if (!songlist.children.length ||
     songlist.children[songlist.children.length - 1].dataset.href !== currentSong.dataset.href) {
-    var newRecord = templates['partials/copy_song'](currentSong.dataset);
+    var templateFunction = Handlebars.compile(templates['copy_songlist']);
+    var newRecord = templateFunction(currentSong.dataset);
     $(songlist).append(newRecord);
   }
   if (songlist.children.length > max) {
@@ -240,7 +241,7 @@ function setCurrentPlaylist(target) {
     return;
   currentSonglistAndNotPlaylist = target.parentNode;
   console.debug('setCurrentPlaylist ');
-  var templateFunction = templates['copy_songlist'];
+  var templateFunction = Handlebars.compile(templates['copy_songlist']);
   var pl = document.getElementById('pl-tab-current');
   $(pl).html(templateFunction(currentSonglist));
   return $('li[data-href="' + target.dataset.href + '"]', pl)[0];

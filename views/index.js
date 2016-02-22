@@ -1,5 +1,5 @@
 exports.index = function *(next) {
-  yield this.render('index.html', {locals: this.locals});
+  yield this.render('index.html', {});
 };
 
 exports.inprogress = function * (next) {
@@ -7,5 +7,5 @@ exports.inprogress = function * (next) {
 };
 
 exports.test = function * (next) {
-  yield this.render('test.html', {locals: this.locals});
+  yield this.render('test.html', {});
 };

@@ -43,8 +43,8 @@ app.use(handlebars({
   cache: false,//app.env !== 'development',
   layoutsDir: 'views/_layouts',
   defaultLayout: 'page.html',
-  partialsDir: 'views',
-  helpers: require('views/helpers')
+  partialsDir: 'views/_templates',
+  helpers: require('views/_templates/utils/helpers-server-loader')
 }));
 
 app.use(function *(next) {

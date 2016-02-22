@@ -1,3 +1,19 @@
+1.12.0 / 2016-02-22
+------------------
+
+- All rendering but first on a client side.
+- Server/client's templates are located at the one place.
+- Strict mode since now.
+
+
+1.11.0 / 2016-02-21
+------------------
+
+- Gulp added!
+- We don't need store /public directory anymore.
+- Strict mode since now.
+
+
 1.10.0 / 2016-02-17
 ------------------
 
