@@ -1,4 +1,8 @@
-var path = require('path');
+'use strict';
+const path = require('path');
+const webpack = require('webpack');
+
+const NODE_ENV = process.env.NODE_ENV || "development";
 
 module.exports = {
   entry: "js/main",
@@ -11,13 +15,13 @@ module.exports = {
     library: "[name]"
   },
 
-  watch: true,
+  watch: NODE_ENV == "development",
 
   watchOptions: {
     aggregateTimeout: 200
   },
 
-  devtool: "source-map",
+  devtool: NODE_ENV == "development" ? "source-map" : "none",
 
   resolve: {
     root: [__dirname],
@@ -36,6 +40,27 @@ module.exports = {
       include: [path.resolve(__dirname, 'views/_templates/partials')],
       loader: "raw-loader"
     }]
-  }
+  },
+
+  plugins: [
+    new webpack.DefinePlugin({
+      NODE_ENV: JSON.stringify(NODE_ENV),
+      LANG: JSON.stringify('eng')
+    })
+  ]
+
+
 };
-console.log(__dirname);
+
+
+if(true) {
+  module.exports.plugins.push(
+    new webpack.optimize.UglifyJsPlugin({
+      compress: {
+        warnings: false,
+        drop_console: true,
+        unsafe: true,
+      }})
+  );
+
+}

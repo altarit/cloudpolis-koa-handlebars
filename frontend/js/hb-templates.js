@@ -11,7 +11,6 @@ templates_names.forEach(function (name) {
 });
 
 //regoister partials
-var partials = {};
 var partials_names = [
   'song',
   'copy_song'

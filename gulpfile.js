@@ -33,8 +33,8 @@ gulp.task('clean', function() {
 });
 
 gulp.task('copy_modules', function() {
-  return gulp.src('temp_modules/**/*.*')
-    .pipe(gulp.dest('node_fixed_modules'));
+  return gulp.src('node_fixed_modules/**/*.*')
+    .pipe(gulp.dest('node_modules'));
 });
 
 

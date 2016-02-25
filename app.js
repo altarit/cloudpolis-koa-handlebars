@@ -13,11 +13,11 @@ var koa = require('koa'),
   http = require('http'),
   path = require('path'),
   statics = require('koa-static'),
+  mount = require('koa-mount'),
   compression = require('koa-gzip'),
   session = require('koa-generic-session'),
   bodyParser = require('koa-bodyparser'),
   socketIO = require('socket.io'),
-  //handlebars = require('koa-handlebars'),
   handlebars = require('lib/vinyl-koa-handlebars'),
 
 //Project modules
@@ -66,8 +66,8 @@ require('routes')(app);
 var server = require('http').Server(app.callback()),
   io = require('socket.io')(server);
 
-app.use(statics('public'));
-app.use(statics('bower_components'));
+app.use(mount('/', statics('public')));
+app.use(mount('/bower', statics('bower_components')));
 app.use(function*() {throw 404;});
 
 log.debug('EquestriaJS started');
